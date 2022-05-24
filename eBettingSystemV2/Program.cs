@@ -1,5 +1,8 @@
+using eBettingSystemV2.Services;
+using eBettingSystemV2.Services.Database;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,6 +16,23 @@ namespace eBettingSystemV2
     {
         public static void Main(string[] args)
         {
+            //var host = CreateHostBuilder(args).Build();
+            //using (var scope = host.Services.CreateScope())
+            //{
+            //    var database = scope.ServiceProvider.GetService<BettingSystemContext>();
+
+            //    new SetupService().Init(database);
+            //}
+
+            ////test
+            //host.Run();
+
+
+
+
+
+
+
             CreateHostBuilder(args).Build().Run();
         }
 

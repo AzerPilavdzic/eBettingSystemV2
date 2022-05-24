@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using eBettingSystemV2.Models;
+using eBettingSystemV2.Services.Database;
 //using eProdaja.Model.Requests;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,7 @@ namespace eProdaja.Services
     {
         public MappingProfile()
         {
-            CreateMap<Database.Korisnici, Model.Korisnici>();
+            CreateMap<Country, CountryModel>();
 
         }
     }
