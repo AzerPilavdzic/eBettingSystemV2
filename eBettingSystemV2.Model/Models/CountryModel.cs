@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace eBettingSystemV2.Models
 {
-    public partial class Country
+    public partial class CountryModel
     {
        
         public string Country1 { get; set; }
