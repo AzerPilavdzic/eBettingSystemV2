@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.32510.428
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBettingSystemV2", "eBettingSystemV2\eBettingSystemV2.csproj", "{5459C19A-FCA4-4924-8EE8-C4C51121E7B6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0C4400EA-6817-4456-B997-09B9F85C1373} = {0C4400EA-6817-4456-B997-09B9F85C1373}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eBettingSystemV2.Services", "eBettingSystemV2.Services\eBettingSystemV2.Services.csproj", "{0C4400EA-6817-4456-B997-09B9F85C1373}"
 EndProject

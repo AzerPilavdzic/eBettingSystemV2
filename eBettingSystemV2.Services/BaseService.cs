@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace eProdaja.Services
 {
-    public class BaseService<T,TDb,TSearch> /* :*IService<T, TSearch>*/
+    public class BaseService<T,TDb,TSearch>:
+        IService<T, TSearch>
         where T : class 
-        where TDb : class 
-        /*where TSearch : BaseSearchObject*/
+        where TDb : class
+        where TSearch : class /*BaseSearchObject*/
     {
         //public eProdajaContext Context { get; set; }
         //public IMapper Mapper { get; set; }
@@ -68,5 +69,7 @@ namespace eProdaja.Services
 
             return Temp;
         }
+
+
     }
 }
