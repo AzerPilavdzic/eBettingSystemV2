@@ -32,8 +32,8 @@ namespace eBettingSystemV2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-
+            //dodano
+            services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IService<object,object>, BaseService<object,object,object>>();
             services.AddScoped<ICRUDService<object,object,object,object>, BaseCRUDService<object, object, object,object,object>>();
 

@@ -1,6 +1,7 @@
 ﻿//using AutoMapper;
 //using eProdaja.Model.SearchObjects;
 //using eProdaja.Services.Database;
+using AutoMapper;
 using eBettingSystemV2.Services.Database;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,12 @@ namespace eProdaja.Services
         where TSearch : class /*BaseSearchObject*/
     {
         public BettingSystemContext Context { get; set; }
-        //public IMapper Mapper { get; set; }
+        public IMapper Mapper { get; set; }
 
-        public BaseService(BettingSystemContext context /*, IMapper mapper*/)
+        public BaseService(BettingSystemContext context , IMapper mapper)
         {
-            //Context = context;
-            //Mapper = mapper;
+            Context = context;
+            Mapper = mapper;
         }
         public virtual IEnumerable<T> Get(TSearch search = null)
         {

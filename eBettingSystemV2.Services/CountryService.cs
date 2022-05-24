@@ -25,7 +25,7 @@ namespace TourismAgency.Services
         >
         //ICountryService
     {
-        public DrzavaService(/*TourismAgency.Services.Database.Rs2_SeminarskiContext context_, IMapper mapper_*/) : base(/*context_, mapper_*/)
+        public DrzavaService(eBettingSystemV2.Services.Database.BettingSystemContext context_ /*IMapper mapper_*/) : base(context_/* mapper_*/)
         {
 
             //context = context_;

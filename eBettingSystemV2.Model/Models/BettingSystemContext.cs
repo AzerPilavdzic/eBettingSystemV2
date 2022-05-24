@@ -17,7 +17,7 @@ namespace eBettingSystemV2.Models
         {
         }
 
-        public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<CountryModel> Countries { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -31,7 +31,7 @@ namespace eBettingSystemV2.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Country>(entity =>
+            modelBuilder.Entity<CountryModel>(entity =>
             {
                 entity.ToTable("Country");
 
