@@ -35,6 +35,7 @@ namespace eBettingSystemV2
 
 
             services.AddScoped<IService<object,object>, BaseService<object,object,object>>();
+            services.AddScoped<ICRUDService<object,object,object,object>, BaseCRUDService<object, object, object,object,object>>();
 
 
 

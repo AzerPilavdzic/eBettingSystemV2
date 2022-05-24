@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace eProdaja.Services
 {
     public class BaseCRUDService<T, TDb, TSearch, TInsert, TUpdate>
-        : BaseService<T, TDb, TSearch> 
-        //ICRUDService<T, TSearch, TInsert, TUpdate>
+        : BaseService<T, TDb, TSearch>,
+        ICRUDService<T, TSearch, TInsert, TUpdate>
         where T : class 
         where TDb : class 
         where TSearch : class   /*BaseSearchObject */
