@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.32510.428
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBettingSystemV2", "eBettingSystemV2\eBettingSystemV2.csproj", "{5459C19A-FCA4-4924-8EE8-C4C51121E7B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eBettingSystemV2.Services", "eBettingSystemV2.Services\eBettingSystemV2.Services.csproj", "{0C4400EA-6817-4456-B997-09B9F85C1373}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBettingSystemV2.Services", "eBettingSystemV2.Services\eBettingSystemV2.Services.csproj", "{0C4400EA-6817-4456-B997-09B9F85C1373}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eBettingSystemV2.Model", "eBettingSystemV2.Model\eBettingSystemV2.Model.csproj", "{53E7FD83-E663-4E53-820E-C201DD69783D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{0C4400EA-6817-4456-B997-09B9F85C1373}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C4400EA-6817-4456-B997-09B9F85C1373}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C4400EA-6817-4456-B997-09B9F85C1373}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53E7FD83-E663-4E53-820E-C201DD69783D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53E7FD83-E663-4E53-820E-C201DD69783D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53E7FD83-E663-4E53-820E-C201DD69783D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53E7FD83-E663-4E53-820E-C201DD69783D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
