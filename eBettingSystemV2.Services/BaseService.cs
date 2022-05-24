@@ -23,7 +23,7 @@ namespace eProdaja.Services
             //Context = context;
             //Mapper = mapper;
         }
-        public virtual IEnumerable<T> Get(/*TSearch search = null*/)
+        public virtual IEnumerable<T> Get(TSearch search = null)
         {
             //var entity = Context.Set<TDb>().AsQueryable();
 
