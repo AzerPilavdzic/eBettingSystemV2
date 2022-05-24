@@ -10,6 +10,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBettingSystemV2", "eBettin
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBettingSystemV2.Services", "eBettingSystemV2.Services\eBettingSystemV2.Services.csproj", "{0C4400EA-6817-4456-B997-09B9F85C1373}"
+	ProjectSection(ProjectDependencies) = postProject
+		{53E7FD83-E663-4E53-820E-C201DD69783D} = {53E7FD83-E663-4E53-820E-C201DD69783D}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBettingSystemV2.Model", "eBettingSystemV2.Model\eBettingSystemV2.Model.csproj", "{53E7FD83-E663-4E53-820E-C201DD69783D}"
 EndProject
