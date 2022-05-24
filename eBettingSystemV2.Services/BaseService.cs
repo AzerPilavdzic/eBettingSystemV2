@@ -1,7 +1,9 @@
 ﻿//using AutoMapper;
 //using eProdaja.Model.SearchObjects;
 //using eProdaja.Services.Database;
+using AutoMapper;
 using eBettingSystemV2.Services.Database;
+using RS2_Tourism_Agency.Model.SearchObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,61 +16,55 @@ namespace eProdaja.Services
         IService<T, TSearch>
         where T : class 
         where TDb : class
-        where TSearch : class /*BaseSearchObject*/
+        where TSearch : class //base search service
     {
         public BettingSystemContext Context { get; set; }
-        //public IMapper Mapper { get; set; }
+        public IMapper Mapper { get; set; }
 
-        public BaseService(BettingSystemContext context /*, IMapper mapper*/)
+        public BaseService(BettingSystemContext context , IMapper mapper)
         {
-            //Context = context;
-            //Mapper = mapper;
+            Context = context;
+            Mapper = mapper;
         }
         public virtual IEnumerable<T> Get(TSearch search = null)
         {
-            //var entity = Context.Set<TDb>().AsQueryable();
+            var entity = Context.Set<TDb>().AsQueryable();
 
-            //entity = AddFilter(entity, search);
+            entity = AddFilter(entity, search);
 
-            //entity = AddInclude(entity, search);
+            entity = AddInclude(entity, search);
 
+            //ne radi 
             //if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)
             //{
             //    entity = entity.Take(search.PageSize.Value).Skip(search.Page.Value * search.PageSize.Value);
             //}
 
-            //var list = entity.ToList();
-            //NOTE: elaborate IEnumerable vs IList
-            //return Mapper.Map<IList<T>>(list);
-
-
-            IEnumerable<T> var = null;
-
-
-            return var;
+            var list = entity.ToList();
+        //NOTE: elaborate IEnumerable vs IList
+            return Mapper.Map<IList<T>>(list);
+         
         }
 
-        public virtual IQueryable<TDb> AddInclude(IQueryable<TDb> query /*TSearch search = null*/)
+        public virtual IQueryable<TDb> AddInclude(IQueryable<TDb> query, TSearch search = null)
         {
             return query;
         }
 
-        public virtual IQueryable<TDb> AddFilter(IQueryable<TDb> query /*TSearch search = null*/)
+        public virtual IQueryable<TDb> AddFilter(IQueryable<TDb> query , TSearch search = null)
         {
             return query;
         }
 
         public T GetById(int id)
         {
-            //var set = Context.Set<TDb>();
+            var set = Context.Set<TDb>();
 
-            //var entity = set.Find(id);
+            var entity = set.Find(id);
 
-            //return Mapper.Map<T>(entity);
+            return Mapper.Map<T>(entity);
 
-            T Temp = null;
-
-            return Temp;
+            
         }
 
 

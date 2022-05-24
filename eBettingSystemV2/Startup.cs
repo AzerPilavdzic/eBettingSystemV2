@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using RS2_Tourism_Agency.Model.SearchObjects;
 using ServiceStack;
 using System;
 using System.Collections.Generic;
@@ -32,10 +33,14 @@ namespace eBettingSystemV2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //dodano
+            services.AddAutoMapper(typeof(Startup));
 
+            //ne radi
+            //services.AddTransient<IService<object, object>,BaseService<object, object, object>>();
 
-            services.AddScoped<IService<object,object>, BaseService<object,object,object>>();
-            services.AddScoped<ICRUDService<object,object,object,object>, BaseCRUDService<object, object, object,object,object>>();
+            //services.AddScoped<IService<object, object>, BaseService<object, object, object>>();
+            //services.AddScoped<ICRUDService<object, object, object, object>, BaseCRUDService<object, object, object, object, object>>();
 
 
 
