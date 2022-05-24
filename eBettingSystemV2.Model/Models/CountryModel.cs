@@ -7,7 +7,7 @@ namespace eBettingSystemV2.Models
 {
     public partial class Country
     {
-        public int CountryId { get; set; }
+       
         public string Country1 { get; set; }
     }
 }

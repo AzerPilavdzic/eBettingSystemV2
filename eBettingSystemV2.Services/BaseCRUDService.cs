@@ -1,6 +1,7 @@
 ﻿//using AutoMapper;
 //using eProdaja.Model.SearchObjects;
 //using eProdaja.Services.Database;
+using eBettingSystemV2.Services.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,8 @@ namespace eProdaja.Services
         where TInsert : class 
         where TUpdate : class
     {
-        public BaseCRUDService(/*eProdajaContext context, IMapper mapper*/)
-        : base(/*context, mapper*/) { }
+        public BaseCRUDService(BettingSystemContext context/*, IMapper mapper*/)
+        : base(context/*, mapper*/) { }
 
         public virtual T Insert(TInsert insert)
         {

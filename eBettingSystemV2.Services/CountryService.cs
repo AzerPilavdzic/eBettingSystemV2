@@ -2,6 +2,8 @@
 //using eBettingSystemV2.Model;
 //using RS2_Tourism_Agency.Model.Request;
 //using RS2_Tourism_Agency.Model.SearchObjects;
+using eBettingSystemV2.Models;
+using eBettingSystemV2.Services.Database;
 using eProdaja.Services;
 using System;
 using System.Collections.Generic;
@@ -15,8 +17,8 @@ namespace TourismAgency.Services
     public class DrzavaService :
         BaseCRUDService
         <
-        object,
-        object,
+        CountryModel,
+        Country,
         object,
         object,
         object
