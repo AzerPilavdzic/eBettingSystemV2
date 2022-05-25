@@ -36,7 +36,7 @@ namespace eBettingSystemV2
             services.AddAutoMapper(typeof(Startup));
 
             //ne radi
-            services.AddScoped<ICountryService, CountryService>();
+            //services.AddScoped<ICountryService, CountryService>();
 
             //services.AddScoped<IService<object, object>, BaseService<object, object, object>>();
             //services.AddScoped<ICRUDService<object, object, object, object>, BaseCRUDService<object, object, object, object, object>>();
