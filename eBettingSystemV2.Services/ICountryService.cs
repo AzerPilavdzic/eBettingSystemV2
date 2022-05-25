@@ -1,7 +1,7 @@
 ﻿
+using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eProdaja.Services;
-using RS2_Tourism_Agency.Model.SearchObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace TourismAgency.Services
     public interface ICountryService : 
         ICRUDService<CountryModel, 
             CountrySearchObject, 
-            object, object>
+            CountryUpsertRequest, CountryUpsertRequest>
     {
 
 
