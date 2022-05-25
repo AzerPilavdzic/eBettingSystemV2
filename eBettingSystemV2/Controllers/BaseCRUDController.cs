@@ -1,5 +1,5 @@
 ﻿using eBettingSystemV2.Controllers;
-using eProdaja.Services;
+using eBettingSystemV2.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eProdaja.Controllers

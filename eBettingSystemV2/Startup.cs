@@ -1,4 +1,4 @@
-using eProdaja.Services;
+using eBettingSystemV2.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using RS2_Tourism_Agency.Model.SearchObjects;
 using ServiceStack;
 using System;
 using System.Collections.Generic;
@@ -37,7 +36,7 @@ namespace eBettingSystemV2
             services.AddAutoMapper(typeof(Startup));
 
             //ne radi
-            //services.AddTransient<IService<object, object>,BaseService<object, object, object>>();
+            //services.AddTransient<ICountryService, CountryService>();
 
             //services.AddScoped<IService<object, object>, BaseService<object, object, object>>();
             //services.AddScoped<ICRUDService<object, object, object, object>, BaseCRUDService<object, object, object, object, object>>();

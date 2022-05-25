@@ -2,7 +2,6 @@
 using eBettingSystemV2.Services.Database;
 //using eBettingSystemV2.Models;
 using eProdaja.Controllers;
-using eProdaja.Model.SearchObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
