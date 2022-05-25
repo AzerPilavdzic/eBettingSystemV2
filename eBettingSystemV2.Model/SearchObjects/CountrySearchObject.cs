@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace eProdaja.Model.SearchObjects
+namespace eBettingSystemV2.Model.SearchObjects
 {
     public class CountrySearchObject : BaseSearchObject
     {
         public string  Naziv { get; set; }
-        public int? JediniceMjereId { get; set; }
+        public int? CountryId { get; set; }
 
     }
 }
