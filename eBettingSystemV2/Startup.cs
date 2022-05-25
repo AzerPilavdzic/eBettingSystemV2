@@ -26,10 +26,8 @@ namespace eBettingSystemV2
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            //var _con = Configuration["DefaultConnection"];
-            DefaultConnection = Configuration["DefaultConnection"];
-            //???
-            //configuration.GetConnectionString("DefaultConnection");
+            var _con = Configuration["Test"];
+       
 
         }
 
@@ -37,11 +35,23 @@ namespace eBettingSystemV2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //DefaultConnection = Configuration.GetConnectionString();
-            services.AddDbContext<BettingSystemContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString(DefaultConnection)));
             //dodano
             services.AddAutoMapper(typeof(Startup));
+
+
+            //DefaultConnection = Configuration.GetConnectionString();
+            string connectionString =this.Configuration.GetValue<string>("DefaultConnection");
+            //var _ime = Configuration.GetConnectionString(connectionString);
+
+            string dbConn = Configuration.GetSection("ConnectionString").GetSection("DefaultConnection").Value;
+            services.AddDbContext<BettingSystemContext>(options =>
+            //options.UseNpgsql(Configuration.GetConnectionString(DefaultConnection)));
+
+
+            options.UseNpgsql(dbConn));
+            //Host = my_host; Database = my_db; Username = my_user; Password = my_pw");
+
+
             
             //ne radi
             services.AddTransient<ICountryService, CountryService>();
