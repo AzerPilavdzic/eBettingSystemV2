@@ -40,15 +40,15 @@ namespace eBettingSystemV2.Controllers
         //Dodati Patch
 
 
-        [HttpGet]
-        public IEnumerable<CountryModel> GetCountry([FromQuery] CountrySearchObject search = null)
-        {
-            //return base.Get(search);
-            //
+        //[HttpGet]
+        //public IEnumerable<CountryModel> GetCountry([FromQuery] CountrySearchObject search = null)
+        //{
+        //    //return base.Get(search);
+        //    //
 
-            return ICountryService.Get(search);
+        //    return ICountryService.Get(search);
 
-        }
+        //}
 
 
 

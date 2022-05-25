@@ -39,5 +39,52 @@ namespace eBettingSystemV2.Controllers
 
         //Implementirati za logger
         //Dodati Patch
+
+        [HttpGet]
+        [Route("GetAllTeams")]
+        public override IEnumerable<TeamModel> Get([FromQuery] TeamSearchObject search = null)
+        {
+            return base.Get(search);
+        }
+
+
+        [HttpPost]
+        [Route("InsertTeam")]
+        public override TeamModel Insert(TeamUpsertRequest insert)
+        {
+            return base.Insert(insert); 
+        }
+
+
+        [HttpPut]
+        [Route("UpdateTeam")]
+        public override TeamModel Update(int id, [FromBody] TeamUpsertRequest update)
+        {
+            return base.Update(id, update); 
+        }
+
+
+        [HttpGet]
+        [Route("GetTeamById")]
+
+        public override TeamModel GetById(int id)
+        {
+            return base.GetById(id);    
+        }
+
+        [HttpDelete]
+        [Route("DeleteTeam")]
+
+        public TeamModel Delete(int TeamId)
+        {
+
+           return ITeamService.Delete(TeamId);
+            
+        
+        
+        }
+
+
+
     }
 }
