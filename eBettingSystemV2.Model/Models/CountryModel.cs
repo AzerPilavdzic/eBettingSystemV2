@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 namespace eBettingSystemV2.Models
 {
-    public partial class CountryModel
+    public class CountryModel
     {
-       public string Country1 { get; set; }
+       public string CountryName { get; set; }
     }
 }

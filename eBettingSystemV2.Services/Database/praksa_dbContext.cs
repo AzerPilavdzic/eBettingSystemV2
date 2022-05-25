@@ -37,7 +37,7 @@ namespace eBettingSystemV2.Services.Database
 
                 entity.Property(e => e.CountryId).HasDefaultValueSql("nextval('\"BettingSystem\".country_countryid_seq'::regclass)");
 
-                entity.Property(e => e.Country1)
+                entity.Property(e => e.CountryName)
                     .IsRequired()
                     .HasColumnType("character varying");
             });

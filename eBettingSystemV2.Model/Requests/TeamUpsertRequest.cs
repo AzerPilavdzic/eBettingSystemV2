@@ -10,5 +10,8 @@ namespace eBettingSystemV2.Model.SearchObjects
         public string TeamName { get; set; }
         public string City { get; set; }
 
+        public int Countryid { get; set; }
+
+        public int? Foundedyear { get; set; }
     }
 }

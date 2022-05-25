@@ -19,11 +19,13 @@ namespace eBettingSystemV2.Services
             //models 
             CreateMap<Team, TeamModel>();
             CreateMap<Country, CountryModel>();
+            CreateMap<CountryModel, Country>();
 
             //requests
             CreateMap<Country, CountryUpsertRequest>();
             CreateMap<CountryUpsertRequest,Country>();
             CreateMap<Team, TeamUpsertRequest>();
+            CreateMap<TeamUpsertRequest,Team>();
 
 
             //search

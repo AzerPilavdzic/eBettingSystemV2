@@ -13,7 +13,7 @@ namespace eBettingSystemV2.Services.Database
         }
 
         public int CountryId { get; set; }
-        public string Country1 { get; set; }
+        public string CountryName { get; set; }
 
         public virtual ICollection<Team> Teams { get; set; }
     }

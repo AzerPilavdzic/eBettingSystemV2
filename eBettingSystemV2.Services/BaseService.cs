@@ -37,6 +37,8 @@ namespace eBettingSystemV2.Services
             
             if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)
             {
+
+                int broj = search.Page.Value * search.PageSize.Value;
                 entity = entity.Take(search.PageSize.Value).Skip(search.Page.Value * search.PageSize.Value);
             }
 

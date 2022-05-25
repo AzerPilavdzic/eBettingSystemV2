@@ -46,7 +46,7 @@ namespace eBettingSystemV2.Services
             if (!string.IsNullOrWhiteSpace(search?.Naziv))
             {
 
-                filterquery = filterquery.Where(X => X.Country1.StartsWith(search.Naziv));
+                filterquery = filterquery.Where(X => X.CountryName.StartsWith(search.Naziv));
 
 
             }

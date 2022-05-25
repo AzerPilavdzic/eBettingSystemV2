@@ -7,7 +7,7 @@ namespace eBettingSystemV2.Model.SearchObjects
 {
     public class CountryUpsertRequest
     {
-        public string Country1 { get; set; }
+        public string CountryName { get; set; }
 
     }
 }
