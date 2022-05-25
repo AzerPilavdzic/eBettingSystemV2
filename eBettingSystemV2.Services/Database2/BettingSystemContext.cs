@@ -25,7 +25,7 @@ namespace eBettingSystemV2.Services.Database
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                var _con = "Data soruce=192.168.43.21, 5432;Initial Catalog=praksa_db;Trusted_Connection=False;Username=praksa;Password=12345";
+                var _con = "Server=192.168.43.21; Port=5432;Database=praksa_db;Username=praksa;Password=12345";
                 optionsBuilder.UseNpgsql(_con);
             }
         }
@@ -39,7 +39,7 @@ namespace eBettingSystemV2.Services.Database
                 entity.Property(e => e.Country1)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .HasColumnName("Country");
+                    .HasColumnName("Country1");
             });
 
             modelBuilder.Entity<Team>(entity =>
