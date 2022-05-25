@@ -57,7 +57,7 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpPut]
-        [Route("UpdateTeam")]
+        [Route("UpdateTeam/{Id}")]
         public override TeamModel Update(int id, [FromBody] TeamUpsertRequest update)
         {
             return base.Update(id, update); 
@@ -65,7 +65,7 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpGet]
-        [Route("GetTeamById")]
+        [Route("GetTeam/{Id}")]
 
         public override TeamModel GetById(int id)
         {
@@ -73,7 +73,7 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteTeam")]
+        [Route("DeleteTeam/{Id}")]
 
         public TeamModel Delete(int TeamId)
         {
