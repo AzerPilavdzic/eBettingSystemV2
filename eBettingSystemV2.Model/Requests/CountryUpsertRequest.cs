@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace eProdaja.Model.SearchObjects
+namespace eBettingSystemV2.Model.SearchObjects
 {
     public class CountryUpsertRequest
     {

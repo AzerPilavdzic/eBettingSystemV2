@@ -3,14 +3,13 @@
 //using eProdaja.Services.Database;
 using AutoMapper;
 using eBettingSystemV2.Services.Database;
-using RS2_Tourism_Agency.Model.SearchObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eProdaja.Services
+namespace eBettingSystemV2.Services
 {
     public class BaseService<T,TDb,TSearch>:
         IService<T, TSearch>

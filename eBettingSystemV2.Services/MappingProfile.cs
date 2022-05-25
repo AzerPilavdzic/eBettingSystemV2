@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eProdaja.Services
+namespace eBettingSystemV2.Services
 {
     public class MappingProfile : Profile
     {

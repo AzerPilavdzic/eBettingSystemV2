@@ -3,10 +3,9 @@
 //using RS2_Tourism_Agency.Model.Request;
 //using RS2_Tourism_Agency.Model.SearchObjects;
 using AutoMapper;
+using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.Database;
-using eProdaja.Services;
-using RS2_Tourism_Agency.Model.SearchObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 //using TourismAgency.Services.Database;
 
-namespace TourismAgency.Services
+namespace eBettingSystemV2.Services
 {
     public class DrzavaService :
         BaseCRUDService
@@ -43,10 +42,10 @@ namespace TourismAgency.Services
         {
             var filterquery = base.AddFilter(query, search);
 
-            if (!string.IsNullOrWhiteSpace(search?.NazivGT))
+            if (!string.IsNullOrWhiteSpace(search?.Naziv))
             {
 
-                filterquery = filterquery.Where(X => X.Country1.StartsWith(search.NazivGT));
+                filterquery = filterquery.Where(X => X.Country1.StartsWith(search.Naziv));
 
 
             }
