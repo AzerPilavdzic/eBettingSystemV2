@@ -1,8 +1,10 @@
 using eBettingSystemV2.Services;
+using eBettingSystemV2.Services.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 //using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,9 +22,12 @@ namespace eBettingSystemV2
     public class Startup 
     {
         public IConfiguration Configuration { get; }
+        public string DefaultConnection { get; set; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            //var _con = Configuration["DefaultConnection"];
+            DefaultConnection = Configuration["DefaultConnection"];
             //???
             //configuration.GetConnectionString("DefaultConnection");
 
@@ -32,9 +37,12 @@ namespace eBettingSystemV2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //DefaultConnection = Configuration.GetConnectionString();
+            services.AddDbContext<BettingSystemContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString(DefaultConnection)));
             //dodano
             services.AddAutoMapper(typeof(Startup));
-
+            
             //ne radi
             //services.AddScoped<ICountryService, CountryService>();
 
