@@ -81,6 +81,7 @@ namespace eBettingSystemV2.Services
             if (entity != null)
             {
 
+              
                 Mapper.Map(entity, Model);
                 Context.Remove(entity);
             }

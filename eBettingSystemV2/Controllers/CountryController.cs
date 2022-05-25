@@ -40,6 +40,7 @@ namespace eBettingSystemV2.Controllers
         //Dodati Patch
 
 
+<<<<<<< HEAD
 
         [HttpGet]
         [Route("GetAllCountries")]
@@ -61,6 +62,17 @@ namespace eBettingSystemV2.Controllers
         {
             return base.GetById(id);
         }
+=======
+        //[HttpGet]
+        //public IEnumerable<CountryModel> GetCountry([FromQuery] CountrySearchObject search = null)
+        //{
+        //    //return base.Get(search);
+        //    //
+
+        //    return ICountryService.Get(search);
+
+        //}
+>>>>>>> d3482ebeb31bdf7c5418e275232eedfbfaef85c0
 
 
 
