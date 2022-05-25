@@ -15,18 +15,19 @@ using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Services
 {
-    public class DrzavaService :
+    public class CountryService :
         BaseCRUDService
         <
         CountryModel,
         Country,
         CountrySearchObject,
-        object,
-        object
-        >
-        //ICountryService
+        CountryUpsertRequest,
+        CountryUpsertRequest
+        >,
+        ICountryService
+        
     {
-        public DrzavaService(eBettingSystemV2.Services.Database.BettingSystemContext context_, IMapper mapper_) : base(context_, mapper_)
+        public CountryService(eBettingSystemV2.Services.Database.BettingSystemContext context_, IMapper mapper_) : base(context_, mapper_)
         {
 
             Context = context_;
@@ -57,11 +58,7 @@ namespace eBettingSystemV2.Services
 
         }
 
-
-
-
-
-
+       
     }
 }
 
