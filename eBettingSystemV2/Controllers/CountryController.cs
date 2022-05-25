@@ -1,4 +1,6 @@
-﻿using eBettingSystemV2.Models;
+﻿using eBettingSystemV2.Model.SearchObjects;
+using eBettingSystemV2.Models;
+using eBettingSystemV2.Services;
 using eBettingSystemV2.Services.Database;
 //using eBettingSystemV2.Models;
 using eProdaja.Controllers;
