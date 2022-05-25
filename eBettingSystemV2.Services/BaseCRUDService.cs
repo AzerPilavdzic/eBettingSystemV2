@@ -68,5 +68,34 @@ namespace eBettingSystemV2.Services
            
 
         }
+
+        public virtual T Delete(int id)
+        {
+
+            T Model = null;
+
+            var set = Context.Set<TDb>();
+
+            var entity = set.Find(id);
+
+            if (entity != null)
+            {
+
+                Mapper.Map(entity, Model);
+                Context.Remove(entity);
+            }
+            else
+            {
+                return null;
+            
+            }
+
+            Context.SaveChanges();
+
+            return Model;
+
+        }
+
+
     }
 }
