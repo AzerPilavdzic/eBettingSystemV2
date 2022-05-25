@@ -21,7 +21,7 @@ namespace eBettingSystemV2.Services
         where TInsert : class 
         where TUpdate : class
     {
-        public BaseCRUDService(BettingSystemContext context, IMapper mapper)
+        public BaseCRUDService(praksa_dbContext context, IMapper mapper)
         : base(context, mapper) { }
 
         public virtual T Insert(TInsert insert)

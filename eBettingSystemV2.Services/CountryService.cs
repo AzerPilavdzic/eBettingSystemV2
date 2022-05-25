@@ -27,7 +27,7 @@ namespace eBettingSystemV2.Services
         ICountryService
         
     {
-        public CountryService(eBettingSystemV2.Services.Database.BettingSystemContext context_, IMapper mapper_) : base(context_, mapper_)
+        public CountryService(eBettingSystemV2.Services.Database.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
         {
 
             Context = context_;

@@ -44,7 +44,7 @@ namespace eBettingSystemV2
             //var _ime = Configuration.GetConnectionString(connectionString);
 
             string dbConn = Configuration.GetSection("ConnectionString").GetSection("DefaultConnection").Value;
-            services.AddDbContext<BettingSystemContext>(options =>
+            services.AddDbContext<praksa_dbContext>(options =>
             //options.UseNpgsql(Configuration.GetConnectionString(DefaultConnection)));
 
 

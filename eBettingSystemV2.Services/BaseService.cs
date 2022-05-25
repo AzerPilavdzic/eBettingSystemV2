@@ -18,10 +18,10 @@ namespace eBettingSystemV2.Services
         where TDb : class
         where TSearch : BaseSearchObject  //base search service
     {
-        public BettingSystemContext Context { get; set; }
+        public praksa_dbContext Context { get; set; }
         public IMapper Mapper { get; set; }
 
-        public BaseService(BettingSystemContext context , IMapper mapper)
+        public BaseService(praksa_dbContext context , IMapper mapper)
         {
             Context = context;
             Mapper = mapper;

@@ -19,7 +19,7 @@ namespace eBettingSystemV2
             //var host = CreateHostBuilder(args).Build();
             //using (var scope = host.Services.CreateScope())
             //{
-            //    var database = scope.ServiceProvider.GetService<BettingSystemContext>();
+            //    var database = scope.ServiceProvider.GetService<praksa_dbContext>();
 
             //    new SetupService().Init(database);
             //}

@@ -10,7 +10,7 @@ namespace eBettingSystemV2
 {
     public class SetupService
     {
-        public void Init(BettingSystemContext context)
+        public void Init(praksa_dbContext context)
         {
             //context.Database.Migrate();
 

@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace eBettingSystemV2.Services.Database
 {
-    public partial class BettingSystemContext : DbContext
+    public partial class praksa_dbContext : DbContext
     {
-        public BettingSystemContext()
+        public praksa_dbContext()
         {
         }
 
-        public BettingSystemContext(DbContextOptions<BettingSystemContext> options)
+        public praksa_dbContext(DbContextOptions<praksa_dbContext> options)
             : base(options)
         {
         }
@@ -25,8 +25,7 @@ namespace eBettingSystemV2.Services.Database
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                var _con = "Server=192.168.43.21; Port=5432;Database=praksa_db;Username=praksa;Password=12345";
-                optionsBuilder.UseNpgsql(_con);
+                optionsBuilder.UseNpgsql("Server=192.168.43.21; Port=5432;Database=praksa_db;Username=praksa;Password=12345");
             }
         }
 
@@ -34,23 +33,36 @@ namespace eBettingSystemV2.Services.Database
         {
             modelBuilder.Entity<Country>(entity =>
             {
-                entity.ToTable("Country");
+                entity.ToTable("Country", "BettingSystem");
+
+                entity.Property(e => e.CountryId).HasDefaultValueSql("nextval('\"BettingSystem\".country_countryid_seq'::regclass)");
 
                 entity.Property(e => e.Country1)
                     .IsRequired()
-                    .HasMaxLength(100)
-                    .HasColumnName("Country1");
+                    .HasColumnType("character varying");
             });
 
             modelBuilder.Entity<Team>(entity =>
             {
-                entity.ToTable("Team");
+                entity.ToTable("teams", "BettingSystem");
 
-                entity.Property(e => e.City).HasMaxLength(100);
+                entity.Property(e => e.Teamid).HasColumnName("teamid");
 
-                entity.Property(e => e.TeamName)
-                    .IsRequired()
-                    .HasMaxLength(100);
+                entity.Property(e => e.City)
+                    .HasColumnType("character varying")
+                    .HasColumnName("city");
+
+                entity.Property(e => e.Countryid).HasColumnName("countryid");
+
+                entity.Property(e => e.Foundedyear).HasColumnName("foundedyear");
+
+                entity.Property(e => e.Teamname).HasColumnName("teamname");
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.Teams)
+                    .HasForeignKey(d => d.Countryid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("teams_fk");
             });
 
             OnModelCreatingPartial(modelBuilder);
