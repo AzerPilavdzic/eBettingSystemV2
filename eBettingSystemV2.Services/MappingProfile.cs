@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.Database;
 //using eProdaja.Model.Requests;
@@ -15,11 +16,21 @@ namespace eBettingSystemV2.Services
         public MappingProfile()
         {
 
-            //upsert request
-
-
+            //models 
+            CreateMap<Team, TeamModel>();
             CreateMap<Country, CountryModel>();
-            //CreateMap<Team, TeamModel>;
+
+            //requests
+            CreateMap<Country, CountryUpsertRequest>();
+            CreateMap<Team, TeamUpsertRequest>();
+
+
+            //search
+            CreateMap<Country, CountrySearchObject>();
+            CreateMap<Team, TeamSearchObject>();
+
+
+
 
 
         }
