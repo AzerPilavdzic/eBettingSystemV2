@@ -2,6 +2,7 @@
 //using eProdaja.Model.SearchObjects;
 //using eProdaja.Services.Database;
 using AutoMapper;
+using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Services.Database;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace eBettingSystemV2.Services
         ICRUDService<T, TSearch, TInsert, TUpdate>
         where T : class 
         where TDb : class 
-        where TSearch : class
+        where TSearch : BaseSearchObject
         where TInsert : class 
         where TUpdate : class
     {

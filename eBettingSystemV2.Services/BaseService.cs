@@ -2,6 +2,7 @@
 //using eProdaja.Model.SearchObjects;
 //using eProdaja.Services.Database;
 using AutoMapper;
+using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Services.Database;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace eBettingSystemV2.Services
         IService<T, TSearch>
         where T : class 
         where TDb : class
-        where TSearch : class //base search service
+        where TSearch : BaseSearchObject  //base search service
     {
         public BettingSystemContext Context { get; set; }
         public IMapper Mapper { get; set; }
@@ -33,11 +34,11 @@ namespace eBettingSystemV2.Services
 
             entity = AddInclude(entity, search);
 
-            //ne radi 
-            //if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)
-            //{
-            //    entity = entity.Take(search.PageSize.Value).Skip(search.Page.Value * search.PageSize.Value);
-            //}
+            
+            if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)
+            {
+                entity = entity.Take(search.PageSize.Value).Skip(search.Page.Value * search.PageSize.Value);
+            }
 
             var list = entity.ToList();
         //NOTE: elaborate IEnumerable vs IList
