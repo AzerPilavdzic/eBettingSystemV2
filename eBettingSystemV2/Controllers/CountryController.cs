@@ -20,7 +20,7 @@ namespace eBettingSystemV2.Controllers
     {
         public static List<Country> Test = new List<Country>();
         private ICountryService ICountryService { get; set; }
-        private static readonly string[] Summaries = new[]
+        private static readonly string[] TestPodaci = new[]
         {
             "BIH", "CRO", "SLO", "SRB"
         };
@@ -40,17 +40,36 @@ namespace eBettingSystemV2.Controllers
         //Dodati Patch
 
 
+
         [HttpGet]
-        public IEnumerable<CountryModel> GetCountry([FromQuery] CountrySearchObject search = null)
+        [Route("GetAllCountries")]
+        public override IEnumerable<CountryModel> Get([FromQuery] CountrySearchObject search = null)
         {
-            //return base.Get(search);
-            //
+            return base.Get(search);
+        }
 
-            return ICountryService.Get(search);
+        [HttpPost]
+        [Route("InsertCountry")]
+        public override CountryModel Insert(CountryUpsertRequest insert)
+        {
+            return base.Insert(insert);
+        }
 
+        [HttpGet]
+        [Route("GetCountryById/{id}")]
+        public override CountryModel GetById(int id)
+        {
+            return base.GetById(id);
         }
 
 
+
+        [HttpPut]
+        [Route("UpdateCountry/{id}")]
+        public override CountryModel Update(int id, [FromBody] CountryUpsertRequest update)
+        {
+            return base.Update(id, update);
+        }
 
     }
 }

@@ -1,6 +1,9 @@
 ﻿using eBettingSystemV2.Controllers;
+using eBettingSystemV2.Model.SearchObjects;
+using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace eProdaja.Controllers
 {
@@ -30,5 +33,6 @@ namespace eProdaja.Controllers
             var result = ((ICRUDService<T, TSearch, TInsert, TUpdate>)this.Service).Update(id, update);
             return result;
         }
+      
     }
 }
