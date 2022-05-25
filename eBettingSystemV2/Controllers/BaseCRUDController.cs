@@ -7,8 +7,15 @@ namespace eProdaja.Controllers
     public class BaseCRUDController<T, TSearch, TInsert, TUpdate> : BaseController<T, TSearch>
         where T : class where TSearch : class where TInsert : class where TUpdate : class
     {
+        //private ITeamService service;
+
         public BaseCRUDController(ICRUDService<T, TSearch, TInsert, TUpdate> service) : base(service)
         { }
+
+        //public BaseCRUDController(ITeamService service)
+        //{
+        //    this.service = service;
+        //}
 
         [HttpPost]
         public virtual T Insert(TInsert insert)

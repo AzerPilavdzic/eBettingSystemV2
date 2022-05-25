@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
+using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.Database;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 namespace eBettingSystemV2.Services
 {
     public class TeamService:
-        BaseCRUDService<object,Team, BaseSearchObject, object,object>,
+        BaseCRUDService<TeamModel,Team,TeamSearchObject,TeamUpsertRequest, TeamUpsertRequest>,
         ITeamService      
     {
         public TeamService(eBettingSystemV2.Services.Database.BettingSystemContext context_, IMapper mapper_) : base(context_, mapper_)

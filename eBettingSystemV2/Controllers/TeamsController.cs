@@ -16,22 +16,23 @@ namespace eBettingSystemV2.Controllers
     [ApiController]
     [Route("[controller]")]
     //public class CountryController
-    public class CountryController : BaseCRUDController<CountryModel, CountrySearchObject, CountryUpsertRequest, CountryUpsertRequest>
+    public class TeamsController : BaseCRUDController<TeamModel, TeamSearchObject, TeamUpsertRequest, TeamUpsertRequest>
     {
         public static List<Country> Test = new List<Country>();
-        private ICountryService ICountryService { get; set; }
+        //private ITeamService ITeamService { get; set; }
+        private ITeamService ITeamService { get; set; }
         private static readonly string[] Summaries = new[]
         {
             "BIH", "CRO", "SLO", "SRB"
         };
 
-        private readonly ILogger<CountryController> _logger;
-        public CountryController(ICountryService service) : base(service)
+        private readonly ILogger<TeamsController> _logger;
+        public TeamsController(ITeamService service) : base(service)
         {
-            ICountryService = service;
+            ITeamService = service;
         }
 
-        //public CountryController(ILogger<CountryController> logger) : 
+        //public TeamController(ILogger<CountryController> logger) : 
         //{
         //    _logger = logger;
         //}
