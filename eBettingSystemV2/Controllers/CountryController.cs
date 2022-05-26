@@ -57,6 +57,8 @@ namespace eBettingSystemV2.Controllers
         [Route("InsertCountry")]
         public override IActionResult Insert(CountryUpsertRequest insert)
         {
+
+           
             return base.Insert(insert);
         }
 

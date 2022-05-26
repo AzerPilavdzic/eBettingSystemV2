@@ -47,7 +47,21 @@ namespace eBettingSystemV2.Controllers
         [HttpGet("{id}")]
         public virtual IActionResult GetById(int id)
         {
-            return Ok(Service.GetById(id));
+            if (Service.GetById(id) == null)
+            {
+
+                return NotFound("Podatak ne postoji u bazi");
+
+            }
+            else
+            {
+                return Ok(Service.GetById(id));
+
+
+            }
+
+
+          
         }
     }
 }

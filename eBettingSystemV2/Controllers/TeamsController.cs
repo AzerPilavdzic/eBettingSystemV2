@@ -62,27 +62,47 @@ namespace eBettingSystemV2.Controllers
         [Route("InsertTeam")]
         public override IActionResult Insert(TeamUpsertRequest insert)
         {
-           
 
-            try
+            if (insert.Countryid == 0)
             {
 
-                return base.Insert(insert);
+                return BadRequest("Unos nije validan");
+
+
             }
-            catch
+            else
             {
-                if (insert.Countryid == 0)
+                try
                 {
 
 
-                    _logger.LogInformation("CountryId can not be null");
+                    return base.Insert(insert);
+                }
+                catch
+                {
+                    if (insert.Countryid == 0)
+                    {
+
+
+                        _logger.LogInformation("CountryId can not be null");
+                    }
+
+
+                    return null;
+
+
                 }
 
 
-                return null;
-            
-            
+
+
             }
+
+
+
+
+
+           
 
             //return base.Insert(insert)
 
@@ -112,12 +132,14 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteTeam/{Id}")]
+        [Route("DeleteTeam/{TeamId}")]
 
-        public TeamModel Delete(int TeamId)
+        public IActionResult Delete(int TeamId)
         {
+            
 
-           return ITeamService.Delete(TeamId);
+
+           return Ok(ITeamService.Delete(TeamId));
             
         
         
