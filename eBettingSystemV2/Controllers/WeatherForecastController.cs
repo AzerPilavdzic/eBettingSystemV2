@@ -26,7 +26,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [NotImplExceptionFilter]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IEnumerable<WeatherForecast>> Get()
         {
             
 

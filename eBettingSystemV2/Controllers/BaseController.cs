@@ -23,7 +23,7 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpGet]
-        public virtual IActionResult Get([FromQuery] TSearch search = null)
+        public virtual  IActionResult Get([FromQuery] TSearch search = null)
         {
 
             if (Service.Get(search) == null)

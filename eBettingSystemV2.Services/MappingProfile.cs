@@ -16,6 +16,10 @@ namespace eBettingSystemV2.Services
         public MappingProfile()
         {
 
+            //var o1 = new Object1();
+
+
+
             //models 
             CreateMap<Team, TeamModel>();
             CreateMap<TeamModel, Team>();
