@@ -65,9 +65,47 @@ namespace eBettingSystemV2.Services
             var entity = set.Find(id);
 
             return Mapper.Map<T>(entity);
+      
+        }
+
+
+
+        //get by foreign key
+
+        public virtual IQueryable<TDb> ForeignKeyFilter(IQueryable<TDb> query,int Id)
+        {
+                   
+            return query;
+        }
+
+
+
+        public IEnumerable<T> GetbyForeignKey(int Id)
+        {
+            var set = Context.Set<TDb>();
+
+            var list = ForeignKeyFilter(set, Id);
+
+            if (list == null)
+            {
+                return null;
+
+
+            }
+            else
+            {
+
+                return Mapper.Map<IEnumerable<T>>(list);
+            }
 
             
+
+
         }
+
+
+
+
 
 
     }

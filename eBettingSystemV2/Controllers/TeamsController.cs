@@ -124,6 +124,20 @@ namespace eBettingSystemV2.Controllers
         }
 
 
+        [HttpGet]
+        [Route("GetTeamByCountryId/{CountryId}")]
+
+        public IEnumerable<TeamModel> GetTeamByCountryId(int CountryId)
+        {
+
+            return ITeamService.GetbyForeignKey(CountryId);
+        
+        
+        }
+
+
+
+
 
     }
 }

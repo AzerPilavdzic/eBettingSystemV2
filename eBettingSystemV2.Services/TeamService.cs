@@ -25,7 +25,28 @@ namespace eBettingSystemV2.Services
         }
 
 
-       
+
+        // get by foreign key
+        public override IQueryable<Team> ForeignKeyFilter(IQueryable<Team> query,int id)
+        {
+            var Team = query.Where(X => X.Countryid == id);
+
+            if (Team == null)
+            {
+                return null;
+
+
+            }
+            else
+            {
+                return Team;
+
+            }      
+
+        }
+
+
+
 
 
     }
