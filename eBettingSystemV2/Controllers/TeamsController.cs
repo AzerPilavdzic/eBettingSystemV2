@@ -52,7 +52,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetAllTeams")]
-        public override IEnumerable<TeamModel> Get([FromQuery] TeamSearchObject search = null)
+        public override IActionResult Get([FromQuery] TeamSearchObject search = null)
         {
             return base.Get(search);
         }
@@ -60,7 +60,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("InsertTeam")]
-        public override TeamModel Insert(TeamUpsertRequest insert)
+        public override IActionResult Insert(TeamUpsertRequest insert)
         {
            
 
@@ -97,7 +97,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateTeam/{Id}")]
-        public override TeamModel Update(int id, [FromBody] TeamUpsertRequest update)
+        public override IActionResult Update(int id, [FromBody] TeamUpsertRequest update)
         {
             return base.Update(id, update); 
         }
@@ -106,7 +106,7 @@ namespace eBettingSystemV2.Controllers
         [HttpGet]
         [Route("GetTeam/{Id}")]
 
-        public override TeamModel GetById(int id)
+        public override IActionResult GetById(int id)
         {
             return base.GetById(id);    
         }

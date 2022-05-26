@@ -21,17 +21,17 @@ namespace eProdaja.Controllers
         //}
 
         [HttpPost]
-        public virtual T Insert(TInsert insert)
+        public virtual IActionResult Insert(TInsert insert)
         {
             var result = ((ICRUDService<T, TSearch, TInsert, TUpdate>)this.Service).Insert(insert);
-            return result;
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
-        public virtual T Update(int id, [FromBody] TUpdate update)
+        public virtual IActionResult Update(int id, [FromBody] TUpdate update)
         {
             var result = ((ICRUDService<T, TSearch, TInsert, TUpdate>)this.Service).Update(id, update);
-            return result;
+            return Ok(result);
         }
       
     }

@@ -23,15 +23,31 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpGet]
-        public virtual IEnumerable<T> Get([FromQuery] TSearch search = null)
+        public virtual IActionResult Get([FromQuery] TSearch search = null)
         {
-            return Service.Get(search);
+
+            if (Service.Get(search) == null)
+            {
+
+                return NotFound("Podaci ne postoje u bazi");
+
+            }
+            else
+            {
+
+                return Ok(Service.Get(search));
+
+            }
+
+
+
+           
         }
 
         [HttpGet("{id}")]
-        public virtual T GetById(int id)
+        public virtual IActionResult GetById(int id)
         {
-            return Service.GetById(id);
+            return Ok(Service.GetById(id));
         }
     }
 }

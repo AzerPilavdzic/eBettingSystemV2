@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using eBettingSystemV2.ErrorFilters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,11 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpGet]
+        [NotImplExceptionFilter]
         public IEnumerable<WeatherForecast> Get()
         {
+            
+
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
@@ -35,5 +39,23 @@ namespace eBettingSystemV2.Controllers
             })
             .ToArray();
         }
+
+        
+        //[HttpGet]
+        //public IEnumerable<WeatherForecast> GetContact(int id)
+        //{
+        //    var rng = new Random();
+        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        //    {
+        //        Date = DateTime.Now.AddDays(index),
+        //        TemperatureC = rng.Next(-20, 55),
+        //        Summary = Summaries[rng.Next(Summaries.Length)]
+        //    })
+        //    .ToArray();
+        //}
+
+
+
+
     }
 }

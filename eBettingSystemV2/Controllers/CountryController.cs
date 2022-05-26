@@ -48,24 +48,21 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetAllCountries")]
-        public override IEnumerable<CountryModel> Get([FromQuery] CountrySearchObject search = null)
+        public override IActionResult Get([FromQuery] CountrySearchObject search = null)
         {
-            
-
-
             return base.Get(search);
         }
 
         [HttpPost]
         [Route("InsertCountry")]
-        public override CountryModel Insert(CountryUpsertRequest insert)
+        public override IActionResult Insert(CountryUpsertRequest insert)
         {
             return base.Insert(insert);
         }
 
         [HttpGet]
         [Route("GetCountryById/{id}")]
-        public override CountryModel GetById(int id)
+        public override IActionResult GetById(int id)
         {
             return base.GetById(id);
         }
@@ -75,7 +72,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateCountry/{id}")]
-        public override CountryModel Update(int id, [FromBody] CountryUpsertRequest update)
+        public override IActionResult Update(int id, [FromBody] CountryUpsertRequest update)
         {
             return base.Update(id, update);
         }
