@@ -21,16 +21,26 @@ namespace eBettingSystemV2.Controllers
         public static List<Country> Test = new List<Country>();
         //private ITeamService ITeamService { get; set; }
         private ITeamService ITeamService { get; set; }
+        private readonly ILogger<TeamsController> _logger;
+
+
         private static readonly string[] Summaries = new[]
         {
             "BIH", "CRO", "SLO", "SRB"
         };
 
-        private readonly ILogger<TeamsController> _logger;
-        public TeamsController(ITeamService service) : base(service)
+       
+        public TeamsController(ITeamService service, ILogger<TeamsController> logger) : base(service)
         {
             ITeamService = service;
+            _logger = logger;
+
         }
+
+
+        
+
+
 
         //public TeamController(ILogger<CountryController> logger) : 
         //{
@@ -52,7 +62,36 @@ namespace eBettingSystemV2.Controllers
         [Route("InsertTeam")]
         public override TeamModel Insert(TeamUpsertRequest insert)
         {
-            return base.Insert(insert); 
+           
+
+            try
+            {
+
+                return base.Insert(insert);
+            }
+            catch
+            {
+                if (insert.Countryid == 0)
+                {
+
+
+                    _logger.LogInformation("CountryId can not be null");
+                }
+
+
+                return null;
+            
+            
+            }
+
+            //return base.Insert(insert)
+
+
+
+
+
+
+            
         }
 
 

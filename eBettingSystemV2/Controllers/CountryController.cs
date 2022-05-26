@@ -20,15 +20,20 @@ namespace eBettingSystemV2.Controllers
     {
         public static List<Country> Test = new List<Country>();
         private ICountryService ICountryService { get; set; }
+        private readonly ILogger<TeamsController> _logger;
+
+
+
         private static readonly string[] TestPodaci = new[]
         {
             "BIH", "CRO", "SLO", "SRB"
         };
 
-        private readonly ILogger<CountryController> _logger;
-        public CountryController(ICountryService service) : base(service)
+       
+        public CountryController(ICountryService service,ILogger<TeamsController> logger) : base(service)
         {
             ICountryService = service;
+            _logger = logger;
         }
 
         //public CountryController(ILogger<CountryController> logger) : 
@@ -45,6 +50,9 @@ namespace eBettingSystemV2.Controllers
         [Route("GetAllCountries")]
         public override IEnumerable<CountryModel> Get([FromQuery] CountrySearchObject search = null)
         {
+            
+
+
             return base.Get(search);
         }
 

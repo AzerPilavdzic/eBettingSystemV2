@@ -6,6 +6,7 @@ using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.Database;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,8 @@ namespace eBettingSystemV2.Services
         ICountryService
         
     {
+        
+
         public CountryService(eBettingSystemV2.Services.Database.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
         {
 
@@ -58,7 +61,18 @@ namespace eBettingSystemV2.Services
 
         }
 
-       
+        public override CountryModel Insert(CountryUpsertRequest insert)
+        {
+           
+              return  base.Insert(insert);
+
+
+         
+           
+        }
+
+
+
     }
 }
 

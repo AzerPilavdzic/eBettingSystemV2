@@ -1,6 +1,7 @@
 ﻿
 using eBettingSystemV2.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace eBettingSystemV2.Controllers
     public class BaseController<T, TSearch> : ControllerBase where T : class where TSearch : class
     {
         public IService<T, TSearch> Service { get; set; }
+       
 
         public BaseController(IService<T, TSearch> service)
         {
