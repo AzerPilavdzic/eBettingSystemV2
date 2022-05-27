@@ -12,5 +12,6 @@ namespace eBettingSystemV2.Services
         IEnumerable<T> Get(TSearch search = null);
         T GetById(int id);
         IEnumerable<T> GetbyForeignKey(int Id);
+        bool CheckPage0(TSearch search = null);
     }
 }

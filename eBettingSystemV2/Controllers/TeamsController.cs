@@ -54,6 +54,7 @@ namespace eBettingSystemV2.Controllers
         [Route("GetAllTeams")]
         public override IActionResult Get([FromQuery] TeamSearchObject search = null)
         {
+
             return base.Get(search);
         }
 
