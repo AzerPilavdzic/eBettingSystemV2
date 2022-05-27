@@ -48,17 +48,8 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetAllCountries")]
-        public override IActionResult Get([FromQuery] CountrySearchObject search = null)
+        public override Task<ActionResult<IEnumerable<CountryModel>>> Get([FromQuery] CountrySearchObject search = null)
         {
-
-           
-
-
-            //if (search.Page == 0 || search.PageSize==0)
-            //{
-            //    return BadRequest("PageNumber ili PageSize ne smiju biti 0");
-            
-            //}
 
             return base.Get(search);
         }

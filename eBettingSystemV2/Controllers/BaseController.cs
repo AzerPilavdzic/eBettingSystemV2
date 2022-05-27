@@ -24,21 +24,34 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpGet]
-        public virtual  IActionResult Get([FromQuery] TSearch search = null)
+        public virtual async Task<ActionResult<IEnumerable<T>>> Get([FromQuery] TSearch search = null)
         {
             if (Service.CheckPage0(search))
             {
 
-                return BadRequest("PageNumber ili PageSize ne smiju biti 0");
+                return  BadRequest("PageNumber ili PageSize ne smiju biti 0");
             
             }
-           
+
+            if (Service.CheckNegative(search))
+            {
+
+                return BadRequest("vrijednost ne moze biti negativna");
+
+            }
+
+
+
+            //var broj = Service.Get(search).Result.Count();
+
+
 
 
             try
             {
+                var List = await Service.Get(search);
 
-                if (Service.Get(search).Count() == 0)
+                if (List.Count()==0)
                 {
 
                     //search.
@@ -49,21 +62,23 @@ namespace eBettingSystemV2.Controllers
                 else
                 {
 
-                    return Ok(Service.Get(search));
+                    return  Ok(List);
 
                 }
+
+
             }
             catch
             {
 
 
-                return BadRequest("vrijednost ne moze biti negativna"); 
-            
-            
+                return BadRequest("Greska na serveru");
+
+
             }
 
 
-           
+
         }
 
         [HttpGet("{id}")]
