@@ -28,7 +28,7 @@ namespace eBettingSystemV2.Services
         }
         public virtual IEnumerable<T> Get(TSearch search = null)
         {
-            dynamic entity = Context.Set<TDb>().AsQueryable();
+            var entity = Context.Set<TDb>().AsQueryable();
 
             entity = AddFilter(entity, search);
 
