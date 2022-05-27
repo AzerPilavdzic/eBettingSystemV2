@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 //using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -53,7 +54,6 @@ namespace eBettingSystemV2
             options.UseNpgsql(dbConn));
             //Host = my_host; Database = my_db; Username = my_user; Password = my_pw");
 
-
             
             //ne radi
             services.AddTransient<ICountryService, CountryService>();
@@ -66,11 +66,22 @@ namespace eBettingSystemV2
 
 
 
+            services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                //options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.DefaultApiVersion = ApiVersion.Default;
+                //options.ApiVersionReader = new MediaTypeApiVersionReader("version");
+                options.ApiVersionReader = ApiVersionReader.Combine(
+                    new MediaTypeApiVersionReader("version"),
+                    new MediaTypeApiVersionReader("X-version"));
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "eBettingSystemV2", Version = "v1" });
+                c.SwaggerDoc("v2", new OpenApiInfo { Title = "eBettingSystemV2", Version = "v2" });
             });
         }
 
@@ -82,6 +93,7 @@ namespace eBettingSystemV2
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "eBettingSystemV2 v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "eBettingSystemV2 v2"));
             }
 
             app.UseHttpsRedirection();
