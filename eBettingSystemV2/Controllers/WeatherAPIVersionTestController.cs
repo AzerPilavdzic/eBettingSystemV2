@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Controllers
 {
-    [ApiController]
-    [Route("[controller]/api/v{version:apiVersion}/weatherforecast")]
-    [ApiVersion("1.0", Deprecated = true)] //za testiranje api verzije
-    [ApiVersion("2.0")]
+    //[ApiController]
+    //[Route("[controller]/api/v{version:apiVersion}/weatherforecast")]
+    //[ApiVersion("1.0", Deprecated = true)] //za testiranje api verzije
+    //[ApiVersion("2.0")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -61,18 +61,5 @@ namespace eBettingSystemV2.Controllers
             .ToArray();
 
         }
-
-        //[HttpGet]
-        //public IEnumerable<WeatherForecast> GetContact(int id)
-        //{
-        //    var rng = new Random();
-        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //    {
-        //        Date = DateTime.Now.AddDays(index),
-        //        TemperatureC = rng.Next(-20, 55),
-        //        Summary = Summaries[rng.Next(Summaries.Length)]
-        //    })
-        //    .ToArray();
-        //}
     }
 }
