@@ -52,7 +52,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetAllTeams")]
-        public override IActionResult Get([FromQuery] TeamSearchObject search = null)
+        public override Task<ActionResult<IEnumerable<TeamModel>>> Get([FromQuery] TeamSearchObject search = null)
         {
 
             return base.Get(search);

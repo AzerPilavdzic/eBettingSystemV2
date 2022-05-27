@@ -4,6 +4,7 @@
 using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Services.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,39 +34,49 @@ namespace eBettingSystemV2.Services
             return search.Page == 0 || search.PageSize == 0;
             
         }
-
-
-        public virtual IEnumerable<T> Get(TSearch search = null)
+        public virtual bool CheckNegative(TSearch search = null)
         {
-          
+
+            return search.Page < 0 || search.PageSize < 0;
+
+        }
 
 
 
 
-            var entity = Context.Set<TDb>().AsQueryable();
+        public async virtual  Task<IEnumerable<T>> Get(TSearch search = null)
+        {
 
-            entity = AddFilter(entity, search);
 
-            entity = AddInclude(entity, search);
+            var entity = await Context.Set<TDb>().ToListAsync();
 
-            
+            var quary = entity.ToList().AsQueryable();
+
+            entity = AddFilter(quary, search).ToList();
+
+            entity = AddInclude(quary, search).ToList();
+
+
             if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)
             {
                 //search.Page.Value* search.PageSize.Value
 
-                
-                    entity = entity.Skip((search.Page.Value - 1) * search.PageSize.Value)
-                        .Take(search.PageSize.Value);
-                
 
-                                  
-                    
+                entity = entity.Skip((search.Page.Value - 1) * search.PageSize.Value)
+                    .Take(search.PageSize.Value).ToList();
+
+
+
+
 
             }
 
             var list = entity.ToList();
-        //NOTE: elaborate IEnumerable vs IList
-            return Mapper.Map<IList<T>>(list);
+            //NOTE: elaborate IEnumerable vs IList
+
+            //puca ovdje
+
+            return Mapper.Map<IEnumerable<T>>(list);
          
         }
 

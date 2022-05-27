@@ -9,9 +9,10 @@ namespace eBettingSystemV2.Services
 {
     public interface IService<T, TSearch> where T : class where TSearch : class
     {
-        IEnumerable<T> Get(TSearch search = null);
+        Task<IEnumerable<T>> Get(TSearch search = null);
         T GetById(int id);
         IEnumerable<T> GetbyForeignKey(int Id);
         bool CheckPage0(TSearch search = null);
+        bool CheckNegative(TSearch search = null);
     }
 }
