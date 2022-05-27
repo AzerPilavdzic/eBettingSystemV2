@@ -1,4 +1,5 @@
 ﻿
+using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,20 +26,41 @@ namespace eBettingSystemV2.Controllers
         [HttpGet]
         public virtual  IActionResult Get([FromQuery] TSearch search = null)
         {
-
-            if (Service.Get(search) == null)
+            if (Service.CheckPage0(search))
             {
 
-                return NotFound("Podaci ne postoje u bazi");
-
+                return BadRequest("PageNumber ili PageSize ne smiju biti 0");
+            
             }
-            else
+           
+
+
+            try
             {
 
-                return Ok(Service.Get(search));
+                if (Service.Get(search).Count() == 0)
+                {
 
+                    //search.
+
+                    return NotFound("Podaci ne postoje u bazi");
+
+                }
+                else
+                {
+
+                    return Ok(Service.Get(search));
+
+                }
             }
+            catch
+            {
 
+
+                return BadRequest("vrijednost ne moze biti negativna"); 
+            
+            
+            }
 
 
            

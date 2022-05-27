@@ -26,8 +26,22 @@ namespace eBettingSystemV2.Services
             Context = context;
             Mapper = mapper;
         }
+
+
+        public virtual bool CheckPage0(TSearch search=null)
+        {
+            return search.Page == 0 || search.PageSize == 0;
+            
+        }
+
+
         public virtual IEnumerable<T> Get(TSearch search = null)
         {
+          
+
+
+
+
             var entity = Context.Set<TDb>().AsQueryable();
 
             entity = AddFilter(entity, search);
@@ -37,9 +51,16 @@ namespace eBettingSystemV2.Services
             
             if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)
             {
+                //search.Page.Value* search.PageSize.Value
 
-                int broj = search.Page.Value * search.PageSize.Value;
-                entity = entity.Take(search.PageSize.Value).Skip(search.Page.Value * search.PageSize.Value);
+                
+                    entity = entity.Skip((search.Page.Value - 1) * search.PageSize.Value)
+                        .Take(search.PageSize.Value);
+                
+
+                                  
+                    
+
             }
 
             var list = entity.ToList();
