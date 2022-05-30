@@ -91,10 +91,12 @@ namespace eBettingSystemV2
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+            }
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "eBettingSystemV2 v1"));
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "eBettingSystemV2 v2"));
-            }
+
 
             app.UseHttpsRedirection();
 

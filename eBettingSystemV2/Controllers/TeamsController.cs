@@ -63,65 +63,15 @@ namespace eBettingSystemV2.Controllers
         [Route("InsertTeam")]
         public override IActionResult Insert(TeamUpsertRequest insert)
         {
-
-
             try
             {
-
                   return base.Insert(insert);
             }
             catch
             {
-                
-
-
                  _logger.LogInformation("CountryId can not be null");
                  return BadRequest("Unos nije validan");
-                
-
-
-               
-
-
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
-
-
-
-
-           
-
-            //return base.Insert(insert)
-
-
-
-
-
-
-            
         }
 
 
@@ -134,7 +84,7 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpGet]
-        [Route("GetTeam/{Id}")]
+        [Route("GetTeamById/{TeamId}")]
 
         public override IActionResult GetById(int id)
         {
@@ -142,28 +92,18 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteTeam/{TeamId}")]
+        [Route("DeleteTeamById/{TeamId}")]
 
         public async Task<IActionResult> Delete(int TeamId)
         {
             if (ITeamService.Delete(TeamId) != null)
             {
                 return Ok($"Team sa Id {TeamId} je uspjesno obrisan");
-
-
-
             }
             else
             {
-
                 return Ok($"Team ne postoji ");
-
-
             }
-           
-
-
-        
         }
 
 
@@ -172,15 +112,7 @@ namespace eBettingSystemV2.Controllers
 
         public IEnumerable<TeamModel> GetTeamByCountryId(int CountryId)
         {
-
             return ITeamService.GetbyForeignKey(CountryId);
-        
-        
         }
-
-
-
-
-
     }
 }

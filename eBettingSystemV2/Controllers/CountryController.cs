@@ -72,7 +72,6 @@ namespace eBettingSystemV2.Controllers
 
 
 
-
         [HttpPut]
         [Route("UpdateCountry/{id}")]
         public override IActionResult Update(int id, [FromBody] CountryUpsertRequest update)
@@ -80,5 +79,18 @@ namespace eBettingSystemV2.Controllers
             return base.Update(id, update);
         }
 
+        [HttpDelete]
+        [Route("DeleteCountryById/{CountryId}")]
+        public async Task<IActionResult> Delete(int CountryId)
+        {
+            if (ICountryService.Delete(CountryId) != null)
+            {
+                return Ok($"Drzava sa Id {CountryId} je uspjesno obrisana");
+            }
+            else
+            {
+                return Ok($"Drzava ne postoji ");
+            }
+        }
     }
 }
