@@ -7,6 +7,7 @@ namespace eBettingSystemV2.Model.SearchObjects
 {
     public class TeamSearchObject : BaseSearchObject
     {
+        public int CountryId { get; set; }
         public string  Naziv { get; set; }
         public string City { get; set; }
 
