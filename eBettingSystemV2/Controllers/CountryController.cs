@@ -65,7 +65,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetCountryById/{id}")]
-        public override IActionResult GetById(int id)
+        public override Task<ActionResult<CountryModel>> GetById(int id)
         {
             return base.GetById(id);
         }

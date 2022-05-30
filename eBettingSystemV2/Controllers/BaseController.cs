@@ -82,9 +82,13 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpGet("{id}")]
-        public virtual IActionResult GetById(int id)
+        public virtual async Task<ActionResult<T>> GetById(int id)
         {
-            if (Service.GetById(id) == null)
+
+            var Model = await Service.GetByIdAsync(id);
+
+
+            if (Model == null)
             {
 
                 return NotFound("Podatak ne postoji u bazi");
@@ -92,7 +96,7 @@ namespace eBettingSystemV2.Controllers
             }
             else
             {
-                return Ok(Service.GetById(id));
+                return Ok(Model);
 
 
             }
@@ -100,5 +104,34 @@ namespace eBettingSystemV2.Controllers
 
           
         }
+
+
+
+        ////za testiranje
+        //[HttpGet("{id}")]
+        //[Route("For Testing")]
+        //public virtual IActionResult GetByIdasync(int id)
+        //{
+        //    if (Service.GetById(id) == null)
+        //    {
+
+        //        return NotFound("Podatak ne postoji u bazi");
+
+        //    }
+        //    else
+        //    {
+        //        return Ok(Service.GetById(id));
+
+
+        //    }
+
+
+
+        //}
+
+
+
+
+
     }
 }
