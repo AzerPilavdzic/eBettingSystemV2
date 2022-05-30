@@ -4,6 +4,7 @@
 using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Services.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,11 +47,16 @@ namespace eBettingSystemV2.Services
 
         }
 
+
+
         public virtual T Update(int id, TUpdate update)
         {
             var set = Context.Set<TDb>();
 
             var entity = set.Find(id);
+
+            update = Coalesce(update, entity);
+
 
             if (entity != null)
             {
@@ -68,6 +74,8 @@ namespace eBettingSystemV2.Services
            
 
         }
+
+        
 
         public virtual T Delete(int id)
         {
@@ -103,6 +111,13 @@ namespace eBettingSystemV2.Services
 
         }
 
+        public virtual TUpdate Coalesce(TUpdate update,TDb entry)
+        {
 
+
+
+            return update;
+
+        }
     }
 }

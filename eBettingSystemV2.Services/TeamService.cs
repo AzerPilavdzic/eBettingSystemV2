@@ -46,6 +46,29 @@ namespace eBettingSystemV2.Services
         }
 
 
+        public override TeamUpsertRequest Coalesce(TeamUpsertRequest update, Team entry)
+        {
+
+            var entry2 = new TeamUpsertRequest
+            {
+                TeamName = update.TeamName == "string" ? entry.Teamname : update.TeamName,
+                City = update.City == "string" ? entry.City : update.City,
+                Countryid = update.Countryid == 0 ? entry.Countryid : update.Countryid,
+                Foundedyear = update.Foundedyear == 0 ? entry.Foundedyear : update.Foundedyear,
+
+            };
+
+
+            return entry2;
+
+
+
+
+
+
+        }
+
+
 
 
 
