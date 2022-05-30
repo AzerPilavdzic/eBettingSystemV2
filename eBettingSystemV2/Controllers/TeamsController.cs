@@ -98,7 +98,7 @@ namespace eBettingSystemV2.Controllers
         {
             if (ITeamService.Delete(TeamId) != null)
             {
-                return Ok($"Team sa Id {TeamId} je uspjesno obrisan");
+                return Ok($"id = {TeamId};Tim je uspješno izbrisan") ;
             }
             else
             {
