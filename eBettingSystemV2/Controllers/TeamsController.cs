@@ -84,7 +84,7 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpGet]
-        [Route("GetTeamById/{TeamId}")]
+        [Route("GetTeamById/{id}")]
 
         public override IActionResult GetById(int id)
         {
