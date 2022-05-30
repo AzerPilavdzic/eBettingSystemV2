@@ -48,11 +48,15 @@ namespace eBettingSystemV2.Services
 
             if (!string.IsNullOrWhiteSpace(search?.Naziv))
             {
+                filterquery = filterquery.Where(X => X.CountryName.ToLower().StartsWith(search.Naziv.ToLower()));
+            }
 
-                filterquery = filterquery.Where(X => X.CountryName.StartsWith(search.Naziv));
-
+            if (search.CountryId != null)
+            {
+                filterquery = filterquery.Where(X => X.CountryId==search.CountryId);
 
             }
+
             return filterquery;
 
             //IQueryable<object> T = null;
@@ -63,8 +67,13 @@ namespace eBettingSystemV2.Services
 
         public override CountryModel Insert(CountryUpsertRequest insert)
         {
-           
-              return  base.Insert(insert);
+           var entity =  Context.Countries.Where(x => x.CountryName.ToLower() == insert.CountryName.ToLower());
+
+            if (entity==null)
+            {
+              return base.Insert(insert);
+            }
+            return null;
 
 
          
