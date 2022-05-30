@@ -23,8 +23,26 @@ namespace eProdaja.Controllers
         [HttpPost]
         public virtual IActionResult Insert(TInsert insert)
         {
+
             var result = ((ICRUDService<T, TSearch, TInsert, TUpdate>)this.Service).Insert(insert);
-            return Ok(result);
+
+            if (result == null)
+            {
+
+                return BadRequest("Ime vec postoji");
+
+
+            }
+            else
+            {
+
+                return Ok(result);
+            }
+
+
+
+
+          
         }
 
         [HttpPut("{id}")]
@@ -33,6 +51,8 @@ namespace eProdaja.Controllers
             var result = ((ICRUDService<T, TSearch, TInsert, TUpdate>)this.Service).Update(id, update);
             return Ok(result);
         }
-      
+
+       
+
     }
 }

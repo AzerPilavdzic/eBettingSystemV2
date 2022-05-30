@@ -77,7 +77,10 @@ namespace eBettingSystemV2
                     new MediaTypeApiVersionReader("X-version"));
             });
 
-            services.AddControllers();
+            //edited
+            services.AddControllers().AddNewtonsoftJson();
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "eBettingSystemV2", Version = "v1" });

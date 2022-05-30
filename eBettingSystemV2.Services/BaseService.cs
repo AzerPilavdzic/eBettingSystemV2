@@ -54,7 +54,7 @@ namespace eBettingSystemV2.Services
 
             entity = AddFilter(quary, search).ToList();
 
-            entity = AddInclude(quary, search).ToList();
+            //entity = AddInclude(entity, search).ToList();
 
 
             if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)

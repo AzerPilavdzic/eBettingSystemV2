@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace eBettingSystemV2.Services
 
         T Update(int id, TUpdate update);
 
+      
         T Delete(int id);
 
     }

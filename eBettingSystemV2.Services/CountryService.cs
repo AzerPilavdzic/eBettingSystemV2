@@ -67,20 +67,32 @@ namespace eBettingSystemV2.Services
 
         public override CountryModel Insert(CountryUpsertRequest insert)
         {
-           var entity =  Context.Countries.Where(x => x.CountryName.ToLower() == insert.CountryName.ToLower());
 
-            if (entity==null)
-            {
+
+            
+          
               return base.Insert(insert);
-            }
-            return null;
-
+            
 
          
            
         }
 
-        
+        public override bool BeforeInsertBool(CountryUpsertRequest insert)
+        {
+            var entity = Context.Countries.Where(x=>x.CountryName.ToLower()==insert.CountryName.ToLower()).FirstOrDefault();
+
+
+            return entity != null ? true : false;
+
+
+
+
+
+
+        }
+
+
 
 
 

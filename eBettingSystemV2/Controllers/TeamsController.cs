@@ -4,6 +4,7 @@ using eBettingSystemV2.Services;
 using eBettingSystemV2.Services.Database;
 //using eBettingSystemV2.Models;
 using eProdaja.Controllers;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -114,5 +115,21 @@ namespace eBettingSystemV2.Controllers
         {
             return ITeamService.GetbyForeignKey(CountryId);
         }
+
+        [HttpPut]
+        [Route("UpdateTeamTest/{Id}")]
+        public IActionResult Update(int Id, [FromBody] JsonPatchDocument update)
+        {
+
+            var result = ITeamService.UpdateJson(Id, update);
+            return Ok(result);
+
+
+
+
+
+        }
+
+
     }
 }

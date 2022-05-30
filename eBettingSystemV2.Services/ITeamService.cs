@@ -1,5 +1,6 @@
 ﻿using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,8 @@ namespace eBettingSystemV2.Services
             TeamUpsertRequest,
             TeamUpsertRequest>
     {
-
+        //test
+        TeamModel UpdateJson(int id, JsonPatchDocument update);
 
 
 
