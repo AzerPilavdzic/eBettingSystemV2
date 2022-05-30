@@ -127,9 +127,9 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateTeam/{Id}")]
-        public override IActionResult Update(int id, [FromBody] TeamUpsertRequest update)
+        public override IActionResult Update(int Id, [FromBody] TeamUpsertRequest update)
         {
-            return base.Update(id, update); 
+            return base.Update(Id, update); 
         }
 
 
