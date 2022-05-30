@@ -85,7 +85,7 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpGet]
-        [Route("GetTeamById/{TeamId}")]
+        [Route("GetTeamById/{id}")]
 
         public override Task<ActionResult<TeamModel>> GetById(int id)
         {
