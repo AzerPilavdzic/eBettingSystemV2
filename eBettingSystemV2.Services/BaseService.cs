@@ -13,11 +13,12 @@ using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Services
 {
-    public class BaseService<T,TDb,TSearch>:
-        IService<T, TSearch>
+    public class BaseService<T,TDb,TSearch,Tless>:
+        IService<T, TSearch,Tless>
         where T : class 
         where TDb : class
-        where TSearch : BaseSearchObject  //base search service
+        where TSearch : BaseSearchObject//base search service
+        where Tless : class
     {
         public praksa_dbContext Context { get; set; }
         public IMapper Mapper { get; set; }

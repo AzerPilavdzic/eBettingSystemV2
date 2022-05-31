@@ -17,7 +17,7 @@ namespace eBettingSystemV2.Controllers
     [ApiController]
     [Route("[controller]")]
     //public class CountryController
-    public class TeamsController : BaseCRUDController<TeamModel, TeamSearchObject, TeamUpsertRequest, TeamUpsertRequest>
+    public class TeamsController : BaseCRUDController<TeamModel, TeamSearchObject, TeamUpsertRequest, TeamUpsertRequest,object>
     {
         public static List<Country> Test = new List<Country>();
         //private ITeamService ITeamService { get; set; }

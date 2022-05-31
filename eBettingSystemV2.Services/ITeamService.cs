@@ -13,7 +13,8 @@ namespace eBettingSystemV2.Services
         ICRUDService<TeamModel,
             TeamSearchObject,
             TeamUpsertRequest,
-            TeamUpsertRequest>
+            TeamUpsertRequest,
+            object>
     {
         //test
         TeamModel UpdateJson(int id, JsonPatchDocument update);

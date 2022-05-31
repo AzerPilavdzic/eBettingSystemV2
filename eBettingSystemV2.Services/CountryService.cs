@@ -23,7 +23,8 @@ namespace eBettingSystemV2.Services
         Country,
         CountrySearchObject,
         CountryUpsertRequest,
-        CountryUpsertRequest
+        CountryUpsertRequest,
+        object
         >,
         ICountryService
         
