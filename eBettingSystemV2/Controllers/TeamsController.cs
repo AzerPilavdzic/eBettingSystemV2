@@ -87,7 +87,6 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetTeamById/{id}")]
-
         public override Task<ActionResult<TeamModel>> GetById(int id)
         {
             return base.GetById(id);    
@@ -95,10 +94,11 @@ namespace eBettingSystemV2.Controllers
 
         [HttpDelete]
         [Route("DeleteTeamById/{TeamId}")]
-
-        public async Task<IActionResult> Delete(int TeamId)
+        public async Task<ActionResult<TeamModel>> Delete(int TeamId)
         {
-            if (ITeamService.Delete(TeamId) != null)
+            var result = await ITeamService.DeleteAsync(TeamId);
+
+            if (result != null)
             {
                 return Ok($"id = {TeamId};Tim je uspješno izbrisan") ;
             }
