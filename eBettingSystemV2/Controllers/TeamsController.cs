@@ -63,6 +63,7 @@ namespace eBettingSystemV2.Controllers
         [Route("InsertTeam")]
         public override IActionResult Insert(TeamUpsertRequest insert)
         {
+
             try
             {
                   return base.Insert(insert);
