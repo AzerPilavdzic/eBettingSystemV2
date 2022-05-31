@@ -14,7 +14,7 @@ namespace eBettingSystemV2.Services
             TeamSearchObject,
             TeamUpsertRequest,
             TeamUpsertRequest,
-            object>
+            TeamModelLess>
     {
         //test
         TeamModel UpdateJson(int id, JsonPatchDocument update);

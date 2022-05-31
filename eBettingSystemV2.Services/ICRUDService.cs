@@ -15,7 +15,7 @@ namespace eBettingSystemV2.Services
         where TUpdate : class
         where Tless:class
     {
-        T Insert(TInsert insert);
+        Tless Insert(TInsert insert);
 
         T Update(int id, TUpdate update);
 
