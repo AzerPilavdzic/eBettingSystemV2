@@ -62,17 +62,18 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("InsertTeam")]
-        public override IActionResult Insert(TeamUpsertRequest insert)
+        public override async Task<ActionResult<TeamModel>> Insert(TeamUpsertRequest insert)
         {
+            var result = await base.Insert(insert);
 
             try
             {
-                  return base.Insert(insert);
+                  return result;
             }
             catch
             {
                  _logger.LogInformation("CountryId can not be null");
-                 return BadRequest("Unos nije validan");
+                 return NotFound();
             }
         }
 

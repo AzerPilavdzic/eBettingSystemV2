@@ -22,6 +22,7 @@ namespace eBettingSystemV2.Services
       
         T Delete(int id);
         Task<T> DeleteAsync(int id);
+        Task<T> InsertAsync(TInsert insert);
 
     }
 }
