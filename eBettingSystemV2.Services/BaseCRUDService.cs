@@ -125,6 +125,39 @@ namespace eBettingSystemV2.Services
             return Model;
 
         }
+        public virtual async Task<T> DeleteAsync(int id)
+        {
+
+            T Model = null;
+
+            var set = await Context.Set<TDb>().FindAsync(id);
+
+            //var entity = set.Find(id);
+
+
+
+
+            if (set != null)
+            {
+
+                Model = Mapper.Map<T>(set);
+
+                //Mapper.Map(entity,Model);
+
+
+                Context.Remove(set);
+            }
+            else
+            {
+                return null;
+
+            }
+
+            Context.SaveChanges();
+
+            return Model;
+
+        }
 
         public virtual TUpdate Coalesce(TUpdate update,TDb entry)
         {
