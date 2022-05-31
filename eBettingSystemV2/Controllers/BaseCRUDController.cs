@@ -7,12 +7,17 @@ using System;
 
 namespace eProdaja.Controllers
 {
-    public class BaseCRUDController<T, TSearch, TInsert, TUpdate> : BaseController<T, TSearch>
-        where T : class where TSearch : class where TInsert : class where TUpdate : class
+    public class BaseCRUDController<T, TSearch, TInsert, TUpdate,Tless> : 
+        BaseController<T, TSearch,Tless>
+        where T : class 
+        where TSearch : class 
+        where TInsert : class 
+        where TUpdate : class
+        where Tless:class
     {
         //private ITeamService service;
 
-        public BaseCRUDController(ICRUDService<T, TSearch, TInsert, TUpdate> service) : base(service)
+        public BaseCRUDController(ICRUDService<T, TSearch, TInsert, TUpdate,Tless> service) : base(service)
         { }
 
         //public BaseCRUDController(ITeamService service)
@@ -24,7 +29,7 @@ namespace eProdaja.Controllers
         public virtual IActionResult Insert(TInsert insert)
         {
 
-            var result = ((ICRUDService<T, TSearch, TInsert, TUpdate>)this.Service).Insert(insert);
+            var result = ((ICRUDService<T, TSearch, TInsert, TUpdate,Tless>)this.Service).Insert(insert);
 
             if (result == null)
             {
@@ -48,7 +53,7 @@ namespace eProdaja.Controllers
         [HttpPut("{id}")]
         public virtual IActionResult Update(int id, [FromBody] TUpdate update)
         {
-            var result = ((ICRUDService<T, TSearch, TInsert, TUpdate>)this.Service).Update(id, update);
+            var result = ((ICRUDService<T, TSearch, TInsert, TUpdate,Tless>)this.Service).Update(id, update);
             return Ok(result);
         }
 

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace eBettingSystemV2.Services
 {
     public class TeamService:
-        BaseCRUDService<TeamModel,Team,TeamSearchObject,TeamUpsertRequest, TeamUpsertRequest>,
+        BaseCRUDService<TeamModel,Team,TeamSearchObject,TeamUpsertRequest, TeamUpsertRequest,object>,
         ITeamService      
     {
         public TeamService(eBettingSystemV2.Services.Database.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)

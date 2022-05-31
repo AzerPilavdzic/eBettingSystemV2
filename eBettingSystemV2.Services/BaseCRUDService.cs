@@ -14,14 +14,15 @@ using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Services
 {
-    public class BaseCRUDService<T, TDb, TSearch, TInsert, TUpdate>
-        : BaseService<T, TDb, TSearch>,
-        ICRUDService<T, TSearch, TInsert, TUpdate>
+    public class BaseCRUDService<T, TDb, TSearch, TInsert, TUpdate,Tless>
+        : BaseService<T, TDb, TSearch,Tless>,
+        ICRUDService<T, TSearch, TInsert, TUpdate,Tless>
         where T : class 
         where TDb : class 
         where TSearch : BaseSearchObject
         where TInsert : class 
         where TUpdate : class
+        where Tless : class
     {
         public BaseCRUDService(praksa_dbContext context, IMapper mapper)
         : base(context, mapper) { }
