@@ -2,6 +2,7 @@
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.Database;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,13 +46,38 @@ namespace eBettingSystemV2.Services
 
         }
 
+        public virtual TeamModel UpdateJson(int id, JsonPatchDocument update)
+        {
+            //var set = Context.Set<TDb>();
+
+            var entity = Context.Teams.Find(id);
+
+            //update = Coalesce(update, entity);
+
+
+            if (entity != null)
+            {
+                update.ApplyTo(entity);
+            }
+            //else
+            //{
+            //    return null;
+            //}
+
+            Context.SaveChanges();
+
+            return Mapper.Map<TeamModel>(entity);
+
+
+
+        }
 
         public override TeamUpsertRequest Coalesce(TeamUpsertRequest update, Team entry)
         {
 
             var entry2 = new TeamUpsertRequest
             {
-                TeamName = update.TeamName == "string" ? entry.Teamname : update.TeamName,
+                TeamName = checkatributestring(update.TeamName,entry.Teamname),
                 City = update.City == "string" ? entry.City : update.City,
                 Countryid = update.Countryid == 0 ? entry.Countryid : update.Countryid,
                 Foundedyear = update.Foundedyear == 0 ? entry.Foundedyear : update.Foundedyear,
@@ -68,7 +94,27 @@ namespace eBettingSystemV2.Services
 
         }
 
+        public string checkatributestring(string text,string bazatext)
+        {
 
+            if (text == "string" || string.IsNullOrEmpty(text))
+            {
+
+                return bazatext;
+
+            }
+            else
+            {
+
+                return text;
+            
+            }
+        
+
+
+        
+        
+        }
 
 
 

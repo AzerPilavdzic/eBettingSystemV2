@@ -4,6 +4,7 @@
 using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Services.Database;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,12 @@ namespace eBettingSystemV2.Services
 
         public virtual T Insert(TInsert insert)
         {
+
+            if (BeforeInsertBool(insert))
+            {
+                return null;                       
+            }
+            
             var set = Context.Set<TDb>();
 
             TDb entity = Mapper.Map<TDb>(insert);
@@ -46,6 +53,13 @@ namespace eBettingSystemV2.Services
         {
 
         }
+
+        public virtual bool BeforeInsertBool(TInsert insert)
+        {
+
+            return false;
+        }
+
 
 
 
@@ -119,5 +133,7 @@ namespace eBettingSystemV2.Services
             return update;
 
         }
+
+        
     }
 }
