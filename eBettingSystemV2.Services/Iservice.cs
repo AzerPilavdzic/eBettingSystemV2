@@ -16,5 +16,6 @@ namespace eBettingSystemV2.Services
         IEnumerable<T> GetbyForeignKey(int Id);
         bool CheckPage0(TSearch search = null);
         bool CheckNegative(TSearch search = null);
+        Task<IEnumerable<T>> GetbyForeignKeyAsync(int Id);
     }
 }
