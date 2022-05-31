@@ -58,7 +58,7 @@ namespace eBettingSystemV2.Services
                 return null;
             }
 
-            var set = Context.Set<TDb>().ToList();
+            var set = Context.Set<TDb>();
 
             TDb entity = Mapper.Map<TDb>(insert);
 
