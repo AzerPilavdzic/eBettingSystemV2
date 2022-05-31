@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Services
 {
-    public interface ICRUDService<T, TSearch, TInsert, TUpdate> : 
-        IService<T, TSearch> 
+    public interface ICRUDService<T, TSearch, TInsert, TUpdate,Tless> : 
+        IService<T, TSearch,Tless> 
         where T : class 
         where TSearch : class 
         where TInsert : class 
         where TUpdate : class
+        where Tless:class
     {
-        T Insert(TInsert insert);
+        Tless Insert(TInsert insert);
 
         T Update(int id, TUpdate update);
 

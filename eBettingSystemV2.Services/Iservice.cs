@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Services
 {
-    public interface IService<T, TSearch> where T : class where TSearch : class
+    public interface IService<T, TSearch,Tless> 
+        where T : class 
+        where TSearch : class
+        where Tless : class
     {
         Task<IEnumerable<T>> Get(TSearch search = null);
 

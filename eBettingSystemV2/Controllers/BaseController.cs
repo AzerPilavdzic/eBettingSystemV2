@@ -13,12 +13,15 @@ namespace eBettingSystemV2.Controllers
     [ApiController]
     [Route("[controller]")]
     //[Authorize]
-    public class BaseController<T, TSearch> : ControllerBase where T : class where TSearch : class
+    public class BaseController<T, TSearch,Tless> : ControllerBase 
+        where T : class 
+        where TSearch : class
+        where Tless:class
     {
-        public IService<T, TSearch> Service { get; set; }
+        public IService<T, TSearch,Tless> Service { get; set; }
        
 
-        public BaseController(IService<T, TSearch> service)
+        public BaseController(IService<T, TSearch,Tless> service)
         {
             Service = service;
         }
