@@ -50,6 +50,29 @@ namespace eBettingSystemV2.Services
            
         }
 
+        public virtual async Task<T> InsertAsync(TInsert insert)
+        {
+
+            if (BeforeInsertBool(insert))
+            {
+                return null;
+            }
+
+            var set = Context.Set<TDb>();
+
+            TDb entity = Mapper.Map<TDb>(insert);
+
+            set.Add(entity);
+
+            BeforeInsert(insert, entity);
+
+            await Context.SaveChangesAsync();
+
+            return Mapper.Map<T>(entity);
+
+
+        }
+
         public virtual void BeforeInsert(TInsert insert, TDb entity)
         {
 
@@ -118,6 +141,39 @@ namespace eBettingSystemV2.Services
             {
                 return null;
             
+            }
+
+            Context.SaveChanges();
+
+            return Model;
+
+        }
+        public virtual async Task<T> DeleteAsync(int id)
+        {
+
+            T Model = null;
+
+            var set = await Context.Set<TDb>().FindAsync(id);
+
+            //var entity = set.Find(id);
+
+
+
+
+            if (set != null)
+            {
+
+                Model = Mapper.Map<T>(set);
+
+                //Mapper.Map(entity,Model);
+
+
+                Context.Remove(set);
+            }
+            else
+            {
+                return null;
+
             }
 
             Context.SaveChanges();
