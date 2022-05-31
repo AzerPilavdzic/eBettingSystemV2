@@ -50,7 +50,7 @@ namespace eBettingSystemV2.Services
            
         }
 
-        public virtual async Task<T> InsertAsync(TInsert insert)
+        public virtual async Task<Tless> InsertAsync(TInsert insert)
         {
 
             if (BeforeInsertBool(insert))
@@ -68,7 +68,7 @@ namespace eBettingSystemV2.Services
 
             await Context.SaveChangesAsync();
 
-            return Mapper.Map<T>(entity);
+            return Mapper.Map<Tless>(entity);
 
 
         }
