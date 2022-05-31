@@ -4,6 +4,7 @@ using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace eProdaja.Controllers
 {
@@ -26,13 +27,15 @@ namespace eProdaja.Controllers
         //}
 
         [HttpPost]
-        public virtual IActionResult Insert(TInsert insert)
+        public virtual async Task<ActionResult<T>> Insert(TInsert insert)
         {
 
-            var result = ((ICRUDService<T, TSearch, TInsert, TUpdate,Tless>)this.Service).Insert(insert);
+            var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate,Tless>)this.Service).InsertAsync(insert);
+
 
             if (result == null)
             {
+
 
                 return BadRequest("Ime vec postoji");
 

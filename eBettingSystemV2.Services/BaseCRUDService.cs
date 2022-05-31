@@ -50,6 +50,29 @@ namespace eBettingSystemV2.Services
            
         }
 
+        public virtual async Task<T> InsertAsync(TInsert insert)
+        {
+
+            if (BeforeInsertBool(insert))
+            {
+                return null;
+            }
+
+            var set = Context.Set<TDb>().ToList();
+
+            TDb entity = Mapper.Map<TDb>(insert);
+
+            set.Add(entity);
+
+            BeforeInsert(insert, entity);
+
+            await Context.SaveChangesAsync();
+
+            return Mapper.Map<T>(entity);
+
+
+        }
+
         public virtual void BeforeInsert(TInsert insert, TDb entity)
         {
 

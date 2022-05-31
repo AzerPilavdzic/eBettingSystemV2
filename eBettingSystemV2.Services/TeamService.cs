@@ -86,12 +86,6 @@ namespace eBettingSystemV2.Services
 
 
             return entry2;
-
-
-
-
-
-
         }
 
         public string checkatributestring(string text,string bazatext)
