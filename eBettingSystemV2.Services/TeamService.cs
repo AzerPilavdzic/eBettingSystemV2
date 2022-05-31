@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace eBettingSystemV2.Services
 {
     public class TeamService:
-        BaseCRUDService<TeamModel,Team,TeamSearchObject,TeamUpsertRequest, TeamUpsertRequest,object>,
+        BaseCRUDService<TeamModel,Team,TeamSearchObject,TeamUpsertRequest, TeamUpsertRequest,TeamModelLess>,
         ITeamService      
     {
         public TeamService(eBettingSystemV2.Services.Database.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
@@ -78,9 +78,9 @@ namespace eBettingSystemV2.Services
             var entry2 = new TeamUpsertRequest
             {
                 TeamName = checkatributestring(update.TeamName,entry.Teamname),
-                City = update.City == "string" ? entry.City : update.City,
-                Countryid = update.Countryid == 0 ? entry.Countryid : update.Countryid,
-                Foundedyear = update.Foundedyear == 0 ? entry.Foundedyear : update.Foundedyear,
+                City =checkatributestring(update.City,entry.City),
+                Countryid = CheckatributeInt(update.Countryid,entry.Countryid),
+                Foundedyear = CheckatributeInt(update.Foundedyear.Value, entry.Foundedyear.Value),
 
             };
 
@@ -115,6 +115,38 @@ namespace eBettingSystemV2.Services
         
         
         }
+
+        public int CheckatributeInt(int broj, int bazabroj)
+        {
+
+            return broj==0?bazabroj:broj;
+
+
+        }
+
+
+        public override IQueryable<Team> AddFilter(IQueryable<Team> query, TeamSearchObject search = null)
+        {
+            
+            var filterquery = base.AddFilter(query, search);
+            IQueryable<Team> filter =null;
+
+            if (!string.IsNullOrWhiteSpace(search?.City))
+            {
+                filter = filterquery.Where(x=>x.City!=null).Where(X => X.City.ToLower().StartsWith(search.City.ToLower()));
+            }
+
+            if (search.CountryId != 0)
+            {
+                filter = filter.Where(X => X.Countryid == search.CountryId);
+
+            }
+
+            return filter;
+
+
+        }
+
 
 
 
