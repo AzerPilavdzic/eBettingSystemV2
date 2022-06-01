@@ -71,11 +71,11 @@ namespace eBettingSystemV2.Controllers
 
 
             }
-            catch
+            catch(Exception ex)
             {
 
 
-                return BadRequest("Greska na serveru");
+                return BadRequest(ex.Message);
 
 
             }

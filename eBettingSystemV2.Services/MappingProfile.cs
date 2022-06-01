@@ -23,18 +23,30 @@ namespace eBettingSystemV2.Services
             //models 
             CreateMap<Team, TeamModel>();
             CreateMap<TeamModel, Team>();
+
+            CreateMap<Sport, SportModel>();
+            CreateMap<SportModel, Sport>();
+
             CreateMap<Country, CountryModel>();
             CreateMap<CountryModel, Country>();
+
             CreateMap<Team, TeamModelLess>();
             CreateMap<TeamModelLess, Team>();
 
+            CreateMap<Sport, SportModelLess>();
+            CreateMap< SportModelLess, Sport >();
 
 
             //requests
             CreateMap<Country, CountryUpsertRequest>();
             CreateMap<CountryUpsertRequest,Country>();
+
+            CreateMap<Sport, SportUpsertRequest>();
+            CreateMap<SportUpsertRequest, Sport>();
+
             CreateMap<Team, TeamUpsertRequest>();
             CreateMap<TeamUpsertRequest,Team>();
+
             CreateMap<TeamInsertRequest, Team>();
             CreateMap<Team,TeamInsertRequest>();
 
@@ -43,6 +55,8 @@ namespace eBettingSystemV2.Services
             //search
             CreateMap<Country, CountrySearchObject>();
             CreateMap<Team, TeamSearchObject>();
+            CreateMap<Sport, SportSearchObject>();
+
 
 
 
