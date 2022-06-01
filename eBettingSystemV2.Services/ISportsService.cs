@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Services
 {
-    public interface ITeamService:
-        ICRUDService<TeamModel,
-            TeamSearchObject,
-            TeamUpsertRequest,
-            TeamUpsertRequest,
-            TeamModelLess>
+    public interface ISportService :
+        ICRUDService<SportModel,
+            SportSearchObject,
+            SportUpsertRequest,
+            SportUpsertRequest,
+            SportModelLess>
     {
         //test
-        TeamModel UpdateJson(int id, JsonPatchDocument update);
+        //SportModel UpdateJson(int id, JsonPatchDocument update);
 
 
 
