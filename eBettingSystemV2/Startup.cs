@@ -31,11 +31,22 @@ namespace eBettingSystemV2
        
 
         }
-
+        private readonly string _policyName = "CorsPolicy";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy(name: _policyName, builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
             //dodano startup
             services.AddAutoMapper(typeof(ICountryService));
             services.AddAutoMapper(typeof(ITeamService));
@@ -101,14 +112,15 @@ namespace eBettingSystemV2
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "eBettingSystemV2 v1"));
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "eBettingSystemV2 v2"));
 
-
-
+                
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(_policyName);
 
             app.UseEndpoints(endpoints =>
             {
