@@ -64,23 +64,23 @@ namespace eBettingSystemV2.Controllers
         [Route("InsertTeam")]
         public override async Task<ActionResult<TeamModel>> Insert(TeamUpsertRequest insert)
         {
-            var result = await base.Insert(insert);
-
+           
             try
             {
-                  return result;
+                var result = await base.Insert(insert);
+                return result;
             }
-            catch
+            catch(Exception ex)
             {
-                 _logger.LogInformation("CountryId can not be null");
-                 return NotFound();
+                _logger.LogInformation("CountryId can not be null");
+                 return BadRequest(ex.Message);
             }
         }
 
 
         [HttpPut]
         [Route("UpdateTeam/{Id}")]
-        public override IActionResult Update(int Id, [FromBody] TeamUpsertRequest update)
+        public override Task<ActionResult<TeamModel>> Update(int Id, [FromBody] TeamUpsertRequest update)
         {
             return base.Update(Id, update); 
         }
@@ -140,13 +140,6 @@ namespace eBettingSystemV2.Controllers
 
             var result = ITeamService.UpdateJson(Id, update);
             return Ok(result);
-
-
-
-
-
         }
-
-
     }
 }
