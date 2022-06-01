@@ -14,7 +14,7 @@ namespace eBettingSystemV2.Services
             CountrySearchObject, 
             CountryUpsertRequest, 
             CountryUpsertRequest,
-            object>
+            CountryModel>
     {
 
 

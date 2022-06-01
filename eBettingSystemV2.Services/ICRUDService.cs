@@ -15,7 +15,7 @@ namespace eBettingSystemV2.Services
         where TUpdate : class
         where Tless:class
     {
-        T Insert(TInsert insert);
+        Tless Insert(TInsert insert);
 
         T Update(int id, TUpdate update);
         Task<T> UpdateAsync(int id,TUpdate update);
@@ -23,7 +23,7 @@ namespace eBettingSystemV2.Services
       
         T Delete(int id);
         Task<T> DeleteAsync(int id);
-        Task<T> InsertAsync(TInsert insert);
+        Task<Tless> InsertAsync(TInsert insert);
 
     }
 }

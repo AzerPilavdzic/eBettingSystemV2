@@ -58,6 +58,7 @@ namespace eBettingSystemV2
             //ne radi
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<ITeamService, TeamService>();
+            services.AddTransient<ISportService, SportService>();
 
 
             //services.AddScoped<IService<object, object>, BaseService<object, object, object>>();

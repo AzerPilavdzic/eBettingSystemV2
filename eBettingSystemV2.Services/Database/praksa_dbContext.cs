@@ -18,6 +18,7 @@ namespace eBettingSystemV2.Services.Database
         }
 
         public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<Sport> Sport { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -25,7 +26,7 @@ namespace eBettingSystemV2.Services.Database
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Server=192.168.43.21; Port=5432;Database=praksa_db;Username=praksa;Password=12345");
+                optionsBuilder.UseNpgsql("Host=192.168.43.21;Database=praksa_db;Username=praksa;Password=12345");
             }
         }
 
@@ -35,11 +36,29 @@ namespace eBettingSystemV2.Services.Database
             {
                 entity.ToTable("Country", "BettingSystem");
 
+                entity.HasIndex(e => e.CountryName, "country_un")
+                    .IsUnique();
+
                 entity.Property(e => e.CountryId).HasDefaultValueSql("nextval('\"BettingSystem\".country_countryid_seq'::regclass)");
 
                 entity.Property(e => e.CountryName)
                     .IsRequired()
                     .HasColumnType("character varying");
+            });
+
+            modelBuilder.Entity<Sport>(entity =>
+            {
+                entity.HasKey(e => e.SportsId)
+                    .HasName("sportovi_pk");
+
+                entity.ToTable("sport", "BettingSystem");
+
+                entity.Property(e => e.SportsId).HasDefaultValueSql("nextval('\"BettingSystem\".sportovi_id_seq'::regclass)");
+
+                entity.Property(e => e.name)
+                    .IsRequired()
+                    .HasColumnType("character varying")
+                    .HasColumnName("name");
             });
 
             modelBuilder.Entity<Team>(entity =>

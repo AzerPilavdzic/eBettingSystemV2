@@ -27,7 +27,7 @@ namespace eBettingSystemV2.Services
         public BaseCRUDService(praksa_dbContext context, IMapper mapper)
         : base(context, mapper) { }
 
-        public virtual T Insert(TInsert insert)
+        public virtual Tless Insert(TInsert insert)
         {
 
             if (BeforeInsertBool(insert))
@@ -45,12 +45,12 @@ namespace eBettingSystemV2.Services
 
             Context.SaveChanges();
 
-            return Mapper.Map<T>(entity);
+            return Mapper.Map<Tless>(entity);
 
            
         }
 
-        public virtual async Task<T> InsertAsync(TInsert insert)
+        public virtual async Task<Tless> InsertAsync(TInsert insert)
         {
 
             if (!BeforeInsertBool(insert))
@@ -68,7 +68,7 @@ namespace eBettingSystemV2.Services
 
             await Context.SaveChangesAsync();
 
-            return Mapper.Map<T>(entity);
+            return Mapper.Map<Tless>(entity);
 
 
         }
