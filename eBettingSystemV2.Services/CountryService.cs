@@ -70,29 +70,22 @@ namespace eBettingSystemV2.Services
 
         public override CountryModel Insert(CountryUpsertRequest insert)
         {
+            if (!BeforeInsertBool(insert))
+            {
+            throw new Exception("Drzava sa tim imenom vec postoji.");
+            }
+                return base.Insert(insert);
 
-
-            
-          
-              return base.Insert(insert);
-            
-
-         
-           
         }
 
         public override bool BeforeInsertBool(CountryUpsertRequest insert)
         {
             var entity = Context.Countries.Where(x=>x.CountryName.ToLower()==insert.CountryName.ToLower()).FirstOrDefault();
-
-
-            return entity != null ? true : false;
-
-
-
-
-
-
+            if (entity == null)
+            {
+                return true;
+            }
+            throw new Exception("EXCEPTION: DRZAVA SA TIM IMENOM VEC POSTOJI.");
         }
 
         

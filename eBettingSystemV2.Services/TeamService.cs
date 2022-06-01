@@ -25,6 +25,25 @@ namespace eBettingSystemV2.Services
 
         }
 
+        public override bool BeforeInsertBool(TeamUpsertRequest insert)
+        {
+            var entity = Context.Teams.Where(x => x.Teamname.ToLower() == insert.TeamName.ToLower()).FirstOrDefault();
+            if (entity == null)
+            {
+                return true;
+            }
+            throw new Exception("EXCEPTION: IME TIMA VEC POSTOJI.");
+        }
+
+        public override Task<TeamModel> InsertAsync(TeamUpsertRequest insert)
+        {
+            if (insert.Countryid<=0)
+            {
+                throw new Exception("Country ID ne moze biti nula.");
+            }
+
+            return base.InsertAsync(insert);
+        }
 
 
         // get by foreign key
@@ -103,12 +122,12 @@ namespace eBettingSystemV2.Services
                 return text;
             
             }
-        
 
 
-        
-        
-        }
+
+
+
+    }
 
         public int CheckatributeInt(int broj, int bazabroj)
         {
@@ -123,11 +142,19 @@ namespace eBettingSystemV2.Services
         {
             
             var filterquery = base.AddFilter(query, search);
-            IQueryable<Team> filter =null;
+            IQueryable<Team> filter = filterquery;
+
+            if (!string.IsNullOrWhiteSpace(search?.Naziv))
+            {
+                filter = filterquery.Where(x => x.Teamname != null).Where(X => X.Teamname.ToLower().StartsWith(search.Naziv.ToLower()));
+            }
+
+
+
 
             if (!string.IsNullOrWhiteSpace(search?.City))
             {
-                filter = filterquery.Where(x=>x.City!=null).Where(X => X.City.ToLower().StartsWith(search.City.ToLower()));
+                filter = filter.Where(x=>x.City!=null).Where(X => X.City.ToLower().StartsWith(search.City.ToLower()));
             }
 
             if (search.CountryId != 0)

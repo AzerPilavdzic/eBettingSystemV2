@@ -18,6 +18,7 @@ namespace eBettingSystemV2.Services
         Tless Insert(TInsert insert);
 
         T Update(int id, TUpdate update);
+        Task<T> UpdateAsync(int id,TUpdate update);
 
       
         T Delete(int id);
