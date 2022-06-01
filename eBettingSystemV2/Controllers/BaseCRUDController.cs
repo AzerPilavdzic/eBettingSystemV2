@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace eProdaja.Controllers
 {
-    public class BaseCRUDController<T, TSearch, TInsert, TUpdate,Tless> : 
-        BaseController<T, TSearch,Tless>
-        where T : class 
-        where TSearch : class 
-        where TInsert : class 
+    public class BaseCRUDController<T, TSearch, TInsert, TUpdate, Tless> :
+        BaseController<T, TSearch, Tless>
+        where T : class
+        where TSearch : class
+        where TInsert : class
         where TUpdate : class
-        where Tless:class
+        where Tless : class
     {
         //private ITeamService service;
 
-        public BaseCRUDController(ICRUDService<T, TSearch, TInsert, TUpdate,Tless> service) : base(service)
+        public BaseCRUDController(ICRUDService<T, TSearch, TInsert, TUpdate, Tless> service) : base(service)
         { }
 
         //public BaseCRUDController(ITeamService service)
@@ -30,37 +30,36 @@ namespace eProdaja.Controllers
         public virtual async Task<ActionResult<T>> Insert(TInsert insert)
         {
 
-            var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate,Tless>)this.Service).InsertAsync(insert);
-
-
-            if (result == null)
+            try
             {
+                var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).InsertAsync(insert);
 
-
-                return BadRequest("Ime vec postoji");
-
-
+                if (result == null)
+                {
+                    return BadRequest("Ime vec postoji");
+                }
+                else
+                {
+                    return Ok(result);
+                }
             }
-            else
+            catch (Exception ex)
             {
-
-                return Ok(result);
+                return BadRequest(ex.Message);
+                throw;
             }
 
 
-
-
-          
         }
 
         [HttpPut("{id}")]
-        public virtual IActionResult Update(int id, [FromBody] TUpdate update)
+        public virtual async Task<ActionResult<T>> Update(int id, [FromBody] TUpdate update)
         {
-            var result = ((ICRUDService<T, TSearch, TInsert, TUpdate,Tless>)this.Service).Update(id, update);
+            var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).UpdateAsync(id, update);
             return Ok(result);
         }
 
-       
+
 
     }
 }
