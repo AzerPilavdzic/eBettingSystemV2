@@ -45,7 +45,6 @@ namespace eBettingSystemV2.Controllers
         //Dodati Patch
 
 
-
         [HttpGet]
         [Route("GetAllCountries")]
         public override Task<ActionResult<IEnumerable<CountryModel>>> Get([FromQuery] CountrySearchObject search = null)
@@ -69,10 +68,9 @@ namespace eBettingSystemV2.Controllers
         }
 
 
-
         [HttpPut]
         [Route("UpdateCountry/{id}")]
-        public override IActionResult Update(int id, [FromBody] CountryUpsertRequest update)
+        public override Task<ActionResult<CountryModel>> Update(int id, [FromBody] CountryUpsertRequest update)
         {
             return base.Update(id, update);
         }
@@ -81,7 +79,9 @@ namespace eBettingSystemV2.Controllers
         [Route("DeleteCountryById/{CountryId}")]
         public async Task<IActionResult> Delete(int CountryId)
         {
-            if (ICountryService.Delete(CountryId) != null)
+            var result = await ICountryService.DeleteAsync(CountryId);
+
+            if (result != null)
             {
                 return Ok($"Drzava sa Id {CountryId} je uspjesno obrisana");
             }

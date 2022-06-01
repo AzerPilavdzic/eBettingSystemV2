@@ -101,6 +101,8 @@ namespace eBettingSystemV2
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "eBettingSystemV2 v2"));
 
 
+
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

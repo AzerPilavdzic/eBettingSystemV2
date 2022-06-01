@@ -53,7 +53,7 @@ namespace eBettingSystemV2.Services
         public virtual async Task<T> InsertAsync(TInsert insert)
         {
 
-            if (BeforeInsertBool(insert))
+            if (!BeforeInsertBool(insert))
             {
                 return null;
             }
@@ -80,8 +80,7 @@ namespace eBettingSystemV2.Services
 
         public virtual bool BeforeInsertBool(TInsert insert)
         {
-
-            return false;
+            return true;
         }
 
 
@@ -108,12 +107,32 @@ namespace eBettingSystemV2.Services
             Context.SaveChanges();
 
             return Mapper.Map<T>(entity);
-
-           
-
         }
 
-        
+        public virtual async Task<T> UpdateAsync(int id, TUpdate update)
+        {
+            var set = await Context.Set<TDb>().FindAsync(id);
+
+            //var entity = set.FindAsync(id);
+
+            update = Coalesce(update, set);
+
+
+            if (set != null)
+            {
+                Mapper.Map(update, set);
+            }
+            else
+            {
+                return null;
+            }
+
+            Context.SaveChanges();
+
+            return Mapper.Map<T>(set);
+        }
+
+
 
         public virtual T Delete(int id)
         {
@@ -131,10 +150,8 @@ namespace eBettingSystemV2.Services
             {
 
                 Model = Mapper.Map<T>(entity);
-
                 //Mapper.Map(entity,Model);
               
-
                 Context.Remove(entity);
             }
             else
@@ -158,35 +175,24 @@ namespace eBettingSystemV2.Services
             //var entity = set.Find(id);
 
 
-
-
             if (set != null)
             {
-
                 Model = Mapper.Map<T>(set);
-
                 //Mapper.Map(entity,Model);
-
-
                 Context.Remove(set);
             }
             else
             {
                 return null;
-
             }
 
             Context.SaveChanges();
-
             return Model;
 
         }
 
         public virtual TUpdate Coalesce(TUpdate update,TDb entry)
         {
-
-
-
             return update;
 
         }

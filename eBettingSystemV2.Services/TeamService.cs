@@ -25,6 +25,25 @@ namespace eBettingSystemV2.Services
 
         }
 
+        public override bool BeforeInsertBool(TeamUpsertRequest insert)
+        {
+            var entity = Context.Teams.Where(x => x.Teamname.ToLower() == insert.TeamName.ToLower()).FirstOrDefault();
+            if (entity == null)
+            {
+                return true;
+            }
+            throw new Exception("EXCEPTION: IME TIMA VEC POSTOJI.");
+        }
+
+        public override Task<TeamModel> InsertAsync(TeamUpsertRequest insert)
+        {
+            if (insert.Countryid<=0)
+            {
+                throw new Exception("Country ID ne moze biti nula.");
+            }
+
+            return base.InsertAsync(insert);
+        }
 
 
         // get by foreign key
@@ -103,12 +122,12 @@ namespace eBettingSystemV2.Services
                 return text;
             
             }
-        
 
 
-        
-        
-        }
+
+
+
+    }
 
 
 
