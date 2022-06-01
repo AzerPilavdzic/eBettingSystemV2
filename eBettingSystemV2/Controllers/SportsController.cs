@@ -39,13 +39,6 @@ namespace eBettingSystemV2.Controllers
         }
 
 
-
-
-
-
-
-
-
         [HttpGet]
         [Route("GetAllSport")]
         public override Task<ActionResult<IEnumerable<SportModel>>> Get([FromQuery] SportSearchObject search = null)
@@ -54,6 +47,11 @@ namespace eBettingSystemV2.Controllers
             return base.Get(search);
 
 
+        }
+
+        public override Task<ActionResult<SportModel>> Insert(SportUpsertRequest insert)
+        {
+            return base.Insert(insert);
         }
     }
 }
