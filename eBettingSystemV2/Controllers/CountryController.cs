@@ -4,6 +4,7 @@ using eBettingSystemV2.Services;
 using eBettingSystemV2.Services.Database;
 //using eBettingSystemV2.Models;
 using eProdaja.Controllers;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -76,18 +77,21 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpDelete]
+        //[EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
+        [EnableCors("CorsPolicy")]
         [Route("DeleteCountryById/{CountryId}")]
         public async Task<IActionResult> Delete(int CountryId)
         {
             var result = await ICountryService.DeleteAsync(CountryId);
 
-            if (result != null)
+            if (result != 0)
             {
                 return Ok($"Drzava sa Id {CountryId} je uspjesno obrisana");
             }
             else
             {
-                return Ok($"Drzava ne postoji ");
+                Console.WriteLine("TESTIRANJE ISPISA U KONZOLI");
+                return BadRequest($"Drzava ne postoji ");
             }
         }
     }

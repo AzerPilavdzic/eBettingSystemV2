@@ -99,16 +99,15 @@ namespace eBettingSystemV2.Controllers
         {
             var result = await ITeamService.DeleteAsync(TeamId);
 
-            if (result != null)
+            if (result != -1)
             {
-                return Ok($"id = {TeamId};Tim je uspješno izbrisan") ;
+                return Ok($"id = {TeamId};Tim je uspješno izbrisan");
             }
             else
             {
-                return Ok($"Team ne postoji ");
+                return NotFound($"Team sa {TeamId} ID ne postoji.");
             }
         }
-
 
         [HttpGet]
         [Route("GetTeamByCountryId/{CountryId}")]

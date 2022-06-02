@@ -165,7 +165,7 @@ namespace eBettingSystemV2.Services
             return Model;
 
         }
-        public virtual async Task<T> DeleteAsync(int id)
+        public virtual async Task<int> DeleteAsync(int id)
         {
 
             T Model = null;
@@ -183,11 +183,11 @@ namespace eBettingSystemV2.Services
             }
             else
             {
-                return null;
+                return -1;
             }
 
             Context.SaveChanges();
-            return Model;
+            return id;
 
         }
 
