@@ -24,7 +24,7 @@ namespace eBettingSystemV2.Services
         CountrySearchObject,
         CountryUpsertRequest,
         CountryUpsertRequest,
-        object
+        CountryModel
         >,
         ICountryService
         
@@ -49,7 +49,9 @@ namespace eBettingSystemV2.Services
 
             if (!string.IsNullOrWhiteSpace(search?.Naziv))
             {
-                filterquery = filterquery.Where(X => X.CountryName.ToLower().StartsWith(search.Naziv.ToLower()));
+                filterquery = filterquery.Where(x=>x.CountryName!=null)
+                    .Where(X => X.CountryName.ToLower()
+                    .StartsWith(search.Naziv.ToLower()));
             }
 
             if (search.CountryId != null)
@@ -68,30 +70,27 @@ namespace eBettingSystemV2.Services
 
         public override CountryModel Insert(CountryUpsertRequest insert)
         {
+            if (!BeforeInsertBool(insert))
+            {
+            throw new Exception("Drzava sa tim imenom vec postoji.");
+            }
+                return base.Insert(insert);
 
-
-            
-          
-              return base.Insert(insert);
-            
-
-         
-           
         }
 
         public override bool BeforeInsertBool(CountryUpsertRequest insert)
         {
             var entity = Context.Countries.Where(x=>x.CountryName.ToLower()==insert.CountryName.ToLower()).FirstOrDefault();
-
-
-            return entity != null ? true : false;
-
-
-
-
-
-
+            if (entity == null)
+            {
+                return true;
+            }
+            throw new Exception("EXCEPTION: DRZAVA SA TIM IMENOM VEC POSTOJI.");
         }
+
+        
+
+
 
 
 

@@ -15,12 +15,15 @@ namespace eBettingSystemV2.Services
         where TUpdate : class
         where Tless:class
     {
-        T Insert(TInsert insert);
+        Tless Insert(TInsert insert);
 
         T Update(int id, TUpdate update);
+        Task<T> UpdateAsync(int id,TUpdate update);
 
       
         T Delete(int id);
+        Task<T> DeleteAsync(int id);
+        Task<Tless> InsertAsync(TInsert insert);
 
     }
 }

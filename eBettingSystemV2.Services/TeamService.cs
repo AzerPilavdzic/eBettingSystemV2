@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace eBettingSystemV2.Services
 {
     public class TeamService:
-        BaseCRUDService<TeamModel,Team,TeamSearchObject,TeamUpsertRequest, TeamUpsertRequest,object>,
+        BaseCRUDService<TeamModel,Team,TeamSearchObject,TeamUpsertRequest, TeamUpsertRequest,TeamModelLess>,
         ITeamService      
     {
         public TeamService(eBettingSystemV2.Services.Database.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
@@ -25,6 +25,25 @@ namespace eBettingSystemV2.Services
 
         }
 
+        public override bool BeforeInsertBool(TeamUpsertRequest insert)
+        {
+            var entity = Context.Teams.Where(x => x.Teamname.ToLower() == insert.TeamName.ToLower()).FirstOrDefault();
+            if (entity == null)
+            {
+                return true;
+            }
+            throw new Exception("EXCEPTION: IME TIMA VEC POSTOJI.");
+        }
+
+        public override Task<TeamModelLess> InsertAsync(TeamUpsertRequest insert)
+        {
+            if (insert.Countryid<=0)
+            {
+                throw new Exception("Country ID ne moze biti nula.");
+            }
+
+            return base.InsertAsync(insert);
+        }
 
 
         // get by foreign key
@@ -78,20 +97,14 @@ namespace eBettingSystemV2.Services
             var entry2 = new TeamUpsertRequest
             {
                 TeamName = checkatributestring(update.TeamName,entry.Teamname),
-                City = update.City == "string" ? entry.City : update.City,
-                Countryid = update.Countryid == 0 ? entry.Countryid : update.Countryid,
-                Foundedyear = update.Foundedyear == 0 ? entry.Foundedyear : update.Foundedyear,
+                City =checkatributestring(update.City,entry.City),
+                Countryid = CheckatributeInt(update.Countryid,entry.Countryid),
+                Foundedyear = CheckatributeInt(update.Foundedyear.Value, entry.Foundedyear.Value),
 
             };
 
 
             return entry2;
-
-
-
-
-
-
         }
 
         public string checkatributestring(string text,string bazatext)
@@ -109,12 +122,52 @@ namespace eBettingSystemV2.Services
                 return text;
             
             }
-        
 
 
-        
-        
+
+
+
+    }
+
+        public int CheckatributeInt(int broj, int bazabroj)
+        {
+
+            return broj==0?bazabroj:broj;
+
+
         }
+
+
+        public override IQueryable<Team> AddFilter(IQueryable<Team> query, TeamSearchObject search = null)
+        {
+            
+            var filterquery = base.AddFilter(query, search);
+            IQueryable<Team> filter = filterquery;
+
+            if (!string.IsNullOrWhiteSpace(search?.Naziv))
+            {
+                filter = filterquery.Where(x => x.Teamname != null).Where(X => X.Teamname.ToLower().StartsWith(search.Naziv.ToLower()));
+            }
+
+
+
+
+            if (!string.IsNullOrWhiteSpace(search?.City))
+            {
+                filter = filter.Where(x=>x.City!=null).Where(X => X.City.ToLower().StartsWith(search.City.ToLower()));
+            }
+
+            if (search.CountryId != 0)
+            {
+                filter = filter.Where(X => X.Countryid == search.CountryId);
+
+            }
+
+            return filter;
+
+
+        }
+
 
 
 

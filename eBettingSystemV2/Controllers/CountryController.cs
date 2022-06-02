@@ -16,7 +16,7 @@ namespace eBettingSystemV2.Controllers
     [ApiController]
     [Route("[controller]")]
     //public class CountryController
-    public class CountryController : BaseCRUDController<CountryModel, CountrySearchObject, CountryUpsertRequest, CountryUpsertRequest,object>
+    public class CountryController : BaseCRUDController<CountryModel, CountrySearchObject, CountryUpsertRequest, CountryUpsertRequest, CountryModel>
     {
         public static List<Country> Test = new List<Country>();
         private ICountryService ICountryService { get; set; }
@@ -45,7 +45,6 @@ namespace eBettingSystemV2.Controllers
         //Dodati Patch
 
 
-
         [HttpGet]
         [Route("GetAllCountries")]
         public override Task<ActionResult<IEnumerable<CountryModel>>> Get([FromQuery] CountrySearchObject search = null)
@@ -56,10 +55,8 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("InsertCountry")]
-        public override IActionResult Insert(CountryUpsertRequest insert)
+        public override Task<ActionResult<CountryModel>>Insert(CountryUpsertRequest insert)
         {
-
-           
             return base.Insert(insert);
         }
 
@@ -71,10 +68,9 @@ namespace eBettingSystemV2.Controllers
         }
 
 
-
         [HttpPut]
         [Route("UpdateCountry/{id}")]
-        public override IActionResult Update(int id, [FromBody] CountryUpsertRequest update)
+        public override Task<ActionResult<CountryModel>> Update(int id, [FromBody] CountryUpsertRequest update)
         {
             return base.Update(id, update);
         }
@@ -83,7 +79,9 @@ namespace eBettingSystemV2.Controllers
         [Route("DeleteCountryById/{CountryId}")]
         public async Task<IActionResult> Delete(int CountryId)
         {
-            if (ICountryService.Delete(CountryId) != null)
+            var result = await ICountryService.DeleteAsync(CountryId);
+
+            if (result != null)
             {
                 return Ok($"Drzava sa Id {CountryId} je uspjesno obrisana");
             }

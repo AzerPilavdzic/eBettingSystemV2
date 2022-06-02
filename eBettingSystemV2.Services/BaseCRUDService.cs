@@ -27,12 +27,12 @@ namespace eBettingSystemV2.Services
         public BaseCRUDService(praksa_dbContext context, IMapper mapper)
         : base(context, mapper) { }
 
-        public virtual T Insert(TInsert insert)
+        public virtual Tless Insert(TInsert insert)
         {
 
             if (BeforeInsertBool(insert))
             {
-                return null;                       
+                return null;
             }
             
             var set = Context.Set<TDb>();
@@ -45,9 +45,32 @@ namespace eBettingSystemV2.Services
 
             Context.SaveChanges();
 
-            return Mapper.Map<T>(entity);
+            return Mapper.Map<Tless>(entity);
 
            
+        }
+
+        public virtual async Task<Tless> InsertAsync(TInsert insert)
+        {
+
+            if (!BeforeInsertBool(insert))
+            {
+                return null;
+            }
+
+            var set = Context.Set<TDb>();
+
+            TDb entity = Mapper.Map<TDb>(insert);
+
+            set.Add(entity);
+
+            BeforeInsert(insert, entity);
+
+            await Context.SaveChangesAsync();
+
+            return Mapper.Map<Tless>(entity);
+
+
         }
 
         public virtual void BeforeInsert(TInsert insert, TDb entity)
@@ -57,8 +80,7 @@ namespace eBettingSystemV2.Services
 
         public virtual bool BeforeInsertBool(TInsert insert)
         {
-
-            return false;
+            return true;
         }
 
 
@@ -85,12 +107,32 @@ namespace eBettingSystemV2.Services
             Context.SaveChanges();
 
             return Mapper.Map<T>(entity);
-
-           
-
         }
 
-        
+        public virtual async Task<T> UpdateAsync(int id, TUpdate update)
+        {
+            var set = await Context.Set<TDb>().FindAsync(id);
+
+            //var entity = set.FindAsync(id);
+
+            update = Coalesce(update, set);
+
+
+            if (set != null)
+            {
+                Mapper.Map(update, set);
+            }
+            else
+            {
+                return null;
+            }
+
+            Context.SaveChanges();
+
+            return Mapper.Map<T>(set);
+        }
+
+
 
         public virtual T Delete(int id)
         {
@@ -108,10 +150,8 @@ namespace eBettingSystemV2.Services
             {
 
                 Model = Mapper.Map<T>(entity);
-
                 //Mapper.Map(entity,Model);
               
-
                 Context.Remove(entity);
             }
             else
@@ -125,12 +165,34 @@ namespace eBettingSystemV2.Services
             return Model;
 
         }
+        public virtual async Task<T> DeleteAsync(int id)
+        {
+
+            T Model = null;
+
+            var set = await Context.Set<TDb>().FindAsync(id);
+
+            //var entity = set.Find(id);
+
+
+            if (set != null)
+            {
+                Model = Mapper.Map<T>(set);
+                //Mapper.Map(entity,Model);
+                Context.Remove(set);
+            }
+            else
+            {
+                return null;
+            }
+
+            Context.SaveChanges();
+            return Model;
+
+        }
 
         public virtual TUpdate Coalesce(TUpdate update,TDb entry)
         {
-
-
-
             return update;
 
         }

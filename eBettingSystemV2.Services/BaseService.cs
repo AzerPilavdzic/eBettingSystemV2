@@ -91,6 +91,7 @@ namespace eBettingSystemV2.Services
             return query;
         }
 
+        // ne koristi se
         public T GetById(int id)
         {
             var set = Context.Set<TDb>();
@@ -141,7 +142,7 @@ namespace eBettingSystemV2.Services
         {
            
             var entity = await Context.Set<TDb>().FindAsync(id);
-
+            
             //var entity = set.Find(id);
 
             return Mapper.Map<T>(entity);
@@ -149,7 +150,30 @@ namespace eBettingSystemV2.Services
         }
 
 
-      
+        public async Task<IEnumerable<T>> GetbyForeignKeyAsync(int Id)
+        {
+            var set = await Context.Set<TDb>().ToListAsync();
+
+            var setq = set.AsQueryable();
+
+            var list = ForeignKeyFilter(setq,Id);
+
+            if (list == null)
+            {
+                return null;
+
+
+            }
+            else
+            {
+
+                return Mapper.Map<IEnumerable<T>>(list);
+            }
+
+
+
+
+        }
 
 
 

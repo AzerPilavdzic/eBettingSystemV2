@@ -17,7 +17,7 @@ namespace eBettingSystemV2.Controllers
     [ApiController]
     [Route("[controller]")]
     //public class CountryController
-    public class TeamsController : BaseCRUDController<TeamModel, TeamSearchObject, TeamUpsertRequest, TeamUpsertRequest,object>
+    public class TeamsController : BaseCRUDController<TeamModel, TeamSearchObject, TeamUpsertRequest, TeamUpsertRequest,TeamModelLess>
     {
         public static List<Country> Test = new List<Country>();
         //private ITeamService ITeamService { get; set; }
@@ -62,23 +62,25 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("InsertTeam")]
-        public override IActionResult Insert(TeamUpsertRequest insert)
+        public override async Task<ActionResult<TeamModel>> Insert(TeamUpsertRequest insert)
         {
+           
             try
             {
-                  return base.Insert(insert);
+                var result = await base.Insert(insert);
+                return result;
             }
-            catch
+            catch(Exception ex)
             {
-                 _logger.LogInformation("CountryId can not be null");
-                 return BadRequest("Unos nije validan");
+                _logger.LogInformation("CountryId can not be null");
+                 return BadRequest(ex.Message);
             }
         }
 
 
         [HttpPut]
         [Route("UpdateTeam/{Id}")]
-        public override IActionResult Update(int Id, [FromBody] TeamUpsertRequest update)
+        public override Task<ActionResult<TeamModel>> Update(int Id, [FromBody] TeamUpsertRequest update)
         {
             return base.Update(Id, update); 
         }
@@ -86,7 +88,6 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetTeamById/{id}")]
-
         public override Task<ActionResult<TeamModel>> GetById(int id)
         {
             return base.GetById(id);    
@@ -94,10 +95,11 @@ namespace eBettingSystemV2.Controllers
 
         [HttpDelete]
         [Route("DeleteTeamById/{TeamId}")]
-
-        public async Task<IActionResult> Delete(int TeamId)
+        public async Task<ActionResult<TeamModel>> Delete(int TeamId)
         {
-            if (ITeamService.Delete(TeamId) != null)
+            var result = await ITeamService.DeleteAsync(TeamId);
+
+            if (result != null)
             {
                 return Ok($"id = {TeamId};Tim je uspješno izbrisan") ;
             }
@@ -111,9 +113,24 @@ namespace eBettingSystemV2.Controllers
         [HttpGet]
         [Route("GetTeamByCountryId/{CountryId}")]
 
-        public IEnumerable<TeamModel> GetTeamByCountryId(int CountryId)
+        public async Task<ActionResult<IEnumerable<TeamModel>>> GetTeamByCountryId(int CountryId)
         {
-            return ITeamService.GetbyForeignKey(CountryId);
+
+            var result = await ITeamService.GetbyForeignKeyAsync(CountryId);
+
+            if (result.Count() == 0)
+            {
+
+                return BadRequest("Podaci ne postoje");
+
+            }
+            else
+            {
+                return Ok(result);
+            
+            }
+
+            
         }
 
         [HttpPut]
@@ -123,13 +140,6 @@ namespace eBettingSystemV2.Controllers
 
             var result = ITeamService.UpdateJson(Id, update);
             return Ok(result);
-
-
-
-
-
         }
-
-
     }
 }
