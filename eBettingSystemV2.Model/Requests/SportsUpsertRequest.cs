@@ -7,8 +7,6 @@ namespace eBettingSystemV2.Model.SearchObjects
 {
     public class SportUpsertRequest
     {
-        //public int SportsId { get; set; }
         public string name { get; set; }
-
     }
 }

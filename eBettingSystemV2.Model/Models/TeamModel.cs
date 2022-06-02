@@ -12,5 +12,7 @@ namespace eBettingSystemV2.Models
         public int? FoundedYear { get; set; }
         public string City { get; set; }
         public int CountryId { get; set; }
+
+        public int sportid { get; set; }
     }
 }
