@@ -20,7 +20,7 @@ namespace eBettingSystemV2.Controllers
     public class SportController : BaseCRUDController<SportModel, SportSearchObject, SportUpsertRequest, SportUpsertRequest, SportModelLess>
     {
         public static List<Country> Test = new List<Country>();
-    
+
         private ISportService ISportService { get; set; }
         private readonly ILogger<SportController> _logger;
 
@@ -49,9 +49,39 @@ namespace eBettingSystemV2.Controllers
 
         }
 
+        [HttpGet]
+        [Route("GetSportById")]
+        public override Task<ActionResult<SportModel>> GetById(int id)
+        {
+            return base.GetById(id);
+        }
+
+
+
+
+
+
         public override Task<ActionResult<SportModel>> Insert(SportUpsertRequest insert)
         {
             return base.Insert(insert);
         }
+
+
+        [HttpPost]
+        [Route("AddoneormoreSports")]
+        public override Task<ActionResult<IEnumerable<SportModelLess>>> InsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
+        {
+            return base.InsertOneOrMore(insertlist);
+        }
+
+        [HttpPost]
+        [Route("AddSportById")]
+        public override Task<ActionResult<SportModelLess>> InsertById(int Id, SportUpsertRequest Insert)
+        {
+            return base.InsertById(Id, Insert);
+        }
+
+
+
     }
 }
