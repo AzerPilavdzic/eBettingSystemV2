@@ -35,7 +35,7 @@ namespace eBettingSystemV2.Services
             throw new Exception("EXCEPTION: IME TIMA VEC POSTOJI.");
         }
 
-        public override Task<TeamModel> InsertAsync(TeamUpsertRequest insert)
+        public override Task<TeamModelLess> InsertAsync(TeamUpsertRequest insert)
         {
             if (insert.Countryid<=0)
             {

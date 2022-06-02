@@ -32,7 +32,7 @@ namespace eBettingSystemV2.Services
 
             if (BeforeInsertBool(insert))
             {
-                return null;                       
+                return null;
             }
             
             var set = Context.Set<TDb>();
