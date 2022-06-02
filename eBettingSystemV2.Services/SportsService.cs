@@ -28,15 +28,17 @@ namespace eBettingSystemV2.Services
 
 
         public SportService(eBettingSystemV2.Services.Database.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
-    {
+        {
 
-        Context = context_;
-        Mapper = mapper_;
+            Context = context_;
+            Mapper = mapper_;
+        }
 
 
+        public override SportModelLess Insert(SportUpsertRequest insert)
+        {
+            return base.Insert(insert);
+        }
 
-    }
-
-       
     }
 }
