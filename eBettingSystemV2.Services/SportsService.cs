@@ -63,5 +63,18 @@ namespace eBettingSystemV2.Services
 
 
         }
+
+        public override bool BeforeInsertBool(SportUpsertRequest insert)
+        {
+            var entity = Context.Sport.Where(x => x.name.ToLower() == insert.name.ToLower()).FirstOrDefault();
+            if (entity == null)
+            {
+                return true;
+            }
+            throw new Exception("EXCEPTION: IME SPORTA VEC POSTOJI.");
+        }
+
+
+
     }
 }

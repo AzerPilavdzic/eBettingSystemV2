@@ -60,6 +60,24 @@ namespace eBettingSystemV2.Controllers
         //}
 
 
+        [HttpPost]
+        [Route("InsertSport")]
+        public override async Task<ActionResult<SportModel>> Insert(SportUpsertRequest insert)
+        {
+
+            try
+            {
+                var result = await base.Insert(insert);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
 
 
         [HttpDelete]
