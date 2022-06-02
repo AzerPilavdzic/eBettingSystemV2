@@ -43,7 +43,9 @@ namespace eBettingSystemV2
                 {
                     builder.AllowAnyOrigin()
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                         .WithMethods("GET", "PUT", "DELETE", "POST", "PATCH")
+                        ;
                 });
             });
 
@@ -65,17 +67,17 @@ namespace eBettingSystemV2
             options.UseNpgsql(dbConn));
             //Host = my_host; Database = my_db; Username = my_user; Password = my_pw");
 
-            
+            #region AddTransient
+
             //ne radi
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<ITeamService, TeamService>();
             services.AddTransient<ISportService, SportService>();
 
+            #endregion 
 
             //services.AddScoped<IService<object, object>, BaseService<object, object, object>>();
             //services.AddScoped<ICRUDService<object, object, object, object>, BaseCRUDService<object, object, object, object, object>>();
-
-
 
 
             services.AddApiVersioning(options =>
@@ -121,6 +123,7 @@ namespace eBettingSystemV2
             app.UseAuthorization();
 
             app.UseCors(_policyName);
+
 
             app.UseEndpoints(endpoints =>
             {
