@@ -7,7 +7,7 @@ namespace eBettingSystemV2.Models
 {
     public partial class SportModelLess
     {
-        public int SportId { get; set; }
+        public int SportsId { get; set; }
 
     }
 }

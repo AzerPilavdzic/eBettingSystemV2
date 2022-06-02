@@ -83,7 +83,15 @@ namespace eBettingSystemV2.Services
             return true;
         }
 
+        public virtual IEnumerable<TDb> AddRange(IEnumerable<TInsert> insertlist ,DbSet<TDb> set)
+        {
+            IEnumerable<TDb> entity = Mapper.Map<IEnumerable<TDb>>(insertlist);
+            set.AddRange(entity);
 
+            return entity;
+
+
+        }
 
 
         public virtual T Update(int id, TUpdate update)
@@ -131,8 +139,6 @@ namespace eBettingSystemV2.Services
 
             return Mapper.Map<T>(set);
         }
-
-
 
         public virtual T Delete(int id)
         {
@@ -194,6 +200,106 @@ namespace eBettingSystemV2.Services
         public virtual TUpdate Coalesce(TUpdate update,TDb entry)
         {
             return update;
+
+        }
+
+        public virtual async Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TInsert> List)
+        {
+
+            //if (!BeforeInsertBool(insert))
+            //{
+            //    return null;
+            //}
+
+
+            var set = Context.Set<TDb>();
+
+
+            var entity=AddRange(List,set);
+
+
+            //IEnumerable<TDb> entity = Mapper.Map<IEnumerable<TDb>>(List);
+
+            //set.AddRange(entity);
+
+            //BeforeInsert(insert, entity);
+
+
+
+            await Context.SaveChangesAsync();
+
+            return Mapper.Map<IEnumerable<Tless>>(entity);
+
+
+
+
+        }
+
+
+
+
+
+
+
+        public virtual bool checkIfNameSame(TInsert insert,TDb entry)
+        {
+
+            return false;
+        
+        }
+
+        public virtual async Task<Tless> InsertById(TInsert Insert, int Id)
+        {
+            //if (!BeforeInsertBool(insert))
+            //{
+            //    return null;
+            //}
+
+            var set =  await Context.Set<TDb>().FindAsync(Id);
+            TDb entity = null;
+
+
+            
+
+            if (set != null && checkIfNameSame(Insert,set)==false)
+            {
+               
+                Mapper.Map(Insert, set);
+                entity = Mapper.Map<TDb>(set);
+            }
+            else
+            {
+                if (!checkIfNameSame(Insert, set))
+                {
+                    entity = Mapper.Map<TDb>(Insert);
+                    Context.Set<TDb>().Add(entity);
+
+                }
+                else
+                {
+                    entity = Mapper.Map<TDb>(set);
+
+                }
+
+              
+
+            
+            }
+
+
+
+            //set.Add(entity);
+
+            //BeforeInsert(insert, entity);
+
+
+            await Context.SaveChangesAsync();
+
+            return Mapper.Map<Tless>(entity);
+
+
+
+
 
         }
 
