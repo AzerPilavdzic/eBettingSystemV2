@@ -49,9 +49,74 @@ namespace eBettingSystemV2.Controllers
 
         }
 
-        public override Task<ActionResult<SportModel>> Insert(SportUpsertRequest insert)
+
+        //ne radi
+        //[HttpPost]
+        //[Route("InsertSport")]
+
+        //public override Task<ActionResult<SportModel>> Insert(SportUpsertRequest insert)
+        //{
+        //    return base.Insert(insert);
+        //}
+
+
+        [HttpPost]
+        [Route("InsertSport")]
+        public override async Task<ActionResult<SportModel>> Insert(SportUpsertRequest insert)
         {
-            return base.Insert(insert);
+
+            try
+            {
+                var result = await base.Insert(insert);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
+
+
+
+
+        [HttpDelete]
+        [Route("DeleteSportById/{SportsId}")]
+        public async Task<IActionResult> Delete(int SportsId)
+        {
+            var result = await ISportService.DeleteAsync(SportsId);
+
+            if (result != null)
+            {
+                return Ok($"Sport sa Id {SportsId} je uspjesno obrisan");
+            }
+            else
+            {
+                return Ok($"Drzava ne postoji ");
+            }
+        }
+
+
+
+
+        [HttpGet]
+        [Route("GetSportById/{id}")]
+        public override Task<ActionResult<SportModel>> GetById(int id)
+        {
+            return base.GetById(id);
+        }
+
+
+        [HttpPut]
+        [Route("UpdateSport/{id}")]
+        public override Task<ActionResult<SportModel>> Update(int id, [FromBody] SportUpsertRequest update)
+        {
+            return base.Update(id, update);
+        }
+             
+
+
+
+
     }
 }
