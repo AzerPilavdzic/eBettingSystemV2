@@ -40,5 +40,28 @@ namespace eBettingSystemV2.Services
             return base.Insert(insert);
         }
 
+
+        public override IQueryable<Sport> AddFilter(IQueryable<Sport> query, SportSearchObject search = null)
+        {
+            var filterquery = base.AddFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search?.SportName))
+            {
+                filterquery = filterquery.Where(x => x.name != null)
+                    .Where(X => X.name.ToLower()
+                    .StartsWith(search.SportName.ToLower()));
+            }
+
+            if (search.SportId != null)
+            {
+                filterquery = filterquery.Where(X => X.SportsId == search.SportId);
+
+            }
+
+            return filterquery;
+
+
+
+        }
     }
 }
