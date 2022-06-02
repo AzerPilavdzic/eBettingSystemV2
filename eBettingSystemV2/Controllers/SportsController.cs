@@ -50,14 +50,15 @@ namespace eBettingSystemV2.Controllers
         }
 
 
+        
+
         [HttpGet]
-        [Route("GetSportById")]
+        [Route("GetSportById/{id}")]
         public override Task<ActionResult<SportModel>> GetById(int id)
         {
             return base.GetById(id);
-
         }
-      
+
 
 
         [HttpPost]
@@ -104,12 +105,7 @@ namespace eBettingSystemV2.Controllers
 
 
 
-        [HttpGet]
-        [Route("GetSportById/{id}")]
-        public override Task<ActionResult<SportModel>> GetById(int id)
-        {
-            return base.GetById(id);
-        }
+        
 
 
         [HttpPut]
