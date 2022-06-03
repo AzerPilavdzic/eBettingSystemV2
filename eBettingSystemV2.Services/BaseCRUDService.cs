@@ -83,7 +83,7 @@ namespace eBettingSystemV2.Services
             return true;
         }
 
-        public virtual IEnumerable<TDb> AddRange(IEnumerable<TInsert> insertlist ,DbSet<TDb> set)
+        public virtual IEnumerable<TDb> AddRange(IEnumerable<TUpdate> insertlist ,DbSet<TDb> set)
         {
             IEnumerable<TDb> entity = Mapper.Map<IEnumerable<TDb>>(insertlist);
             set.AddRange(entity);
@@ -92,7 +92,6 @@ namespace eBettingSystemV2.Services
 
 
         }
-
 
         public virtual T Update(int id, TUpdate update)
         {
@@ -174,6 +173,9 @@ namespace eBettingSystemV2.Services
         public virtual async Task<int> DeleteAsync(int id)
         {
 
+            BeforeDelete(id);
+
+
             T Model = null;
 
             var set = await Context.Set<TDb>().FindAsync(id);
@@ -203,7 +205,7 @@ namespace eBettingSystemV2.Services
 
         }
 
-        public virtual async Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TInsert> List)
+        public virtual async Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TUpdate> List)
         {
 
             //if (!BeforeInsertBool(insert))
@@ -234,12 +236,6 @@ namespace eBettingSystemV2.Services
 
 
         }
-
-
-
-
-
-
 
         public virtual bool checkIfNameSame(TInsert insert,TDb entry)
         {
@@ -301,6 +297,12 @@ namespace eBettingSystemV2.Services
 
 
 
+        }
+
+        public virtual void BeforeDelete(int id)
+        { 
+        
+      
         }
 
         

@@ -18,7 +18,7 @@ namespace eBettingSystemV2.Services
        SportModel,
        Sport,
        SportSearchObject,
-       SportUpsertRequest,
+       SportInsertRequest,
        SportUpsertRequest,
        SportModelLess
        >,
@@ -36,7 +36,7 @@ namespace eBettingSystemV2.Services
         }
 
 
-        public override SportModelLess Insert(SportUpsertRequest insert)
+        public override SportModelLess Insert(SportInsertRequest insert)
         {
             return base.Insert(insert);
         }
@@ -123,7 +123,7 @@ namespace eBettingSystemV2.Services
 
         //insersport by id
 
-        public override bool checkIfNameSame(SportUpsertRequest insert, Sport entry)
+        public override bool checkIfNameSame(SportInsertRequest insert, Sport entry)
         {
             if (insert.name == entry?.name)
             {
@@ -136,7 +136,7 @@ namespace eBettingSystemV2.Services
         }
            
 
-        public override bool BeforeInsertBool(SportUpsertRequest insert)
+        public override bool BeforeInsertBool(SportInsertRequest insert)
         {
             var entity = Context.Sport.Where(x => x.name.ToLower() == insert.name.ToLower()).FirstOrDefault();
             if (entity == null)
@@ -148,7 +148,24 @@ namespace eBettingSystemV2.Services
         }
 
 
+        public override void BeforeDelete(int id)
+        {
+            var daliposotji = Context.Teams.Where(X => X.sportid == id).ToList();
 
+            if (daliposotji != null)
+            {
+                foreach (var a in daliposotji)
+                {
+                    a.sportid = null;
+                
+                }
+                Context.SaveChanges();
+            }
+
+
+
+            base.BeforeDelete(id);
+        }
 
 
 
