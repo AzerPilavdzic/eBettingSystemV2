@@ -55,7 +55,7 @@ namespace eBettingSystemV2.Services
                 addnumber = set.Count() - takenumber;
                 set.AddRange(Mapper.Map<IEnumerable<Sport>>(list.Skip(takenumber - addnumber)));
                 takenumber = set.Count();
-            
+
             }
 
 
@@ -65,23 +65,23 @@ namespace eBettingSystemV2.Services
 
             int i = 0;
 
-           
+
 
 
             foreach (var a in SetMini)
             {
-                               
+
                 if (a.name != list[i].name)
                 {
-                   //a.name = list[i].name;
-                   set.Find(a.SportsId).name = list[i].name; 
+                    //a.name = list[i].name;
+                    set.Find(a.SportsId).name = list[i].name;
                 }
                 i++;
 
 
             }
 
-            
+
 
 
 
@@ -92,7 +92,7 @@ namespace eBettingSystemV2.Services
 
             return entity;
 
-
+        }
 
 
         public override IQueryable<Sport> AddFilter(IQueryable<Sport> query, SportSearchObject search = null)
@@ -129,11 +129,11 @@ namespace eBettingSystemV2.Services
             {
 
                 return true;
-            
-            
+
+
             }
             return false;
-
+        }
            
 
         public override bool BeforeInsertBool(SportUpsertRequest insert)
