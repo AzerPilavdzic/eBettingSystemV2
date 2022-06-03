@@ -20,7 +20,7 @@ namespace eBettingSystemV2.Controllers
     public class SportController : BaseCRUDController<SportModel, SportSearchObject, SportUpsertRequest, SportUpsertRequest, SportModelLess>
     {
         public static List<Country> Test = new List<Country>();
-    
+
         private ISportService ISportService { get; set; }
         private readonly ILogger<SportController> _logger;
 
@@ -49,9 +49,95 @@ namespace eBettingSystemV2.Controllers
 
         }
 
-        public override Task<ActionResult<SportModel>> Insert(SportUpsertRequest insert)
+
+        
+
+        [HttpGet]
+        [Route("GetSportById/{id}")]
+        public override Task<ActionResult<SportModel>> GetById(int id)
         {
-            return base.Insert(insert);
+            return base.GetById(id);
         }
+
+
+
+        [HttpPost]
+        [Route("InsertSport")]
+        public override async Task<ActionResult<SportModel>> Insert(SportUpsertRequest insert)
+        {
+
+            try
+            {
+                var result = await base.Insert(insert);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+
+
+
+
+
+        
+
+        [HttpDelete]
+        [Route("DeleteSportById/{SportsId}")]
+        public async Task<IActionResult> Delete(int SportsId)
+        {
+            var result = await ISportService.DeleteAsync(SportsId);
+
+            if (result != null)
+            {
+                return Ok($"Sport sa Id {SportsId} je uspjesno obrisan");
+            }
+            else
+            {
+                return Ok($"Drzava ne postoji ");
+            }
+        }
+
+
+
+
+        
+
+
+        [HttpPut]
+        [Route("UpdateSport/{id}")]
+        public override Task<ActionResult<SportModel>> Update(int id, [FromBody] SportUpsertRequest update)
+
+        {
+            return base.Update(id, update);
+        }
+
+
+
+        [HttpPost]
+        [Route("AddoneormoreSports")]
+        public override Task<ActionResult<IEnumerable<SportModelLess>>> InsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
+        {
+            return base.InsertOneOrMore(insertlist);
+        }
+
+        [HttpPost]
+        [Route("AddSportById")]
+        public override Task<ActionResult<SportModelLess>> InsertById(int Id, SportUpsertRequest Insert)
+        {
+            return base.InsertById(Id, Insert);
+        }
+
+
+             
+
+
+
+
+
     }
 }
