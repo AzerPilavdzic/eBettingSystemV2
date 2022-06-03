@@ -52,7 +52,7 @@ namespace eBettingSystemV2.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public virtual async Task<ActionResult<T>> GetById(int id)
         {
             var Model = await Service.GetByIdAsync(id);

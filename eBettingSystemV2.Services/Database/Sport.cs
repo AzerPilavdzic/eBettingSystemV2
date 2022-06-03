@@ -9,5 +9,7 @@ namespace eBettingSystemV2.Services.Database
     {
         public int SportsId { get; set; }
         public string name { get; set; }
+
+        
     }
 }

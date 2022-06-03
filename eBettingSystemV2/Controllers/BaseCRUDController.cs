@@ -4,6 +4,7 @@ using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace eProdaja.Controllers
@@ -52,6 +53,30 @@ namespace eProdaja.Controllers
 
         }
 
+        [HttpPost]
+        public virtual async Task<ActionResult<IEnumerable<Tless>>> InsertOneOrMore(IEnumerable<TInsert> insertlist)
+        {
+            var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).InsertOneOrMoreAsync(insertlist);
+
+
+
+            if (result == null)
+            {
+                return Ok("Null");
+
+            }
+            else
+            {
+
+                return Ok(result);
+
+            }
+
+
+
+        }
+
+
         [HttpPut("{id}")]
         public virtual async Task<ActionResult<T>> Update(int id, [FromBody] TUpdate update)
         {
@@ -59,7 +84,15 @@ namespace eProdaja.Controllers
             return Ok(result);
         }
 
+        [HttpPost("{Id}")]
+        public virtual async Task<ActionResult<Tless>> InsertById(int Id , TInsert Insert)
+        {
 
+            var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).InsertById(Insert,Id);
 
+            return Ok(result);
+
+        }
+       
     }
 }
