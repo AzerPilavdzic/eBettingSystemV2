@@ -12,7 +12,7 @@ namespace eBettingSystemV2.Services.Database
         public int? Foundedyear { get; set; }
         public string City { get; set; }
         public int Countryid { get; set; }
-        public int sportid { get; set; }
+        public int ? sportid { get; set; }
 
         public virtual Country Country { get; set; }
     }

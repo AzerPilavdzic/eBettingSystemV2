@@ -54,12 +54,6 @@ namespace eBettingSystemV2.Controllers
             return base.Get(search);
         }
 
-        [HttpPost]
-        [Route("InsertCountry")]
-        public override Task<ActionResult<CountryModel>>Insert(CountryUpsertRequest insert)
-        {
-            return base.Insert(insert);
-        }
 
         [HttpGet]
         [Route("GetCountryById/{id}")]
@@ -69,7 +63,17 @@ namespace eBettingSystemV2.Controllers
         }
 
 
+        [HttpPost]
+        [Route("InsertCountry")]
+        public override Task<ActionResult<CountryModel>>Insert(CountryUpsertRequest insert)
+        {
+            return base.Insert(insert);
+        }
+
+
+
         [HttpPut]
+        [EnableCors("CorsPolicy")]
         [Route("UpdateCountry/{id}")]
         public override Task<ActionResult<CountryModel>> Update(int id, [FromBody] CountryUpsertRequest update)
         {

@@ -31,6 +31,7 @@ namespace eBettingSystemV2.Controllers
         };
 
 
+
         public SportController(ISportService service, ILogger<SportController> logger) : base(service)
         {
             ISportService = service;
@@ -48,8 +49,6 @@ namespace eBettingSystemV2.Controllers
 
 
         }
-
-
         
 
         [HttpGet]
@@ -58,7 +57,6 @@ namespace eBettingSystemV2.Controllers
         {
             return base.GetById(id);
         }
-
 
 
         [HttpPost]
@@ -78,34 +76,13 @@ namespace eBettingSystemV2.Controllers
 
         }
 
-
-
-
-
-
-
         
-
-        [HttpDelete]
-        [Route("DeleteSportById/{SportsId}")]
-        public async Task<IActionResult> Delete(int SportsId)
+        [HttpPost]
+        [Route("AddoneormoreSports")]
+        public override Task<ActionResult<IEnumerable<SportModelLess>>> InsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
         {
-            var result = await ISportService.DeleteAsync(SportsId);
-
-            if (result != null)
-            {
-                return Ok($"Sport sa Id {SportsId} je uspjesno obrisan");
-            }
-            else
-            {
-                return Ok($"Drzava ne postoji ");
-            }
+            return base.InsertOneOrMore(insertlist);
         }
-
-
-
-
-        
 
 
         [HttpPut]
@@ -117,27 +94,28 @@ namespace eBettingSystemV2.Controllers
         }
 
 
-
-        [HttpPost]
-        [Route("AddoneormoreSports")]
-        public override Task<ActionResult<IEnumerable<SportModelLess>>> InsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
-        {
-            return base.InsertOneOrMore(insertlist);
-        }
-
-        [HttpPost]
-        [Route("AddSportById")]
+        [HttpPut]
+        [Route("UpdateSportById")]
         public override Task<ActionResult<SportModelLess>> InsertById(int Id, SportUpsertRequest Insert)
         {
             return base.InsertById(Id, Insert);
         }
 
 
-             
+        [HttpDelete]
+        [Route("DeleteSportById/{SportsId}")]
+        public async Task<IActionResult> Delete(int SportsId)
+        {
+            var result = await ISportService.DeleteAsync(SportsId);
 
-
-
-
-
+            if (result != -1)
+            {
+                return Ok($"Sport sa Id {SportsId} je uspjesno obrisan");
+            }
+            else
+            {
+                return BadRequest($"Team ne postoji ");
+            }
+        }
     }
 }
