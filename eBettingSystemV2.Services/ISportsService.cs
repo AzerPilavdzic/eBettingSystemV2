@@ -12,7 +12,7 @@ namespace eBettingSystemV2.Services
     public interface ISportService :
         ICRUDService<SportModel,
             SportSearchObject,
-            SportUpsertRequest,
+            SportInsertRequest,
             SportUpsertRequest,
             SportModelLess>
     {

@@ -24,8 +24,10 @@ namespace eBettingSystemV2.Services
         T Delete(int id);
         Task<int> DeleteAsync(int id);
         Task<Tless> InsertAsync(TInsert insert);
-        Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TInsert> List);
+        Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TUpdate> List);
         Task<Tless> InsertById(TInsert Insert, int Id);
+
+
 
     }
 }
