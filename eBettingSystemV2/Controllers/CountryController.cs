@@ -17,7 +17,7 @@ namespace eBettingSystemV2.Controllers
     [ApiController]
     [Route("[controller]")]
     //public class CountryController
-    public class CountryController : BaseCRUDController<CountryModel, CountrySearchObject, CountryUpsertRequest, CountryUpsertRequest, CountryModel>
+    public class CountryController : BaseCRUDController<CountryModel, CountrySearchObject, CountryInsertRequest, CountryUpsertRequest, CountryModelLess>
     {
         public static List<Country> Test = new List<Country>();
         private ICountryService ICountryService { get; set; }
@@ -64,14 +64,14 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("InsertCountry")]
-        public override Task<ActionResult<CountryModel>> Insert(CountryUpsertRequest insert)
+        public override Task<ActionResult<CountryModel>> Insert(CountryInsertRequest insert)
         {
             return base.Insert(insert);
         }
 
         [HttpPost]
         [Route("InsertCountryById")]
-        public override Task<ActionResult<CountryModel>> InsertById(int Id, CountryUpsertRequest Insert)
+        public override Task<ActionResult<CountryModelLess>> InsertById(int Id, CountryInsertRequest Insert)
         {
             return base.InsertById(Id, Insert);
         }
@@ -79,9 +79,22 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("InsertOneOrMoreCountry")]
-        public override Task<ActionResult<IEnumerable<CountryModel>>> InsertOneOrMore(IEnumerable<CountryUpsertRequest> insertlist)
+        public override async Task<ActionResult<IEnumerable<CountryModelLess>>> InsertOneOrMore(IEnumerable<CountryUpsertRequest> insertlist)
         {
-            return base.InsertOneOrMore(insertlist);
+            try
+            {
+                var result = await base.InsertOneOrMore(insertlist);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
+
+
+            
         }
 
 
