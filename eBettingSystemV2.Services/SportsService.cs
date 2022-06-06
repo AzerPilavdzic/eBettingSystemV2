@@ -138,7 +138,7 @@ namespace eBettingSystemV2.Services
 
         public override bool BeforeInsertBool(SportInsertRequest insert)
         {
-            var entity = Context.Sport.Where(x => x.name.ToLower() == insert.name.ToLower()).FirstOrDefault();
+            var entity = Context.Sports.Where(x => x.name.ToLower() == insert.name.ToLower()).FirstOrDefault();
             if (entity == null)
             {
                 return true;
@@ -150,13 +150,13 @@ namespace eBettingSystemV2.Services
 
         public override void BeforeDelete(int id)
         {
-            var daliposotji = Context.Teams.Where(X => X.sportid == id).ToList();
+            var daliposotji = Context.Teams.Where(X => X.Sportid == id).ToList();
 
             if (daliposotji != null)
             {
                 foreach (var a in daliposotji)
                 {
-                    a.sportid = null;
+                    a.Sportid = null;
                 
                 }
                 Context.SaveChanges();
