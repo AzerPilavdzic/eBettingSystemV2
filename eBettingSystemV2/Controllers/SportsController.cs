@@ -17,7 +17,7 @@ namespace eBettingSystemV2.Controllers
 
     [ApiController]
     [Route("[controller]")]
-    public class SportController : BaseCRUDController<SportModel, SportSearchObject, SportUpsertRequest, SportUpsertRequest, SportModelLess>
+    public class SportController : BaseCRUDController<SportModel, SportSearchObject, SportInsertRequest, SportUpsertRequest, SportModelLess>
     {
         public static List<Country> Test = new List<Country>();
 
@@ -29,7 +29,6 @@ namespace eBettingSystemV2.Controllers
         {
             "BIH", "CRO", "SLO", "SRB"
         };
-
 
 
         public SportController(ISportService service, ILogger<SportController> logger) : base(service)
@@ -49,6 +48,8 @@ namespace eBettingSystemV2.Controllers
 
 
         }
+
+
         
 
         [HttpGet]
@@ -59,9 +60,10 @@ namespace eBettingSystemV2.Controllers
         }
 
 
+
         [HttpPost]
         [Route("InsertSport")]
-        public override async Task<ActionResult<SportModel>> Insert(SportUpsertRequest insert)
+        public override async Task<ActionResult<SportModel>> Insert(SportInsertRequest insert)
         {
 
             try
@@ -76,13 +78,48 @@ namespace eBettingSystemV2.Controllers
 
         }
 
-        
         [HttpPost]
         [Route("AddoneormoreSports")]
         public override Task<ActionResult<IEnumerable<SportModelLess>>> InsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
         {
             return base.InsertOneOrMore(insertlist);
         }
+
+
+        [HttpPost]
+        [Route("AddSportById")]
+        public override Task<ActionResult<SportModelLess>> InsertById(int Id, SportInsertRequest Insert)
+        {
+            return base.InsertById(Id, Insert);
+        }
+
+
+
+
+
+
+
+
+        [HttpDelete]
+        [Route("DeleteSportById/{SportsId}")]
+        public async Task<IActionResult> Delete(int SportsId)
+        {
+            var result = await ISportService.DeleteAsync(SportsId);
+
+            if (result != null)
+            {
+                return Ok($"Sport sa Id {SportsId} je uspjesno obrisan");
+            }
+            else
+            {
+                return Ok($"Drzava ne postoji ");
+            }
+        }
+
+
+
+
+        
 
 
         [HttpPut]
@@ -94,28 +131,15 @@ namespace eBettingSystemV2.Controllers
         }
 
 
-        [HttpPut]
-        [Route("UpdateSportById")]
-        public override Task<ActionResult<SportModelLess>> InsertById(int Id, SportUpsertRequest Insert)
-        {
-            return base.InsertById(Id, Insert);
-        }
+
+       
 
 
-        [HttpDelete]
-        [Route("DeleteSportById/{SportsId}")]
-        public async Task<IActionResult> Delete(int SportsId)
-        {
-            var result = await ISportService.DeleteAsync(SportsId);
+             
 
-            if (result != -1)
-            {
-                return Ok($"Sport sa Id {SportsId} je uspjesno obrisan");
-            }
-            else
-            {
-                return BadRequest($"Team ne postoji ");
-            }
-        }
+
+
+
+
     }
 }

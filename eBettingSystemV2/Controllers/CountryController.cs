@@ -54,7 +54,7 @@ namespace eBettingSystemV2.Controllers
             return base.Get(search);
         }
 
-
+       
         [HttpGet]
         [Route("GetCountryById/{id}")]
         public override Task<ActionResult<CountryModel>> GetById(int id)
@@ -62,18 +62,31 @@ namespace eBettingSystemV2.Controllers
             return base.GetById(id);
         }
 
-
         [HttpPost]
         [Route("InsertCountry")]
-        public override Task<ActionResult<CountryModel>>Insert(CountryUpsertRequest insert)
+        public override Task<ActionResult<CountryModel>> Insert(CountryUpsertRequest insert)
         {
             return base.Insert(insert);
+        }
+
+        [HttpPost]
+        [Route("InsertCountryById")]
+        public override Task<ActionResult<CountryModel>> InsertById(int Id, CountryUpsertRequest Insert)
+        {
+            return base.InsertById(Id, Insert);
+        }
+
+
+        [HttpPost]
+        [Route("InsertOneOrMoreCountry")]
+        public override Task<ActionResult<IEnumerable<CountryModel>>> InsertOneOrMore(IEnumerable<CountryUpsertRequest> insertlist)
+        {
+            return base.InsertOneOrMore(insertlist);
         }
 
 
 
         [HttpPut]
-        [EnableCors("CorsPolicy")]
         [Route("UpdateCountry/{id}")]
         public override Task<ActionResult<CountryModel>> Update(int id, [FromBody] CountryUpsertRequest update)
         {
@@ -86,17 +99,28 @@ namespace eBettingSystemV2.Controllers
         [Route("DeleteCountryById/{CountryId}")]
         public async Task<IActionResult> Delete(int CountryId)
         {
-            var result = await ICountryService.DeleteAsync(CountryId);
+            try
+            {
+                var result = await ICountryService.DeleteAsync(CountryId);
 
-            if (result != 0)
-            {
-                return Ok($"Drzava sa Id {CountryId} je uspjesno obrisana");
+                if (result != 0)
+                {
+                    return Ok($"Drzava sa Id {CountryId} je uspjesno obrisana");
+                }
+                else
+                {
+                    //Console.WriteLine("TESTIRANJE ISPISA U KONZOLI");
+                    return BadRequest($"Drzava ne postoji ");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("TESTIRANJE ISPISA U KONZOLI");
-                return BadRequest($"Drzava ne postoji ");
+                return BadRequest(ex.Message);
             }
+
+
+
+           
         }
     }
 }
