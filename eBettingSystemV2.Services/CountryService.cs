@@ -6,6 +6,7 @@ using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.Database;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -88,10 +89,83 @@ namespace eBettingSystemV2.Services
             throw new Exception("EXCEPTION: DRZAVA SA TIM IMENOM VEC POSTOJI.");
         }
 
-        
+        public override IEnumerable<Country> AddRange(IEnumerable<CountryUpsertRequest> insertlist, DbSet<Country> set)
+        {
+            int takenumber = insertlist.Count(); //koliko ih treba uzeti
+            int addnumber = 0;  //koliko ih treba dodati
+            var list = insertlist.ToList(); //konverzija
+
+            if (takenumber > set.Count())
+            {
+                addnumber = set.Count() - takenumber;
+                set.AddRange(Mapper.Map<IEnumerable<Country>>(list.Skip(takenumber - addnumber)));
+                takenumber = set.Count();
+
+            }
+
+            var SetMini = set.Take(takenumber);
+
+            int i = 0;
 
 
 
+
+            foreach (var a in SetMini)
+            {
+
+                if (a.CountryName != list[i].CountryName)
+                {
+                    //a.name = list[i].name;
+                    set.Find(a.CountryId).CountryName = list[i].CountryName;
+                }
+                i++;
+
+
+            }
+
+
+
+
+
+
+
+            IEnumerable<Country> entity = Mapper.Map<IEnumerable<Country>>(SetMini);
+            //set.AddRange(entity);
+
+            return entity;
+        }
+
+        public override bool checkIfNameSame(CountryUpsertRequest insert, Country entry)
+        {
+            if (insert.CountryName == entry?.CountryName)
+            {
+
+                return true;
+
+
+            }
+            return false;
+        }
+
+
+        public override void BeforeDelete(int id)
+        {
+            var entry = Context.Teams.Where(X=>X.Countryid==id).FirstOrDefault();
+
+            if (entry != null)
+            {
+
+                throw new Exception("Team got a relation with the Country you want to Delete");
+               
+            
+            }
+
+
+
+
+
+
+        }
 
 
 

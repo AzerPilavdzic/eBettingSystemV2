@@ -27,6 +27,20 @@ namespace eBettingSystemV2.Services
 
         public override bool BeforeInsertBool(TeamUpsertRequest insert)
         {
+            var dalipostoji = Context.Countries.Find(insert.Countryid);
+            if (dalipostoji == null)
+            {
+                throw new Exception($"Country with the countryid {insert.Countryid} Does not exist in the Database");
+
+            }
+
+
+
+
+
+
+
+
             var entity = Context.Teams.Where(x => x.Teamname.ToLower() == insert.TeamName.ToLower()).FirstOrDefault();
             if (entity == null)
             {
