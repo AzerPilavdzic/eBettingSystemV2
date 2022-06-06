@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.IdentityModel.Protocols;
 
 #nullable disable
 
@@ -19,8 +17,9 @@ namespace eBettingSystemV2.Services.Database
         {
         }
 
+        public virtual DbSet<Competition> Competitions { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
-        public virtual DbSet<Sport> Sport { get; set; }
+        public virtual DbSet<Sport> Sports { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -28,12 +27,41 @@ namespace eBettingSystemV2.Services.Database
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql(ConfigurationManager.AppSettings["DefaultConnection"]);
+                optionsBuilder.UseNpgsql("Host=192.168.43.21 ; Database=praksa_db;Username=praksa;Password=12345");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Competition>(entity =>
+            {
+                entity.ToTable("competition", "BettingSystem");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Countryid).HasColumnName("countryid");
+
+                entity.Property(e => e.Naziv)
+                    .HasColumnType("character varying")
+                    .HasColumnName("naziv");
+
+                entity.Property(e => e.Sportid).HasColumnName("sportid");
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.Competitions)
+                    .HasForeignKey(d => d.Countryid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("competition_fk");
+
+                entity.HasOne(d => d.Sport)
+                    .WithMany(p => p.Competitions)
+                    .HasForeignKey(d => d.Sportid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("competition_fk_1");
+            });
+
             modelBuilder.Entity<Country>(entity =>
             {
                 entity.ToTable("Country", "BettingSystem");
@@ -77,6 +105,8 @@ namespace eBettingSystemV2.Services.Database
 
                 entity.Property(e => e.Foundedyear).HasColumnName("foundedyear");
 
+                entity.Property(e => e.Sportid).HasColumnName("sportid");
+
                 entity.Property(e => e.Teamname).HasColumnName("teamname");
 
                 entity.HasOne(d => d.Country)
@@ -84,6 +114,11 @@ namespace eBettingSystemV2.Services.Database
                     .HasForeignKey(d => d.Countryid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("teams_fk");
+
+                entity.HasOne(d => d.Sport)
+                    .WithMany(p => p.Teams)
+                    .HasForeignKey(d => d.Sportid)
+                    .HasConstraintName("teams_sportid_sport_sportsid_fk");
             });
 
             OnModelCreatingPartial(modelBuilder);
