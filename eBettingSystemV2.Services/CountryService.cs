@@ -23,9 +23,9 @@ namespace eBettingSystemV2.Services
         CountryModel,
         Country,
         CountrySearchObject,
+        CountryInsertRequest,
         CountryUpsertRequest,
-        CountryUpsertRequest,
-        CountryModel
+        CountryModelLess
         >,
         ICountryService
         
@@ -69,7 +69,7 @@ namespace eBettingSystemV2.Services
 
         }
 
-        public override CountryModel Insert(CountryUpsertRequest insert)
+        public override CountryModelLess Insert(CountryInsertRequest insert)
         {
             if (!BeforeInsertBool(insert))
             {
@@ -79,7 +79,7 @@ namespace eBettingSystemV2.Services
 
         }
 
-        public override bool BeforeInsertBool(CountryUpsertRequest insert)
+        public override bool BeforeInsertBool(CountryInsertRequest insert)
         {
             var entity = Context.Countries.Where(x=>x.CountryName.ToLower()==insert.CountryName.ToLower()).FirstOrDefault();
             if (entity == null)
@@ -91,51 +91,84 @@ namespace eBettingSystemV2.Services
 
         public override IEnumerable<Country> AddRange(IEnumerable<CountryUpsertRequest> insertlist, DbSet<Country> set)
         {
-            int takenumber = insertlist.Count(); //koliko ih treba uzeti
-            int addnumber = 0;  //koliko ih treba dodati
-            var list = insertlist.ToList(); //konverzija
+            List<Country> Result = new List<Country>();
+            Country aa = null;
 
-            if (takenumber > set.Count())
+
+
+
+            foreach (var a in insertlist)
             {
-                addnumber = set.Count() - takenumber;
-                set.AddRange(Mapper.Map<IEnumerable<Country>>(list.Skip(takenumber - addnumber)));
-                takenumber = set.Count();
-
-            }
-
-            var SetMini = set.Take(takenumber);
-
-            int i = 0;
-
-
-
-
-            foreach (var a in SetMini)
-            {
-
-                if (a.CountryName != list[i].CountryName)
+                if (Context.Countries.Where(X=>X.CountryName==a.CountryName).FirstOrDefault()!=null)
                 {
-                    //a.name = list[i].name;
-                    set.Find(a.CountryId).CountryName = list[i].CountryName;
+
+                    throw new Exception($"Entry with the name {a.CountryName} already exist in the database");
+                
                 }
-                i++;
+
+
+                if (a.CountryId == 0)
+                {
+
+                    aa = Mapper.Map<Country>(a);
+                    //dodaj u bazu
+                    set.Add(aa);
+                    //dodaj u result
+                    Context.SaveChanges();
+
+                    Result.Add(aa);
+                    continue;
+
+                }
+
+                var entry = set.Find(a.CountryId);
+
+                if (entry != null)
+                {
+
+                    entry.CountryName = a.CountryName;
+
+                    Result.Add(Mapper.Map<Country>(entry));
+
+                }
+                else
+                {
+                    if (a.CountryId != 0)
+                    {
+
+                        a.CountryId = 0;
+
+                    }
+
+                    aa = Mapper.Map<Country>(a);
+
+                    set.Add(aa);
+                    Context.SaveChanges();
+
+
+                    Result.Add(Mapper.Map<Country>(aa));
+
+                }
+
+
+
 
 
             }
 
 
-
-
-
-
-
-            IEnumerable<Country> entity = Mapper.Map<IEnumerable<Country>>(SetMini);
+            IEnumerable<Country> entity = Mapper.Map<IEnumerable<Country>>(Result);
             //set.AddRange(entity);
 
             return entity;
+
+
+
+
+
         }
 
-        public override bool checkIfNameSame(CountryUpsertRequest insert, Country entry)
+        public override bool checkIfNameSame(CountryInsertRequest insert, Country entry)
         {
             if (insert.CountryName == entry?.CountryName)
             {
