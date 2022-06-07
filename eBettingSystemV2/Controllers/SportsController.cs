@@ -1,8 +1,8 @@
 ﻿using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
-using eBettingSystemV2.Services.Database;
-//using eBettingSystemV2.Models;
+using eBettingSystemV2.Services.DataBase;
+using eBettingSystemV2.Models;
 using eProdaja.Controllers;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -50,7 +50,7 @@ namespace eBettingSystemV2.Controllers
         }
 
 
-        
+
 
         [HttpGet]
         [Route("GetSportById/{id}")]
@@ -79,7 +79,7 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpPost]
-        [Route("AddoneormoreSports")]
+        [Route("UpsertOneOrMoreSports")]
         public override Task<ActionResult<IEnumerable<SportModelLess>>> InsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
         {
             return base.InsertOneOrMore(insertlist);
@@ -87,18 +87,11 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpPost]
-        [Route("AddSportById")]
+        [Route("UpsertSports")]
         public override Task<ActionResult<SportModelLess>> InsertById(int Id, SportInsertRequest Insert)
         {
             return base.InsertById(Id, Insert);
         }
-
-
-
-
-
-
-
 
         [HttpDelete]
         [Route("DeleteSportById/{SportsId}")]
@@ -106,20 +99,15 @@ namespace eBettingSystemV2.Controllers
         {
             var result = await ISportService.DeleteAsync(SportsId);
 
-            if (result != null)
+            if (result != SportsId)
             {
-                return Ok($"Sport sa Id {SportsId} je uspjesno obrisan");
+                return BadRequest($"Drzava ne postoji ");
             }
             else
             {
-                return Ok($"Drzava ne postoji ");
+                return Ok($"Sport sa Id {SportsId} je uspjesno obrisan");
             }
         }
-
-
-
-
-        
 
 
         [HttpPut]
@@ -132,10 +120,10 @@ namespace eBettingSystemV2.Controllers
 
 
 
-       
 
 
-             
+
+
 
 
 

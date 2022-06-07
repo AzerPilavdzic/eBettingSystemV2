@@ -1,7 +1,7 @@
 ﻿using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
-using eBettingSystemV2.Services.Database;
+using eBettingSystemV2.Services.DataBase;
 //using eBettingSystemV2.Models;
 using eProdaja.Controllers;
 using Microsoft.AspNetCore.Cors;
@@ -70,7 +70,7 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpPost]
-        [Route("InsertCountryById")]
+        [Route("UpsertCountries")]
         public override Task<ActionResult<CountryModelLess>> InsertById(int Id, CountryInsertRequest Insert)
         {
             return base.InsertById(Id, Insert);
@@ -78,7 +78,7 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpPost]
-        [Route("InsertOneOrMoreCountry")]
+        [Route("UpsertOneOrMoreCountries")]
         public override async Task<ActionResult<IEnumerable<CountryModelLess>>> InsertOneOrMore(IEnumerable<CountryUpsertRequest> insertlist)
         {
             try
