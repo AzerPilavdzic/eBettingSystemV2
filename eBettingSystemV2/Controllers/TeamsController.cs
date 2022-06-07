@@ -60,6 +60,35 @@ namespace eBettingSystemV2.Controllers
         }
 
 
+        [HttpGet]
+        [Route("GetTeamById/{id}")]
+        public override Task<ActionResult<TeamModel>> GetById(int id)
+        {
+            return base.GetById(id);    
+        }
+
+
+        [HttpGet]
+        [Route("GetTeamByCountryId/{CountryId}")]
+        public async Task<ActionResult<IEnumerable<TeamModel>>> GetTeamByCountryId(int CountryId)
+        {
+
+            var result = await ITeamService.GetbyForeignKeyAsync(CountryId);
+
+            if (result.Count() == 0)
+            {
+
+                return BadRequest("Podaci ne postoje");
+
+            }
+            else
+            {
+                return Ok(result);
+            
+            }
+        }
+
+
         [HttpPost]
         [Route("InsertTeam")]
         public override async Task<ActionResult<TeamModel>> Insert(TeamUpsertRequest insert)
@@ -86,11 +115,13 @@ namespace eBettingSystemV2.Controllers
         }
 
 
-        [HttpGet]
-        [Route("GetTeamById/{id}")]
-        public override Task<ActionResult<TeamModel>> GetById(int id)
+        [HttpPut]
+        [Route("UpdateTeamTEST_TEST/{Id}")]
+        public IActionResult Update(int Id, [FromBody] JsonPatchDocument update)
         {
-            return base.GetById(id);    
+
+            var result = ITeamService.UpdateJson(Id, update);
+            return Ok(result);
         }
 
         [HttpDelete]
@@ -109,36 +140,6 @@ namespace eBettingSystemV2.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("GetTeamByCountryId/{CountryId}")]
 
-        public async Task<ActionResult<IEnumerable<TeamModel>>> GetTeamByCountryId(int CountryId)
-        {
-
-            var result = await ITeamService.GetbyForeignKeyAsync(CountryId);
-
-            if (result.Count() == 0)
-            {
-
-                return BadRequest("Podaci ne postoje");
-
-            }
-            else
-            {
-                return Ok(result);
-            
-            }
-
-            
-        }
-
-        [HttpPut]
-        [Route("UpdateTeamTest/{Id}")]
-        public IActionResult Update(int Id, [FromBody] JsonPatchDocument update)
-        {
-
-            var result = ITeamService.UpdateJson(Id, update);
-            return Ok(result);
-        }
     }
 }
