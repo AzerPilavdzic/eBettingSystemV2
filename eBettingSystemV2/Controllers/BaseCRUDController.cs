@@ -17,10 +17,14 @@ namespace eProdaja.Controllers
         where TUpdate : class
         where Tless : class
     {
+        private ISportService service;
+
         //private ITeamService service;
 
         public BaseCRUDController(ICRUDService<T, TSearch, TInsert, TUpdate, Tless> service) : base(service)
         { }
+
+       
 
         //public BaseCRUDController(ITeamService service)
         //{
@@ -54,7 +58,7 @@ namespace eProdaja.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<ActionResult<IEnumerable<Tless>>> InsertOneOrMore(IEnumerable<TInsert> insertlist)
+        public virtual async Task<ActionResult<IEnumerable<Tless>>> InsertOneOrMore(IEnumerable<TUpdate> insertlist)
         {
             var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).InsertOneOrMoreAsync(insertlist);
 

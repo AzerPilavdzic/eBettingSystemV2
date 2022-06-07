@@ -5,10 +5,11 @@ using System.Text;
 
 namespace eBettingSystemV2.Model.SearchObjects
 {
-    public class SportInsertRequest
+    public class CountryInsertRequest
     {
-        
-        public string name { get; set; }
+
+      
+        public string CountryName { get; set; }
 
     }
 }

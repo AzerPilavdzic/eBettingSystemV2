@@ -17,7 +17,7 @@ namespace eBettingSystemV2.Controllers
 
     [ApiController]
     [Route("[controller]")]
-    public class SportController : BaseCRUDController<SportModel, SportSearchObject, SportUpsertRequest, SportUpsertRequest, SportModelLess>
+    public class SportController : BaseCRUDController<SportModel, SportSearchObject, SportInsertRequest, SportUpsertRequest, SportModelLess>
     {
         public static List<Country> Test = new List<Country>();
 
@@ -63,7 +63,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("InsertSport")]
-        public override async Task<ActionResult<SportModel>> Insert(SportUpsertRequest insert)
+        public override async Task<ActionResult<SportModel>> Insert(SportInsertRequest insert)
         {
 
             try
@@ -78,13 +78,27 @@ namespace eBettingSystemV2.Controllers
 
         }
 
+        [HttpPost]
+        [Route("AddoneormoreSports")]
+        public override Task<ActionResult<IEnumerable<SportModelLess>>> InsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
+        {
+            return base.InsertOneOrMore(insertlist);
+        }
+
+
+        [HttpPost]
+        [Route("AddSportById")]
+        public override Task<ActionResult<SportModelLess>> InsertById(int Id, SportInsertRequest Insert)
+        {
+            return base.InsertById(Id, Insert);
+        }
 
 
 
 
 
 
-        
+
 
         [HttpDelete]
         [Route("DeleteSportById/{SportsId}")]
@@ -118,19 +132,7 @@ namespace eBettingSystemV2.Controllers
 
 
 
-        [HttpPost]
-        [Route("AddoneormoreSports")]
-        public override Task<ActionResult<IEnumerable<SportModelLess>>> InsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
-        {
-            return base.InsertOneOrMore(insertlist);
-        }
-
-        [HttpPost]
-        [Route("AddSportById")]
-        public override Task<ActionResult<SportModelLess>> InsertById(int Id, SportUpsertRequest Insert)
-        {
-            return base.InsertById(Id, Insert);
-        }
+       
 
 
              

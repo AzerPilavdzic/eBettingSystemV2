@@ -6,6 +6,7 @@ using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.Database;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,9 @@ namespace eBettingSystemV2.Services
         CountryModel,
         Country,
         CountrySearchObject,
+        CountryInsertRequest,
         CountryUpsertRequest,
-        CountryUpsertRequest,
-        CountryModel
+        CountryModelLess
         >,
         ICountryService
         
@@ -68,7 +69,7 @@ namespace eBettingSystemV2.Services
 
         }
 
-        public override CountryModel Insert(CountryUpsertRequest insert)
+        public override CountryModelLess Insert(CountryInsertRequest insert)
         {
             if (!BeforeInsertBool(insert))
             {
@@ -78,7 +79,7 @@ namespace eBettingSystemV2.Services
 
         }
 
-        public override bool BeforeInsertBool(CountryUpsertRequest insert)
+        public override bool BeforeInsertBool(CountryInsertRequest insert)
         {
             var entity = Context.Countries.Where(x=>x.CountryName.ToLower()==insert.CountryName.ToLower()).FirstOrDefault();
             if (entity == null)
@@ -88,10 +89,116 @@ namespace eBettingSystemV2.Services
             throw new Exception("EXCEPTION: DRZAVA SA TIM IMENOM VEC POSTOJI.");
         }
 
-        
+        public override IEnumerable<Country> AddRange(IEnumerable<CountryUpsertRequest> insertlist, DbSet<Country> set)
+        {
+            List<Country> Result = new List<Country>();
+            Country aa = null;
 
 
 
+
+            foreach (var a in insertlist)
+            {
+                if (Context.Countries.Where(X=>X.CountryName==a.CountryName).FirstOrDefault()!=null)
+                {
+
+                    throw new Exception($"Entry with the name {a.CountryName} already exist in the database");
+                
+                }
+
+
+                if (a.CountryId == 0)
+                {
+
+                    aa = Mapper.Map<Country>(a);
+                    //dodaj u bazu
+                    set.Add(aa);
+                    //dodaj u result
+                    Context.SaveChanges();
+
+                    Result.Add(aa);
+                    continue;
+
+                }
+
+                var entry = set.Find(a.CountryId);
+
+                if (entry != null)
+                {
+
+                    entry.CountryName = a.CountryName;
+
+                    Result.Add(Mapper.Map<Country>(entry));
+
+                }
+                else
+                {
+                    if (a.CountryId != 0)
+                    {
+
+                        a.CountryId = 0;
+
+                    }
+
+                    aa = Mapper.Map<Country>(a);
+
+                    set.Add(aa);
+                    Context.SaveChanges();
+
+
+                    Result.Add(Mapper.Map<Country>(aa));
+
+                }
+
+
+
+
+
+            }
+
+
+            IEnumerable<Country> entity = Mapper.Map<IEnumerable<Country>>(Result);
+            //set.AddRange(entity);
+
+            return entity;
+
+
+
+
+
+        }
+
+        public override bool checkIfNameSame(CountryInsertRequest insert, Country entry)
+        {
+            if (insert.CountryName == entry?.CountryName)
+            {
+
+                return true;
+
+
+            }
+            return false;
+        }
+
+
+        public override void BeforeDelete(int id)
+        {
+            var entry = Context.Teams.Where(X=>X.Countryid==id).FirstOrDefault();
+
+            if (entry != null)
+            {
+
+                throw new Exception("Team got a relation with the Country you want to Delete");
+               
+            
+            }
+
+
+
+
+
+
+        }
 
 
 

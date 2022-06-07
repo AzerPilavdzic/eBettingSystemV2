@@ -12,9 +12,9 @@ namespace eBettingSystemV2.Services
     public interface ICountryService : 
         ICRUDService<CountryModel, 
             CountrySearchObject, 
-            CountryUpsertRequest, 
+            CountryInsertRequest, 
             CountryUpsertRequest,
-            CountryModel>
+            CountryModelLess>
     {
 
 

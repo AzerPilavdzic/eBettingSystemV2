@@ -18,7 +18,7 @@ namespace eBettingSystemV2.Services
        SportModel,
        Sport,
        SportSearchObject,
-       SportUpsertRequest,
+       SportInsertRequest,
        SportUpsertRequest,
        SportModelLess
        >,
@@ -36,7 +36,7 @@ namespace eBettingSystemV2.Services
         }
 
 
-        public override SportModelLess Insert(SportUpsertRequest insert)
+        public override SportModelLess Insert(SportInsertRequest insert)
         {
             return base.Insert(insert);
         }
@@ -46,51 +46,69 @@ namespace eBettingSystemV2.Services
         //metoda za dodavanje sportova sa odgovarajucim pravilima
         public override IEnumerable<Sport> AddRange(IEnumerable<SportUpsertRequest> insertlist, DbSet<Sport> set)
         {
-            int takenumber = insertlist.Count(); //koliko ih treba uzeti
-            int addnumber = 0;  //koliko ih treba dodati
-            var list = insertlist.ToList(); //konverzija
 
-            if (takenumber > set.Count())
+            List<Sport> Result = new List<Sport>();
+            Sport aa = null;
+
+
+            foreach (var a in insertlist)
             {
-                addnumber = set.Count() - takenumber;
-                set.AddRange(Mapper.Map<IEnumerable<Sport>>(list.Skip(takenumber - addnumber)));
-                takenumber = set.Count();
-
-            }
-
-
-
-
-            var SetMini = set.Take(takenumber);
-
-            int i = 0;
-
-
-
-
-            foreach (var a in SetMini)
-            {
-
-                if (a.name != list[i].name)
+                if (a.SportsId == 0)
                 {
-                    //a.name = list[i].name;
-                    set.Find(a.SportsId).name = list[i].name;
+
+                    aa = Mapper.Map<Sport>(a);
+                    //dodaj u bazu
+                    set.Add(aa);
+                    //dodaj u result
+                    Context.SaveChanges();
+
+                    Result.Add(aa);
+                    continue;
+                
                 }
-                i++;
+
+                var entry = set.Find(a.SportsId);
+
+                if (entry != null)
+                {
+
+                    entry.name = a.name;
+
+                    Result.Add(Mapper.Map<Sport>(entry));
+
+                }
+                else
+                {
+                    if (a.SportsId != 0)
+                    {
+
+                        a.SportsId = 0;
+                    
+                    }
+
+                    aa = Mapper.Map<Sport>(a);
+                  
+                    set.Add(aa);
+                    Context.SaveChanges();
 
 
+                    Result.Add(Mapper.Map<Sport>(aa));
+
+                }
+
+
+            
+            
+            
             }
 
 
-
-
-
-
-
-            IEnumerable<Sport> entity = Mapper.Map<IEnumerable<Sport>>(SetMini);
+            IEnumerable<Sport> entity = Mapper.Map<IEnumerable<Sport>>(Result);
             //set.AddRange(entity);
 
             return entity;
+
+
 
         }
 
@@ -123,7 +141,7 @@ namespace eBettingSystemV2.Services
 
         //insersport by id
 
-        public override bool checkIfNameSame(SportUpsertRequest insert, Sport entry)
+        public override bool checkIfNameSame(SportInsertRequest insert, Sport entry)
         {
             if (insert.name == entry?.name)
             {
@@ -136,9 +154,9 @@ namespace eBettingSystemV2.Services
         }
            
 
-        public override bool BeforeInsertBool(SportUpsertRequest insert)
+        public override bool BeforeInsertBool(SportInsertRequest insert)
         {
-            var entity = Context.Sport.Where(x => x.name.ToLower() == insert.name.ToLower()).FirstOrDefault();
+            var entity = Context.Sports.Where(x => x.name.ToLower() == insert.name.ToLower()).FirstOrDefault();
             if (entity == null)
             {
                 return true;
@@ -148,7 +166,24 @@ namespace eBettingSystemV2.Services
         }
 
 
+        public override void BeforeDelete(int id)
+        {
+            var daliposotji = Context.Teams.Where(X => X.Sportid == id).ToList();
 
+            if (daliposotji != null)
+            {
+                foreach (var a in daliposotji)
+                {
+                    a.Sportid = null;
+                
+                }
+                Context.SaveChanges();
+            }
+
+
+
+            base.BeforeDelete(id);
+        }
 
 
 

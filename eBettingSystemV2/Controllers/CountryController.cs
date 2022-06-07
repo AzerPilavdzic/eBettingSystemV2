@@ -17,7 +17,7 @@ namespace eBettingSystemV2.Controllers
     [ApiController]
     [Route("[controller]")]
     //public class CountryController
-    public class CountryController : BaseCRUDController<CountryModel, CountrySearchObject, CountryUpsertRequest, CountryUpsertRequest, CountryModel>
+    public class CountryController : BaseCRUDController<CountryModel, CountrySearchObject, CountryInsertRequest, CountryUpsertRequest, CountryModelLess>
     {
         public static List<Country> Test = new List<Country>();
         private ICountryService ICountryService { get; set; }
@@ -54,19 +54,49 @@ namespace eBettingSystemV2.Controllers
             return base.Get(search);
         }
 
-        [HttpPost]
-        [Route("InsertCountry")]
-        public override Task<ActionResult<CountryModel>>Insert(CountryUpsertRequest insert)
-        {
-            return base.Insert(insert);
-        }
-
+       
         [HttpGet]
         [Route("GetCountryById/{id}")]
         public override Task<ActionResult<CountryModel>> GetById(int id)
         {
             return base.GetById(id);
         }
+
+        [HttpPost]
+        [Route("InsertCountry")]
+        public override Task<ActionResult<CountryModel>> Insert(CountryInsertRequest insert)
+        {
+            return base.Insert(insert);
+        }
+
+        [HttpPost]
+        [Route("InsertCountryById")]
+        public override Task<ActionResult<CountryModelLess>> InsertById(int Id, CountryInsertRequest Insert)
+        {
+            return base.InsertById(Id, Insert);
+        }
+
+
+        [HttpPost]
+        [Route("InsertOneOrMoreCountry")]
+        public override async Task<ActionResult<IEnumerable<CountryModelLess>>> InsertOneOrMore(IEnumerable<CountryUpsertRequest> insertlist)
+        {
+            try
+            {
+                var result = await base.InsertOneOrMore(insertlist);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
+
+
+            
+        }
+
 
 
         [HttpPut]
@@ -82,17 +112,28 @@ namespace eBettingSystemV2.Controllers
         [Route("DeleteCountryById/{CountryId}")]
         public async Task<IActionResult> Delete(int CountryId)
         {
-            var result = await ICountryService.DeleteAsync(CountryId);
+            try
+            {
+                var result = await ICountryService.DeleteAsync(CountryId);
 
-            if (result != 0)
-            {
-                return Ok($"Drzava sa Id {CountryId} je uspjesno obrisana");
+                if (result != 0)
+                {
+                    return Ok($"Drzava sa Id {CountryId} je uspjesno obrisana");
+                }
+                else
+                {
+                    //Console.WriteLine("TESTIRANJE ISPISA U KONZOLI");
+                    return BadRequest($"Drzava ne postoji ");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("TESTIRANJE ISPISA U KONZOLI");
-                return BadRequest($"Drzava ne postoji ");
+                return BadRequest(ex.Message);
             }
+
+
+
+           
         }
     }
 }
