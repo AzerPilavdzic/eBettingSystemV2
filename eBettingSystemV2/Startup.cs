@@ -1,5 +1,7 @@
 using eBettingSystemV2.Services;
-using eBettingSystemV2.Services.Database;
+using eBettingSystemV2.Services.DataBase;
+using eBettingSystemV2.Services.Interface;
+using eBettingSystemV2.Services.Servisi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -52,6 +54,7 @@ namespace eBettingSystemV2
             //dodano startup
             services.AddAutoMapper(typeof(ICountryService));
             services.AddAutoMapper(typeof(ITeamService));
+            services.AddAutoMapper(typeof(ICompetitionService));
 
 
 
@@ -73,6 +76,7 @@ namespace eBettingSystemV2
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<ITeamService, TeamService>();
             services.AddTransient<ISportService, SportService>();
+            services.AddTransient<ICompetitionService, CompetitionService>();
 
             #endregion 
 

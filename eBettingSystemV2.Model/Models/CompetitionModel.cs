@@ -7,9 +7,9 @@ namespace eBettingSystemV2.Models
 {
     public class CompetitionModel
     {
-        public int id { get; set; }
-        public string naziv { get; set; }
-        public int sportid { get; set; }
-        public int countryid { get; set; }
+        public int Id { get; set; }
+        public string Naziv { get; set; }
+        public int Sportid { get; set; }
+        public int Countryid { get; set; }
     }
 }

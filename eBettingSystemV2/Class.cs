@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using eBettingSystemV2.Services.Database;
+using eBettingSystemV2.Services.DataBase;
 //using eProdaja.Database;
 using Microsoft.EntityFrameworkCore;
 

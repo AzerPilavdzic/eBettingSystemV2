@@ -5,7 +5,7 @@
 using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
-using eBettingSystemV2.Services.Database;
+using eBettingSystemV2.Services.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -32,7 +32,7 @@ namespace eBettingSystemV2.Services
     {
         
 
-        public CountryService(eBettingSystemV2.Services.Database.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
+        public CountryService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
         {
 
             Context = context_;
