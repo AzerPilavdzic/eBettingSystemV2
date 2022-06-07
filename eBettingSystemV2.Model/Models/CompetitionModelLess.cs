@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Models
 {
-    class CompetitionModelLess
+    public class CompetitionModelLess
     {
         public int id { get; set; }
     }
