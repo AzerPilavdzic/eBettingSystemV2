@@ -42,8 +42,21 @@ namespace eBettingSystemV2.Services
 
         }
 
+        //ne koristi se
 
-        //vraca model iz baze
+        public override CountryModelLess Insert(CountryInsertRequest insert)
+        {
+            if (!BeforeInsertBool(insert))
+            {
+                throw new Exception("Drzava sa tim imenom vec postoji.");
+            }
+            return base.Insert(insert);
+
+        } //ne koristi se
+
+
+        //Get ekstenzije
+
         public override IQueryable<Country> AddFilter(IQueryable<Country> query, CountrySearchObject search = null)
         {
             var filterquery = base.AddFilter(query, search);
@@ -69,15 +82,7 @@ namespace eBettingSystemV2.Services
 
         }
 
-        public override CountryModelLess Insert(CountryInsertRequest insert)
-        {
-            if (!BeforeInsertBool(insert))
-            {
-            throw new Exception("Drzava sa tim imenom vec postoji.");
-            }
-                return base.Insert(insert);
-
-        }
+        //Insert Upsert sekcija 
 
         public override bool BeforeInsertBool(CountryInsertRequest insert)
         {
@@ -181,9 +186,12 @@ namespace eBettingSystemV2.Services
         }
 
 
+        //update ekstenzije
+
         public override void BeforeDelete(int id)
         {
             var entry = Context.Teams.Where(X=>X.Countryid==id).FirstOrDefault();
+            var dalipostojicompetition = Context.Competitions.Where(X=>X.Countryid==id).FirstOrDefault();
 
             if (entry != null)
             {
@@ -191,6 +199,13 @@ namespace eBettingSystemV2.Services
                 throw new Exception("Team got a relation with the Country you want to Delete");
                
             
+            }
+
+            if (dalipostojicompetition != null)
+            {
+
+                throw new Exception("the Country you want to delete got a relation with a entry from the table Competition");
+
             }
 
 
