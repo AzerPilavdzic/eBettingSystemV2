@@ -4,6 +4,7 @@ using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.DataBase;
 using eBettingSystemV2.Services.Interface;
 using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,5 +81,136 @@ namespace eBettingSystemV2.Services.Servisi
 
             Context.SaveChanges();
         }
+
+
+
+
+        //insert Ekstenzije
+        public override void BeforeInsertVoid(CompetitionInsertRequest insert)
+        {
+            var sportpostoji = Context.Sports.Find(insert.Sportid);
+            var countrypostoji = Context.Countries.Find(insert.Countryid);
+
+
+            if(sportpostoji == null)
+            {
+
+                throw new Exception($"Nije moguce napraviti vezu sa tabelom sport jer Sport sa sportsID {insert.Sportid} ne postoji ");
+
+                   
+            }
+
+            if (countrypostoji == null)
+            {
+
+                throw new Exception($"Nije moguce napraviti vezu sa tabelom Country jer Country sa CountryID {insert.Countryid} ne postoji ");
+
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+        }
+        public override IEnumerable<Competition> AddRange(IEnumerable<CompetitionUpsertRequest> insertlist, DbSet<Competition> set)
+        {
+            
+            
+            List<Competition> Result = new List<Competition>();
+            Competition aa = null;
+
+            //provjerava exceptione
+            foreach (var a in insertlist)
+            {
+                var sportpostoji = Context.Sports.Find(a.sportid);
+                var countrypostoji = Context.Countries.Find(a.countryid);
+
+                if(sportpostoji == null)
+                {
+                    throw new Exception ($"Competition {a.naziv} Nije moguce napraviti vezu sa tabelom sport jer Sport sa sportsID {a.sportid} ne postoji ");
+
+                }
+                if (countrypostoji == null)
+                {
+                    throw new Exception($"Competition {a.naziv} Nije moguce napraviti vezu sa tabelom sport jer Sport sa sportsID {a.countryid} ne postoji ");
+                }
+
+            }
+
+
+            foreach (var a in insertlist)
+            {
+                if (a.id == 0)
+                {
+
+                    aa = Mapper.Map<Competition>(a);
+                    //dodaj u bazu
+                    set.Add(aa);
+                    //dodaj u result
+                    Context.SaveChanges();
+
+                    Result.Add(aa);
+                    continue;
+
+                }
+
+                var entry = set.Find(a.id);
+
+                if (entry != null)
+                {
+
+                    entry.Naziv = a.naziv;
+                    entry.Countryid = a.countryid;
+                    entry.Sportid = a.sportid;
+
+                    Result.Add(Mapper.Map<Competition>(entry));
+
+                }
+                else
+                {
+                    if (a.id != 0)
+                    {
+
+                        a.id = 0;
+
+                    }
+
+                    aa = Mapper.Map<Competition>(a);
+
+                    set.Add(aa);
+                    Context.SaveChanges();
+
+
+                    Result.Add(Mapper.Map<Competition>(aa));
+
+                }
+
+
+
+
+
+            }
+
+
+            IEnumerable<Competition> entity = Mapper.Map<IEnumerable<Competition>>(Result);
+            //set.AddRange(entity);
+
+            return entity;
+
+
+
+
+            
+        }
+
+        //..
+
     }
 }
