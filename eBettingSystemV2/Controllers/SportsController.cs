@@ -97,16 +97,32 @@ namespace eBettingSystemV2.Controllers
         [Route("DeleteSportById/{SportsId}")]
         public async Task<IActionResult> Delete(int SportsId)
         {
-            var result = await ISportService.DeleteAsync(SportsId);
 
-            if (result != SportsId)
+            try
             {
-                return BadRequest($"Drzava ne postoji ");
+                var result = await ISportService.DeleteAsync(SportsId);
+
+                if (result != SportsId)
+                {
+                    return BadRequest($"Drzava ne postoji ");
+                }
+                else
+                {
+                    return Ok($"Sport sa Id {SportsId} je uspjesno obrisan");
+                }
+
             }
-            else
+            catch (Exception ex)
             {
-                return Ok($"Sport sa Id {SportsId} je uspjesno obrisan");
+                return BadRequest(ex.Message);
             }
+
+
+
+
+           
+
+          
         }
 
 
