@@ -176,6 +176,16 @@ namespace eBettingSystemV2.Services
         }
 
 
+        public async virtual Task<T> GetByName(string name)
+        {
+
+            var entity = await Context.Set<TDb>().FindAsync(name);
+
+            //var entity = set.Find(id);
+
+            return Mapper.Map<T>(entity);
+
+        }
 
 
 
