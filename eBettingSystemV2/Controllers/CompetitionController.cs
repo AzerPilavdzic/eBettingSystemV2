@@ -81,6 +81,22 @@ namespace eBettingSystemV2.Controllers
             return base.GetById(id);
         }
 
+        [HttpDelete]
+        [Route("DeleteCompetitionById/{CompId}")]
+        public async Task<ActionResult<CompetitionModel>> Delete(int CompId)
+        {
+            var result = await ICompetitionService.DeleteAsync(CompId);
+
+            if (result != -1)
+            {
+                return Ok($"id = {CompId};Competition je uspješno izbrisan");
+            }
+            else
+            {
+                return NotFound($"Competition sa {CompId} ID ne postoji.");
+            }
+        }
+
 
 
     }
