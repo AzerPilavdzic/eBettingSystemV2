@@ -28,6 +28,8 @@ namespace eBettingSystemV2.Services.Servisi
         static readonly HtmlWeb web = new HtmlWeb();   //avoid hardcode
         static readonly HtmlDocument document = web.Load("https://m.rezultati.com/");
 
+        HtmlNodeCollection categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
+
         public string _sportName { get; set; }
         public int _sportID { get; set; }
 
@@ -44,6 +46,8 @@ namespace eBettingSystemV2.Services.Servisi
             //pozovi funkciju za dodavanje drzava
             AddCountries();
             Console.WriteLine(_sportName);
+
+            AddCompetitions();
 
             //this was a test..
             //GetByObjectName("Compentecija32");
@@ -67,8 +71,10 @@ namespace eBettingSystemV2.Services.Servisi
 
         public void AddCountries()
         {
-            var categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
+            //var categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
             List<string> listaKategorija = new List<string>();
+
+            //var categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
 
             categories.ToList().ForEach(i => listaKategorija.Add(i.InnerText));
 
@@ -114,11 +120,37 @@ namespace eBettingSystemV2.Services.Servisi
 
         public void AddCompetitions()
         {
-            //Context.Competitions.Add(new Competition()
-            //{                       
-            //    Sportid=_sportID,
-            //    //Naziv=//iz fora
-            //});
+            //uzmi html od competitiona(unutar njega je drzava i naziv competitiona);
+            //dodao je sve drzave prije toga
+            //lokalna varijabla koja cuva drzavaID, mijenja se svakom narednom iteracijom
+            //sportID property
+            var _categories = categories.ToList();
+            List<string> listCompetition = new List<string>();
+
+
+            categories.ToList().ForEach(i => listCompetition.Add(i.InnerText));
+
+            for (int i = 0; i < listCompetition.Count(); i++)
+            {
+
+                int drzavaID = 69;
+                var _competitionName = Regex.Match(listCompetition[i], @"(?<=: )(?:(?! -).)*");
+                listCompetition[i] = _competitionName.ToString();
+
+
+                Context.Competitions.Add(new Competition()
+                {
+                    Sportid = _sportID,
+                    Countryid = drzavaID,
+                    Naziv = listCompetition[i],
+                });
+
+
+                Console.WriteLine("Drzava ID " + drzavaID + " natjecanje: " + listCompetition[i]);
+
+            }
+
+            Context.SaveChanges();
         }
 
 
@@ -134,5 +166,7 @@ namespace eBettingSystemV2.Services.Servisi
 
             return base.GetByObjectName(name);
         }
+
+
     }
 }
