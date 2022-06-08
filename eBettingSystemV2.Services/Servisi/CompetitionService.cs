@@ -84,6 +84,47 @@ namespace eBettingSystemV2.Services.Servisi
 
 
 
+        //get esktenzije
+        public override IQueryable<Competition> AddFilter(IQueryable<Competition> query, CompetitionSearchObject search = null)
+        {
+            var filterquery = base.AddFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search?.naziv))
+            {
+                filterquery = filterquery.Where(x => x.Naziv != null)
+                    .Where(X => X.Naziv.ToLower()
+                    .StartsWith(search.naziv.ToLower()));
+            }
+
+            if (search.id != null)
+            {
+                filterquery = filterquery.Where(X => X.Id == search.id);
+
+            }
+
+            if (search.countryid != null)
+            {
+                filterquery = filterquery.Where(X => X.Countryid == search.countryid);
+
+            }
+
+            if (search.sportid != null)
+            {
+                filterquery = filterquery.Where(X => X.Sportid == search.sportid);
+
+            }
+
+
+
+
+            return filterquery;
+
+
+
+
+        }
+
+
 
         //insert Ekstenzije
         public override void BeforeInsertVoid(CompetitionInsertRequest insert)
