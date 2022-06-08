@@ -175,7 +175,7 @@ namespace eBettingSystemV2.Services
 
         }
 
-
+        //pokusaj
         public async virtual Task<T> GetByName(string name)
         {
 

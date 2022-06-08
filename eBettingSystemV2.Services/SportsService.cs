@@ -45,6 +45,28 @@ namespace eBettingSystemV2.Services
 
         //metoda za dodavanje sportova sa odgovarajucim pravilima
 
+        //get metode
+
+        public async Task<int> GetIdbyName(string name)
+        {
+
+            var _model = await Context.Sports.Where(x => x.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
+            
+            if (_model == null)
+            {
+                
+                return 0;
+            }
+
+            return _model.SportsId;
+
+
+
+
+        }
+
+
+
         //Get esktenzije
 
         public override IQueryable<Sport> AddFilter(IQueryable<Sport> query, SportSearchObject search = null)
