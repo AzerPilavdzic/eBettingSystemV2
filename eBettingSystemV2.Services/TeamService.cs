@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
-using eBettingSystemV2.Services.Database;
+using eBettingSystemV2.Services.DataBase;
 using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace eBettingSystemV2.Services
         BaseCRUDService<TeamModel,Team,TeamSearchObject,TeamUpsertRequest, TeamUpsertRequest,TeamModelLess>,
         ITeamService      
     {
-        public TeamService(eBettingSystemV2.Services.Database.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
+        public TeamService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
         {
 
             Context = context_;
