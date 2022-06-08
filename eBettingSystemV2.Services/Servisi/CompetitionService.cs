@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eBettingSystemV2.Model.Models;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.DataBase;
@@ -28,17 +29,18 @@ namespace eBettingSystemV2.Services.Servisi
 
         static readonly HtmlWeb web = new HtmlWeb();   //avoid hardcode
         static readonly HtmlDocument document = web.Load("https://m.rezultati.com/");
+        private ICountryService ICountryService { get; set; }
 
         public string _sportName { get; set; }
         public int _sportID { get; set; }
 
 
-        public CompetitionService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
+        public CompetitionService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_,ICountryService service) : base(context_, mapper_)
         {
 
             Context = context_;
             Mapper = mapper_;
-
+            ICountryService = service;
 
             GetSportName();
 
@@ -112,6 +114,120 @@ namespace eBettingSystemV2.Services.Servisi
 
             Context.SaveChanges();
         }
+
+
+        //demo klasa
+
+        public async void AddData(/*List<PodaciSaStranice> Podaci*/)
+        {
+
+            List<PodaciSaStranice> Podaci = new List<PodaciSaStranice>();
+
+            Podaci.Add(new PodaciSaStranice
+            {
+                Competitionname="Kompentecija 1",
+                Country="EUROPA",
+                Sport="",
+
+
+            }
+            );
+
+            List<Competition> competitions = new List<Competition>();
+            
+                foreach (var b in Podaci)
+                {
+                    var x = new Competition
+                    {
+
+
+                    Naziv = b.Competitionname,           //competencija1
+                    Id = GetIdbyName(b.Competitionname),  //45
+                    Sportid = GetIdbyName(b.Sport),        //kosarka 5  ako ne postoji doda i onda vrati id
+                    Countryid = GetIdbyName(b.Country)     //country ukraine 5
+
+
+                    };
+
+                   if (x.Countryid == 0)
+                   {
+
+
+                      var insert = new CountryInsertRequest
+                      {
+                          CountryName = b.Country
+
+                      };
+
+                      var model = await ICountryService.InsertAsync(insert);
+                      x.Countryid = model.CountryId;
+
+                   }
+
+
+
+
+                    competitions.Add(x);
+
+                }
+
+
+
+
+
+
+
+
+
+            var sportoviq = Mapper.Map<IQueryable<CompetitionUpsertRequest>>(competitions);
+
+            InsertOneOrMoreAsync(sportoviq);
+            
+            //45 
+            //naci ce competition sa id 45 
+            //promjeniti ce naziv i oba foreign key na odgovarajucu vezu bez eceptions
+
+
+
+
+          
+        }
+
+        public int GetIdbyName(string name)
+        {
+
+            var postoji = Context.Teams.Where(X => X.Teamname == name).FirstOrDefault();
+
+            if (postoji != null)
+            {
+
+                return postoji.Teamid;
+
+
+            }
+            else
+            {
+
+                var nova = new Team { Teamname = name, Teamid = 0 };
+
+
+                Context.Teams.Add(nova);
+
+                Context.SaveChanges();
+
+                return nova.Teamid;
+          
+            
+            }
+
+
+
+        
+        
+        }
+
+
+
 
 
        

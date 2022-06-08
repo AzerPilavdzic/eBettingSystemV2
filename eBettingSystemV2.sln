@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBettingSystemV2.Services",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBettingSystemV2.Model", "eBettingSystemV2.Model\eBettingSystemV2.Model.csproj", "{53E7FD83-E663-4E53-820E-C201DD69783D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RezultatiImporter", "RezultatiImporter\RezultatiImporter.csproj", "{60F56EEC-0AA9-4D2D-B1E9-3CD507B3F978}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RezultatiImporter", "RezultatiImporter\RezultatiImporter.csproj", "{60F56EEC-0AA9-4D2D-B1E9-3CD507B3F978}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
