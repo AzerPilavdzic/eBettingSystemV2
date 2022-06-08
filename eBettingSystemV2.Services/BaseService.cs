@@ -3,7 +3,7 @@
 //using eProdaja.Services.Database;
 using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
-using eBettingSystemV2.Services.Database;
+using eBettingSystemV2.Services.DataBase;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

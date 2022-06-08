@@ -21,11 +21,24 @@ namespace RezultatiImporter
             HtmlWeb web = new HtmlWeb();
             HtmlDocument document = web.Load("https://m.rezultati.com/");
 
+
+
             //var title = document.DocumentNode.SelectNodes("//div/h1").First().InnerText;
             //var description = document.DocumentNode.SelectNodes("//div/p").First().InnerText;
-
             //*[@id="score-data"]
+
             var categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
+
+            
+            //*[@id="main"]/h2
+            var _sport = document.DocumentNode.SelectSingleNode("//*[@id='main']/h2").InnerText;
+            //var _sport = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
+
+            Console.WriteLine(_sport.ToString());
+
+
+            Console.ReadKey();
+
             var competitions = categories;
             
             List<string> listaKategorija = new List<string>();
@@ -47,6 +60,10 @@ namespace RezultatiImporter
 
 
             //string _regex = @"\w*\:";
+
+            //var _regexSport = Regex.Match(_sport, "^(\\S*)[\\s]+.*");
+
+            //Console.Write(Regex.Match(_sport, "^(\S*)[\s]+.*").ToString());
 
 
             for (int i = 0; i < listaKategorija.Count(); i++)
@@ -99,6 +116,21 @@ namespace RezultatiImporter
             //}
 
             foreach (var item in CompetitionHashSet)
+            {
+                Console.WriteLine(item);
+            }
+
+            Console.WriteLine("========================================================");
+            //}
+            Console.WriteLine("========================================================");
+            //foreach (var category in CategoryHashSet)
+            //{
+            //    Console.WriteLine(category);
+            //}
+
+
+
+            foreach (var item in CategoryHashSet)
             {
                 Console.WriteLine(item);
             }

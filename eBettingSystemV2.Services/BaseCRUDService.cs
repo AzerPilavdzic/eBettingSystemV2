@@ -3,7 +3,8 @@
 //using eProdaja.Services.Database;
 using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
-using eBettingSystemV2.Services.Database;
+using eBettingSystemV2.Services.DataBase;
+//using eBettingSystemV2.Services.Database;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;

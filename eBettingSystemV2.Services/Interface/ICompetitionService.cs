@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Services.Interface
 {
-    
-    
-        public interface ICompetitionService :
-        ICRUDService<CompetitionModel,
-            CompetitionSearchObject,
-            CompetitionUpsertRequest,
-            CompetitionInsertRequest,
-            CompetitionModelLess>
-        { 
-        }
 
-        
-    
+
+    public interface ICompetitionService :
+    ICRUDService<CompetitionModel,
+        CompetitionSearchObject,
+        CompetitionInsertRequest,
+        CompetitionUpsertRequest,
+        CompetitionModelLess>
+    {
+    }
+
+
+
 }

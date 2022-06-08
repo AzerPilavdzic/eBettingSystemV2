@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace eBettingSystemV2.Services.Database
+namespace eBettingSystemV2.Services.DataBase
 {
     public partial class praksa_dbContext : DbContext
     {
@@ -26,8 +27,7 @@ namespace eBettingSystemV2.Services.Database
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Host=192.168.43.21 ; Database=praksa_db;Username=praksa;Password=12345");
+                optionsBuilder.UseNpgsql(ConfigurationManager.AppSettings["DefaultConnection"]);
             }
         }
 
@@ -37,9 +37,7 @@ namespace eBettingSystemV2.Services.Database
             {
                 entity.ToTable("competition", "BettingSystem");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Countryid).HasColumnName("countryid");
 
@@ -58,7 +56,6 @@ namespace eBettingSystemV2.Services.Database
                 entity.HasOne(d => d.Sport)
                     .WithMany(p => p.Competitions)
                     .HasForeignKey(d => d.Sportid)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("competition_fk_1");
             });
 
@@ -85,7 +82,7 @@ namespace eBettingSystemV2.Services.Database
 
                 entity.Property(e => e.SportsId).HasDefaultValueSql("nextval('\"BettingSystem\".sportovi_id_seq'::regclass)");
 
-                entity.Property(e => e.name)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("character varying")
                     .HasColumnName("name");

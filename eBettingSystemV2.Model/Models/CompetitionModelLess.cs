@@ -8,6 +8,6 @@ namespace eBettingSystemV2.Models
 {
     public class CompetitionModelLess
     {
-        public int id { get; set; }
+        public int Id { get; set; }
     }
 }

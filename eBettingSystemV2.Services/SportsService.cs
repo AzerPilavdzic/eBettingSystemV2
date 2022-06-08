@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
-using eBettingSystemV2.Services.Database;
+using eBettingSystemV2.Services.DataBase;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,7 +28,7 @@ namespace eBettingSystemV2.Services
 
 
 
-        public SportService(eBettingSystemV2.Services.Database.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
+        public SportService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
         {
 
             Context = context_;
@@ -72,7 +72,7 @@ namespace eBettingSystemV2.Services
                 if (entry != null)
                 {
 
-                    entry.name = a.name;
+                    entry.Name = a.name;
 
                     Result.Add(Mapper.Map<Sport>(entry));
 
@@ -119,8 +119,8 @@ namespace eBettingSystemV2.Services
 
             if (!string.IsNullOrWhiteSpace(search?.SportName))
             {
-                filterquery = filterquery.Where(x => x.name != null)
-                    .Where(X => X.name.ToLower()
+                filterquery = filterquery.Where(x => x.Name != null)
+                    .Where(X => X.Name.ToLower()
                     .StartsWith(search.SportName.ToLower()));
             }
 
@@ -143,7 +143,7 @@ namespace eBettingSystemV2.Services
 
         public override bool checkIfNameSame(SportInsertRequest insert, Sport entry)
         {
-            if (insert.name == entry?.name)
+            if (insert.name == entry?.Name)
             {
 
                 return true;
@@ -156,7 +156,7 @@ namespace eBettingSystemV2.Services
 
         public override bool BeforeInsertBool(SportInsertRequest insert)
         {
-            var entity = Context.Sports.Where(x => x.name.ToLower() == insert.name.ToLower()).FirstOrDefault();
+            var entity = Context.Sports.Where(x => x.Name.ToLower() == insert.name.ToLower()).FirstOrDefault();
             if (entity == null)
             {
                 return true;
