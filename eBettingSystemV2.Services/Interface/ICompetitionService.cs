@@ -17,6 +17,19 @@ namespace eBettingSystemV2.Services.Interface
         CompetitionUpsertRequest,
         CompetitionModelLess>
     {
+        Task<CompetitionModelLess> GetIdbyNazivAsync(string name);
+        
+          
+
+
+
+        
+
+
+
+
+
+
     }
 
 

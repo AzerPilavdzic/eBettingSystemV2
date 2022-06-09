@@ -16,7 +16,7 @@ namespace eBettingSystemV2.Services
             CountryUpsertRequest,
             CountryModelLess>
     {
-
+        Task<CountryModelLess> GetIdByNameAsync(string name);
 
 
 
