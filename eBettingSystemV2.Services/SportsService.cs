@@ -56,8 +56,10 @@ namespace eBettingSystemV2.Services
             
             if (_model == null)
             {
-                
-                throw new Exception($"Sport sa imenom {name} ne postoji u bazi");
+
+                //throw new Exception($"Sport sa imenom {name} ne postoji u bazi");
+                return new SportModelLess { SportsId = 0 };
+
             }
 
             return Mapper.Map<SportModelLess>(_model);
