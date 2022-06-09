@@ -42,7 +42,6 @@ namespace RezultatiImporter
 
             var categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
 
-            
             //*[@id="main"]/h2
             var _sport = document.DocumentNode.SelectSingleNode("//*[@id='main']/h2").InnerText;
             //var _sport = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
@@ -71,11 +70,12 @@ namespace RezultatiImporter
             categories.ToList().ForEach(i => listaKategorija.Add(i.InnerText));
             competitions.ToList().ForEach(i => listaNatjecanja.Add(i.InnerText));
 
-
             //string _regex = @"\w*\:";
-
-            //var _regexSport = Regex.Match(_sport, "^(\\S*)[\\s]+.*");
-
+            //jedna rijec 
+            var _regexSport = Regex.Match(_sport, "^\\S*");
+                
+            Console.Write(_regexSport.ToString());
+            Console.ReadKey();
             //Console.Write(Regex.Match(_sport, "^(\S*)[\s]+.*").ToString());
 
 

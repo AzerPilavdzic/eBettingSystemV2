@@ -39,12 +39,7 @@ namespace eBettingSystemV2.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
-        [Route("InsertCompetition")]
-        public override Task<ActionResult<CompetitionModel>> Insert(CompetitionInsertRequest insert)
-        {
-            return base.Insert(insert);
-        }           
+             
 
         [HttpGet]
         [Route("GetAllCompetitions")]
@@ -53,11 +48,53 @@ namespace eBettingSystemV2.Controllers
             return base.Get(search);
         }
 
+        [HttpGet]
+        [Route("GetCompetitionById/{id}")]
+        public override Task<ActionResult<CompetitionModel>> GetById(int id)
+        {
+            return base.GetById(id);
+        }
+
+        [HttpPost]
+        [Route("InsertCompetition")]
+        public override Task<ActionResult<CompetitionModel>> Insert(CompetitionInsertRequest insert)
+        {
+            return base.Insert(insert);
+        }
+
+
         [HttpPost]
         [Route("UpsertCompetitionById")]
-        public override Task<ActionResult<CompetitionModelLess>> InsertById(int Id, CompetitionInsertRequest Insert)
+        public override async Task<ActionResult<CompetitionModelLess>> InsertById(int Id, CompetitionInsertRequest Insert)
         {
-            return base.InsertById(Id, Insert);
+            try
+            {
+                var result = await base.InsertById(Id,Insert);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            
+        }
+
+        [HttpPost]
+        [Route("UpsertOneOrMoreCompetitions")]
+        public override async Task<ActionResult<IEnumerable<CompetitionModelLess>>> InsertOneOrMore(IEnumerable<CompetitionUpsertRequest> insertlist)
+        {
+            try
+            {
+                var result = await base.InsertOneOrMore(insertlist);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+           
         }
 
         [HttpPut]
@@ -65,20 +102,6 @@ namespace eBettingSystemV2.Controllers
         public override Task<ActionResult<CompetitionModel>> Update(int id, [FromBody] CompetitionUpsertRequest update)
         {
             return base.Update(id, update);
-        }
-
-        [HttpPost]
-        [Route("UpsertOneOrMoreCompetitions")]
-        public override Task<ActionResult<IEnumerable<CompetitionModelLess>>> InsertOneOrMore(IEnumerable<CompetitionUpsertRequest> insertlist)
-        {
-            return base.InsertOneOrMore(insertlist);
-        }
-
-        [HttpGet]
-        [Route("GetCompetitionById/{id}")]
-        public override Task<ActionResult<CompetitionModel>> GetById(int id)
-        {
-            return base.GetById(id);
         }
 
         [HttpDelete]

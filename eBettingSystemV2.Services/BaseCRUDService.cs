@@ -28,8 +28,12 @@ namespace eBettingSystemV2.Services
         public BaseCRUDService(praksa_dbContext context, IMapper mapper)
         : base(context, mapper) { }
 
-        public virtual Tless Insert(TInsert insert)
+
+        //ne koristi se vise
+        public virtual Tless Insert(TInsert insert)    //ne koristi se vise
         {
+
+           
 
             if (BeforeInsertBool(insert))
             {
@@ -50,50 +54,6 @@ namespace eBettingSystemV2.Services
 
            
         }
-
-        public virtual async Task<Tless> InsertAsync(TInsert insert)
-        {
-
-            if (!BeforeInsertBool(insert))
-            {
-                return null;
-            }
-
-            var set = Context.Set<TDb>();
-
-            TDb entity = Mapper.Map<TDb>(insert);
-
-            set.Add(entity);
-
-            BeforeInsert(insert, entity);
-
-            await Context.SaveChangesAsync();
-
-            return Mapper.Map<Tless>(entity);
-
-
-        }
-
-        public virtual void BeforeInsert(TInsert insert, TDb entity)
-        {
-
-        }
-
-        public virtual bool BeforeInsertBool(TInsert insert)
-        {
-            return true;
-        }
-
-        public virtual IEnumerable<TDb> AddRange(IEnumerable<TUpdate> insertlist ,DbSet<TDb> set)
-        {
-            IEnumerable<TDb> entity = Mapper.Map<IEnumerable<TDb>>(insertlist);
-            set.AddRange(entity);
-
-            return entity;
-
-
-        }
-
         public virtual T Update(int id, TUpdate update)
         {
             var set = Context.Set<TDb>();
@@ -115,7 +75,170 @@ namespace eBettingSystemV2.Services
             Context.SaveChanges();
 
             return Mapper.Map<T>(entity);
+        } //ne koristi se vise
+
+        public virtual T Delete(int id)
+        {
+
+            T Model = null;
+
+            var set = Context.Set<TDb>();
+
+            var entity = set.Find(id);
+
+
+
+
+            if (entity != null)
+            {
+
+                Model = Mapper.Map<T>(entity);
+                //Mapper.Map(entity,Model);
+
+                Context.Remove(entity);
+            }
+            else
+            {
+                return null;
+
+            }
+
+            Context.SaveChanges();
+
+            return Model;
+
+        } //ne koristi se vise
+
+
+        //Insert upsert Sekcija
+        public virtual async Task<Tless> InsertAsync(TInsert insert)
+        {
+
+            BeforeInsertVoid(insert);
+
+            if (!BeforeInsertBool(insert))
+            {
+                return null;
+            }
+
+            var set = Context.Set<TDb>();
+
+            TDb entity = Mapper.Map<TDb>(insert);
+
+            set.Add(entity);
+
+            BeforeInsert(insert, entity);
+
+            await Context.SaveChangesAsync();
+
+            return Mapper.Map<Tless>(entity);
+
+
         }
+
+        public virtual async Task<Tless> InsertById(TInsert Insert, int Id)
+        {
+            BeforeInsertVoid(Insert);
+
+            var set = await Context.Set<TDb>().FindAsync(Id);
+            TDb entity = null;
+
+
+
+
+            if (set != null && checkIfNameSame(Insert, set) == false)
+            {
+
+                Mapper.Map(Insert, set);
+                entity = Mapper.Map<TDb>(set);
+            }
+            else
+            {
+                if (!checkIfNameSame(Insert, set))
+                {
+                    entity = Mapper.Map<TDb>(Insert);
+                    Context.Set<TDb>().Add(entity);
+
+                }
+                else
+                {
+                    entity = Mapper.Map<TDb>(set);
+
+                }
+
+
+
+
+            }
+
+
+
+            //set.Add(entity);
+
+            //BeforeInsert(insert, entity);
+
+
+            await Context.SaveChangesAsync();
+
+            return Mapper.Map<Tless>(entity);
+
+
+
+
+
+        }  //treba preimenovati metodu u UpsertbyIdAsync
+
+        public virtual async Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TUpdate> List)
+        {
+
+            
+            var set = Context.Set<TDb>();
+
+
+            var entity = AddRange(List, set);
+
+         
+            await Context.SaveChangesAsync();
+
+            return Mapper.Map<IEnumerable<Tless>>(entity);
+
+
+
+
+        }  //treba preimenovati u upsertoneormoreAsync
+
+
+
+        //insert upsert ekstenzije
+        public virtual void BeforeInsert(TInsert insert, TDb entity)
+        {
+
+        }
+        public virtual void BeforeInsertVoid(TInsert insert)
+        { 
+        
+        }
+        public virtual bool BeforeInsertBool(TInsert insert)
+        {
+            return true;
+        }
+        public virtual IEnumerable<TDb> AddRange(IEnumerable<TUpdate> insertlist ,DbSet<TDb> set)
+        {
+            IEnumerable<TDb> entity = Mapper.Map<IEnumerable<TDb>>(insertlist);
+            set.AddRange(entity);
+
+            return entity;
+
+
+        }
+        public virtual bool checkIfNameSame(TInsert insert, TDb entry)
+        {
+
+            return false;
+
+        }
+
+        //Update sekcija
 
         public virtual async Task<T> UpdateAsync(int id, TUpdate update)
         {
@@ -140,37 +263,16 @@ namespace eBettingSystemV2.Services
             return Mapper.Map<T>(set);
         }
 
-        public virtual T Delete(int id)
+        //Update eskstenzije
+        public virtual TUpdate Coalesce(TUpdate update, TDb entry)
         {
-
-            T Model = null ;
-
-            var set = Context.Set<TDb>();
-
-            var entity = set.Find(id);
-
-
-
-
-            if (entity != null)
-            {
-
-                Model = Mapper.Map<T>(entity);
-                //Mapper.Map(entity,Model);
-              
-                Context.Remove(entity);
-            }
-            else
-            {
-                return null;
-            
-            }
-
-            Context.SaveChanges();
-
-            return Model;
+            return update;
 
         }
+
+
+        //Delete Sekcija
+     
         public virtual async Task<int> DeleteAsync(int id)
         {
 
@@ -200,105 +302,7 @@ namespace eBettingSystemV2.Services
 
         }
 
-        public virtual TUpdate Coalesce(TUpdate update,TDb entry)
-        {
-            return update;
-
-        }
-
-        public virtual async Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TUpdate> List)
-        {
-
-            //if (!BeforeInsertBool(insert))
-            //{
-            //    return null;
-            //}
-
-
-            var set = Context.Set<TDb>();
-
-
-            var entity=AddRange(List,set);
-
-
-            //IEnumerable<TDb> entity = Mapper.Map<IEnumerable<TDb>>(List);
-
-            //set.AddRange(entity);
-
-            //BeforeInsert(insert, entity);
-
-
-
-            await Context.SaveChangesAsync();
-
-            return Mapper.Map<IEnumerable<Tless>>(entity);
-
-
-
-
-        }
-
-        public virtual bool checkIfNameSame(TInsert insert,TDb entry)
-        {
-
-            return false;
-        
-        }
-
-        public virtual async Task<Tless> InsertById(TInsert Insert, int Id)
-        {
-            //if (!BeforeInsertBool(insert))
-            //{
-            //    return null;
-            //}
-
-            var set =  await Context.Set<TDb>().FindAsync(Id);
-            TDb entity = null;
-
-
-            
-
-            if (set != null && checkIfNameSame(Insert,set)==false)
-            {
-               
-                Mapper.Map(Insert, set);
-                entity = Mapper.Map<TDb>(set);
-            }
-            else
-            {
-                if (!checkIfNameSame(Insert, set))
-                {
-                    entity = Mapper.Map<TDb>(Insert);
-                    Context.Set<TDb>().Add(entity);
-
-                }
-                else
-                {
-                    entity = Mapper.Map<TDb>(set);
-
-                }
-
-              
-
-            
-            }
-
-
-
-            //set.Add(entity);
-
-            //BeforeInsert(insert, entity);
-
-
-            await Context.SaveChangesAsync();
-
-            return Mapper.Map<Tless>(entity);
-
-
-
-
-
-        }
+       //delete ekstenzija
 
         public virtual void BeforeDelete(int id)
         { 
@@ -306,6 +310,14 @@ namespace eBettingSystemV2.Services
       
         }
 
-        
+        public async virtual Task<T> GetByObjectName(string name)
+        {
+            var entity = await Context.Set<TDb>().FindAsync(name);
+
+            //var entity = set.Find(id);
+
+            return Mapper.Map<T>(entity);
+        }
+
     }
 }

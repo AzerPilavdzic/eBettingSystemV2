@@ -26,8 +26,7 @@ namespace eBettingSystemV2.Services
         Task<Tless> InsertAsync(TInsert insert);
         Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TUpdate> List);
         Task<Tless> InsertById(TInsert Insert, int Id);
-
-
+        Task<T> GetByObjectName(string name);
 
     }
 }
