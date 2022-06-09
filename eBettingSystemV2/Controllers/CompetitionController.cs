@@ -55,6 +55,26 @@ namespace eBettingSystemV2.Controllers
             return base.GetById(id);
         }
 
+        [HttpGet]
+        [Route("GetCompetitionIdbyNaziv/{Naziv}")]
+        public async Task<ActionResult<CompetitionModelLess>> GetCompetitionIdbyNaziv(string Naziv)
+        {
+            try
+            {
+                var result = await ICompetitionService.GetIdbyNazivAsync(Naziv);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
+
+        }
+
+
+
         [HttpPost]
         [Route("InsertCompetition")]
         public override Task<ActionResult<CompetitionModel>> Insert(CompetitionInsertRequest insert)

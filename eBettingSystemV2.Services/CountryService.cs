@@ -82,6 +82,25 @@ namespace eBettingSystemV2.Services
 
         }
 
+        public async Task<CountryModelLess> GetIdByNameAsync(string name)
+        {
+            var entry = await Context.Countries
+                .Where(X => X.CountryName.ToLower() == name.ToLower())
+                .FirstOrDefaultAsync();
+
+            if (entry == null)
+            {
+
+                throw new Exception($"Podatak sa imenom {name} ne postoji u bazi");
+            
+            }
+
+
+            return Mapper.Map<CountryModelLess>(entry); 
+        }
+
+
+
         //Insert Upsert sekcija 
 
         public override bool BeforeInsertBool(CountryInsertRequest insert)

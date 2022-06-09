@@ -70,7 +70,7 @@ namespace eBettingSystemV2.Services.Servisi
 
 
 
-        }
+        }   //demo
 
         public void AddCountries()
         {
@@ -119,7 +119,7 @@ namespace eBettingSystemV2.Services.Servisi
             }
 
             Context.SaveChanges();
-        }
+        }    //demo
 
 
         //demo klasa
@@ -197,7 +197,7 @@ namespace eBettingSystemV2.Services.Servisi
 
 
           
-        }
+        } //demo
 
         public int GetIdbyName(string name)
         {
@@ -230,7 +230,7 @@ namespace eBettingSystemV2.Services.Servisi
 
         
         
-        }
+        } //demo
 
 
 
@@ -312,8 +312,24 @@ namespace eBettingSystemV2.Services.Servisi
 
         }
 
+        public async Task<CompetitionModelLess> GetIdbyNazivAsync(string name)
+        {
+            var _model = await Context.Competitions
+                .Where(x => x.Naziv.ToLower() == name.ToLower())
+                .FirstOrDefaultAsync();
+
+            if (_model == null)
+            {
+
+                throw new Exception($"Competition sa imenom {name} ne postoji u bazi");
+            }
+
+            return Mapper.Map<CompetitionModelLess>(_model);
 
 
+
+
+        }
 
         public override Task<CompetitionModel> GetByObjectName(string name)
         {
@@ -325,7 +341,7 @@ namespace eBettingSystemV2.Services.Servisi
             }
 
             return base.GetByObjectName(name);
-        }
+        } //demo klasa
 
 
 

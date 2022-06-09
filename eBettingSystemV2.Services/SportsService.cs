@@ -47,28 +47,27 @@ namespace eBettingSystemV2.Services
 
         //get metode
 
-        public async Task<int> GetIdbyName(string name)
+        public async Task<SportModelLess> GetSportIdbyNameAsync(string name)
         {
 
-            var _model = await Context.Sports.Where(x => x.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
+            var _model = await Context.Sports
+                .Where(x => x.Name.ToLower() == name.ToLower())
+                .FirstOrDefaultAsync();
             
             if (_model == null)
             {
                 
-                return 0;
+                throw new Exception($"Sport sa imenom {name} ne postoji u bazi");
             }
 
-            return _model.SportsId;
+            return Mapper.Map<SportModelLess>(_model);
 
 
 
 
         }
 
-
-
         //Get esktenzije
-
         public override IQueryable<Sport> AddFilter(IQueryable<Sport> query, SportSearchObject search = null)
         {
             var filterquery = base.AddFilter(query, search);
@@ -160,8 +159,7 @@ namespace eBettingSystemV2.Services
 
 
 
-        }
-       
+        }      
         public override bool checkIfNameSame(SportInsertRequest insert, Sport entry)
         {
             if (insert.name == entry?.Name)
