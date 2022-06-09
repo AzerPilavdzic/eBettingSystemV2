@@ -91,8 +91,9 @@ namespace eBettingSystemV2.Services
             if (entry == null)
             {
 
-                throw new Exception($"Podatak sa imenom {name} ne postoji u bazi");
-            
+                //throw new Exception($"Podatak sa imenom {name} ne postoji u bazi");
+                return new CountryModelLess { CountryId = 0 };
+
             }
 
 

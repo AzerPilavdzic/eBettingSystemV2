@@ -72,11 +72,12 @@ namespace eBettingSystemV2
 
             #region AddTransient
 
-            //ne radi
+           
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<ITeamService, TeamService>();
             services.AddTransient<ISportService, SportService>();
             services.AddTransient<ICompetitionService, CompetitionService>();
+            services.AddTransient<IDemo, DemoServices>();
 
             #endregion 
 
