@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
-using eBettingSystemV2.Services.Database;
+using eBettingSystemV2.Services.DataBase;
 //using eProdaja.Model.Requests;
 using System;
 using System.Collections.Generic;
@@ -40,6 +40,13 @@ namespace eBettingSystemV2.Services
             CreateMap<CountryModelLess, Country>();
 
 
+            CreateMap<Competition, CompetitionModel>();
+            CreateMap<CompetitionModel, Competition>();
+
+            CreateMap<Competition, CompetitionModelLess>();
+            CreateMap<CompetitionModelLess, Competition>();
+
+
 
 
             //requests
@@ -61,12 +68,20 @@ namespace eBettingSystemV2.Services
             CreateMap<TeamInsertRequest, Team>();
             CreateMap<Team,TeamInsertRequest>();
 
+            CreateMap<Competition, CompetitionUpsertRequest>();
+            CreateMap<CompetitionUpsertRequest, Competition>();
+
+            CreateMap<Competition, CompetitionInsertRequest>();
+            CreateMap<CompetitionInsertRequest, Competition>();
+
+
 
 
             //search
             CreateMap<Country, CountrySearchObject>();
             CreateMap<Team, TeamSearchObject>();
             CreateMap<Sport, SportSearchObject>();
+            CreateMap<Competition, CompetitionSearchObject>();
 
 
 

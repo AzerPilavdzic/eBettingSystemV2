@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace eBettingSystemV2.Services.Database
+namespace eBettingSystemV2.Services.DataBase
 {
     public partial class Country
     {

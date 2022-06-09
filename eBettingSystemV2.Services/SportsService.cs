@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
-using eBettingSystemV2.Services.Database;
+using eBettingSystemV2.Services.DataBase;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,7 +28,7 @@ namespace eBettingSystemV2.Services
 
 
 
-        public SportService(eBettingSystemV2.Services.Database.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
+        public SportService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
         {
 
             Context = context_;
@@ -44,6 +44,56 @@ namespace eBettingSystemV2.Services
 
 
         //metoda za dodavanje sportova sa odgovarajucim pravilima
+
+        //get metode
+
+        public async Task<int> GetIdbyName(string name)
+        {
+
+            var _model = await Context.Sports.Where(x => x.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
+            
+            if (_model == null)
+            {
+                
+                return 0;
+            }
+
+            return _model.SportsId;
+
+
+
+
+        }
+
+
+
+        //Get esktenzije
+
+        public override IQueryable<Sport> AddFilter(IQueryable<Sport> query, SportSearchObject search = null)
+        {
+            var filterquery = base.AddFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search?.SportName))
+            {
+                filterquery = filterquery.Where(x => x.Name != null)
+                    .Where(X => X.Name.ToLower()
+                    .StartsWith(search.SportName.ToLower()));
+            }
+
+            if (search.SportId != null)
+            {
+                filterquery = filterquery.Where(X => X.SportsId == search.SportId);
+
+            }
+
+            return filterquery;
+
+
+
+
+        }
+
+        // Upsert insert ekstenzije
         public override IEnumerable<Sport> AddRange(IEnumerable<SportUpsertRequest> insertlist, DbSet<Sport> set)
         {
 
@@ -72,7 +122,7 @@ namespace eBettingSystemV2.Services
                 if (entry != null)
                 {
 
-                    entry.name = a.name;
+                    entry.Name = a.name;
 
                     Result.Add(Mapper.Map<Sport>(entry));
 
@@ -111,39 +161,10 @@ namespace eBettingSystemV2.Services
 
 
         }
-
-
-        public override IQueryable<Sport> AddFilter(IQueryable<Sport> query, SportSearchObject search = null)
-        {
-            var filterquery = base.AddFilter(query, search);
-
-            if (!string.IsNullOrWhiteSpace(search?.SportName))
-            {
-                filterquery = filterquery.Where(x => x.name != null)
-                    .Where(X => X.name.ToLower()
-                    .StartsWith(search.SportName.ToLower()));
-            }
-
-            if (search.SportId != null)
-            {
-                filterquery = filterquery.Where(X => X.SportsId == search.SportId);
-
-            }
-
-            return filterquery;
-
-
-
-
-        }
-
-
-
-        //insersport by id
-
+       
         public override bool checkIfNameSame(SportInsertRequest insert, Sport entry)
         {
-            if (insert.name == entry?.name)
+            if (insert.name == entry?.Name)
             {
 
                 return true;
@@ -153,10 +174,9 @@ namespace eBettingSystemV2.Services
             return false;
         }
            
-
         public override bool BeforeInsertBool(SportInsertRequest insert)
         {
-            var entity = Context.Sports.Where(x => x.name.ToLower() == insert.name.ToLower()).FirstOrDefault();
+            var entity = Context.Sports.Where(x => x.Name.ToLower() == insert.name.ToLower()).FirstOrDefault();
             if (entity == null)
             {
                 return true;
@@ -165,10 +185,11 @@ namespace eBettingSystemV2.Services
 
         }
 
-
+        // delete ekstenzije
         public override void BeforeDelete(int id)
         {
             var daliposotji = Context.Teams.Where(X => X.Sportid == id).ToList();
+            var daliposotjicompetition = Context.Competitions.Where(X => X.Sportid == id).ToList();
 
             if (daliposotji != null)
             {
@@ -180,9 +201,19 @@ namespace eBettingSystemV2.Services
                 Context.SaveChanges();
             }
 
+            if (daliposotjicompetition != null)
+            {
+                foreach (var a in daliposotjicompetition)
+                {
+
+                    throw new Exception($"Nije moguce obrisati sport sa id {id} jer Competition {a.Naziv} ima referencu na ovaj sport {a.Sportid}");
 
 
-            base.BeforeDelete(id);
+
+                }
+               
+            }
+
         }
 
 

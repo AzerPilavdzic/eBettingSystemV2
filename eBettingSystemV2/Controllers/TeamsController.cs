@@ -1,7 +1,7 @@
 ﻿using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
-using eBettingSystemV2.Services.Database;
+using eBettingSystemV2.Services.DataBase;
 //using eBettingSystemV2.Models;
 using eProdaja.Controllers;
 using Microsoft.AspNetCore.JsonPatch;
@@ -116,7 +116,7 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpPut]
-        [Route("UpdateTeamTEST_TEST/{Id}")]
+        [Route("UpdateTeam_!!!DONT_USE_THIS!!!/{Id}")]
         public IActionResult Update(int Id, [FromBody] JsonPatchDocument update)
         {
 
@@ -140,6 +140,7 @@ namespace eBettingSystemV2.Controllers
             }
         }
 
+        
 
     }
 }

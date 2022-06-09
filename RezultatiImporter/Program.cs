@@ -3,13 +3,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Timers;
 
-namespace RezultatiImporter
+namespace RezultatiImporter 
 {
     class Program
     {
+        private static Timer aTimer;
         static void Main(string[] args)
+
+
         {
+
+            SetTimer();
+            Console.WriteLine("\nPress the Enter key to exit the application...\n");
+            Console.WriteLine("The application started at {0:HH:mm:ss.fff}", DateTime.Now);
+            Console.ReadLine();
+            aTimer.Stop();
+            aTimer.Dispose();
+            Console.WriteLine("Terminating the application...");
+
 
             //const string str = "Name: music mix.mp3 Size: 2356KB";
             //var match = Regex.Match(str, @"(\w*\:)");
@@ -20,11 +34,23 @@ namespace RezultatiImporter
             HtmlWeb web = new HtmlWeb();
             HtmlDocument document = web.Load("https://m.rezultati.com/");
 
+
+
             //var title = document.DocumentNode.SelectNodes("//div/h1").First().InnerText;
             //var description = document.DocumentNode.SelectNodes("//div/p").First().InnerText;
-
             //*[@id="score-data"]
+
             var categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
+
+            //*[@id="main"]/h2
+            var _sport = document.DocumentNode.SelectSingleNode("//*[@id='main']/h2").InnerText;
+            //var _sport = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
+
+            Console.WriteLine(_sport.ToString());
+
+
+            Console.ReadKey();
+
             var competitions = categories;
             
             List<string> listaKategorija = new List<string>();
@@ -44,8 +70,13 @@ namespace RezultatiImporter
             categories.ToList().ForEach(i => listaKategorija.Add(i.InnerText));
             competitions.ToList().ForEach(i => listaNatjecanja.Add(i.InnerText));
 
-
             //string _regex = @"\w*\:";
+            //jedna rijec 
+            var _regexSport = Regex.Match(_sport, "^\\S*");
+                
+            Console.Write(_regexSport.ToString());
+            Console.ReadKey();
+            //Console.Write(Regex.Match(_sport, "^(\S*)[\s]+.*").ToString());
 
 
             for (int i = 0; i < listaKategorija.Count(); i++)
@@ -103,6 +134,21 @@ namespace RezultatiImporter
             }
 
             Console.WriteLine("========================================================");
+            //}
+            Console.WriteLine("========================================================");
+            //foreach (var category in CategoryHashSet)
+            //{
+            //    Console.WriteLine(category);
+            //}
+
+
+
+            foreach (var item in CategoryHashSet)
+            {
+                Console.WriteLine(item);
+            }
+
+            Console.WriteLine("========================================================");
 
 
             //Console.ReadKey();
@@ -139,6 +185,22 @@ namespace RezultatiImporter
 
 
 
+
+        }
+        private static void SetTimer()
+        {
+            // Create a timer with a one second interval.
+            aTimer = new Timer(1000);
+            // Hook up the Elapsed event for the timer.
+            aTimer.Elapsed += OnTimedEvent;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+        }
+
+        private static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",
+                              e.SignalTime);
         }
     }
 }

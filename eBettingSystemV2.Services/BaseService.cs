@@ -3,7 +3,7 @@
 //using eProdaja.Services.Database;
 using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
-using eBettingSystemV2.Services.Database;
+using eBettingSystemV2.Services.DataBase;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -175,7 +175,17 @@ namespace eBettingSystemV2.Services
 
         }
 
+        //pokusaj
+        public async virtual Task<T> GetByName(string name)
+        {
 
+            var entity = await Context.Set<TDb>().FindAsync(name);
+
+            //var entity = set.Find(id);
+
+            return Mapper.Map<T>(entity);
+
+        }
 
 
 

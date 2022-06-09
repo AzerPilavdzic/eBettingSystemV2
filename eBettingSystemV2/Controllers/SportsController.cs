@@ -1,8 +1,8 @@
 ﻿using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
-using eBettingSystemV2.Services.Database;
-//using eBettingSystemV2.Models;
+using eBettingSystemV2.Services.DataBase;
+using eBettingSystemV2.Models;
 using eProdaja.Controllers;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -50,7 +50,7 @@ namespace eBettingSystemV2.Controllers
         }
 
 
-        
+
 
         [HttpGet]
         [Route("GetSportById/{id}")]
@@ -79,7 +79,7 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpPost]
-        [Route("AddoneormoreSports")]
+        [Route("UpsertOneOrMoreSports")]
         public override Task<ActionResult<IEnumerable<SportModelLess>>> InsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
         {
             return base.InsertOneOrMore(insertlist);
@@ -87,39 +87,43 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpPost]
-        [Route("AddSportById")]
+        [Route("UpsertSports")]
         public override Task<ActionResult<SportModelLess>> InsertById(int Id, SportInsertRequest Insert)
         {
             return base.InsertById(Id, Insert);
         }
 
-
-
-
-
-
-
-
         [HttpDelete]
         [Route("DeleteSportById/{SportsId}")]
         public async Task<IActionResult> Delete(int SportsId)
         {
-            var result = await ISportService.DeleteAsync(SportsId);
 
-            if (result != null)
+            try
             {
-                return Ok($"Sport sa Id {SportsId} je uspjesno obrisan");
+                var result = await ISportService.DeleteAsync(SportsId);
+
+                if (result != SportsId)
+                {
+                    return BadRequest($"Drzava ne postoji ");
+                }
+                else
+                {
+                    return Ok($"Sport sa Id {SportsId} je uspjesno obrisan");
+                }
+
             }
-            else
+            catch (Exception ex)
             {
-                return Ok($"Drzava ne postoji ");
+                return BadRequest(ex.Message);
             }
+
+
+
+
+           
+
+          
         }
-
-
-
-
-        
 
 
         [HttpPut]
@@ -132,10 +136,10 @@ namespace eBettingSystemV2.Controllers
 
 
 
-       
 
 
-             
+
+
 
 
 

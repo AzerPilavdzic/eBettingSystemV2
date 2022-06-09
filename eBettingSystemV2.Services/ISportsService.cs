@@ -19,7 +19,7 @@ namespace eBettingSystemV2.Services
         //test
         //SportModel UpdateJson(int id, JsonPatchDocument update);
 
-
+        //Get Metode
 
 
 

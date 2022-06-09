@@ -17,14 +17,11 @@ namespace eProdaja.Controllers
         where TUpdate : class
         where Tless : class
     {
-        private ISportService service;
-
-        //private ITeamService service;
 
         public BaseCRUDController(ICRUDService<T, TSearch, TInsert, TUpdate, Tless> service) : base(service)
         { }
 
-       
+
 
         //public BaseCRUDController(ITeamService service)
         //{
@@ -32,6 +29,7 @@ namespace eProdaja.Controllers
         //}
 
         [HttpPost]
+        //[Route("BASE3")]
         public virtual async Task<ActionResult<T>> Insert(TInsert insert)
         {
 
@@ -58,6 +56,7 @@ namespace eProdaja.Controllers
         }
 
         [HttpPost]
+        //[Route("BASE2")]
         public virtual async Task<ActionResult<IEnumerable<Tless>>> InsertOneOrMore(IEnumerable<TUpdate> insertlist)
         {
             var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).InsertOneOrMoreAsync(insertlist);
@@ -66,7 +65,7 @@ namespace eProdaja.Controllers
 
             if (result == null)
             {
-                return Ok("Null");
+                return BadRequest("Null");
 
             }
             else
@@ -89,14 +88,16 @@ namespace eProdaja.Controllers
         }
 
         [HttpPost("{Id}")]
-        public virtual async Task<ActionResult<Tless>> InsertById(int Id , TInsert Insert)
+        //[Route("BASE1")]
+        public virtual async Task<ActionResult<Tless>> InsertById(int Id, TInsert Insert)
         {
 
-            var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).InsertById(Insert,Id);
+            var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).InsertById(Insert, Id);
 
             return Ok(result);
 
         }
-       
+
+        
     }
 }
