@@ -62,6 +62,23 @@ namespace eBettingSystemV2.Controllers
             return base.GetById(id);
         }
 
+        [HttpGet]
+        [Route("GetCountryIdByName/{CountryName}")]
+        public async Task<ActionResult<CountryModelLess>> GetCountryIdByName(string CountryName)
+        {
+            try
+            {
+                var result = await ICountryService.GetIdByNameAsync(CountryName);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
         [HttpPost]
         [Route("InsertCountry")]
         public override Task<ActionResult<CountryModel>> Insert(CountryInsertRequest insert)

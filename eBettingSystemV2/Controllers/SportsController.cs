@@ -49,15 +49,31 @@ namespace eBettingSystemV2.Controllers
 
         }
 
-
-
-
         [HttpGet]
         [Route("GetSportById/{id}")]
         public override Task<ActionResult<SportModel>> GetById(int id)
         {
             return base.GetById(id);
         }
+
+        [HttpGet]
+        [Route("GetSportIdByName/{name}")]
+        public async Task<ActionResult<SportModelLess>> GetSportIdByName(string name)
+        {
+            try
+            {
+                var result = await ISportService.GetSportIdbyNameAsync(name);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
+        }
+
+
 
 
 
