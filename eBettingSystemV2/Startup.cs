@@ -1,3 +1,4 @@
+using eBettingSystemV2.Controllers;
 using eBettingSystemV2.Services;
 using eBettingSystemV2.Services.DataBase;
 using eBettingSystemV2.Services.Interface;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 //using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -78,6 +80,7 @@ namespace eBettingSystemV2
             services.AddTransient<ISportService, SportService>();
             services.AddTransient<ICompetitionService, CompetitionService>();
             services.AddTransient<IDemo, DemoServices>();
+            //services.AddTransient<IMemoryCache, DemoController>();
 
             #endregion 
 
@@ -98,6 +101,9 @@ namespace eBettingSystemV2
 
             //edited
             services.AddControllers().AddNewtonsoftJson();
+
+            //new
+            services.AddMemoryCache();
 
 
             services.AddSwaggerGen(c =>
