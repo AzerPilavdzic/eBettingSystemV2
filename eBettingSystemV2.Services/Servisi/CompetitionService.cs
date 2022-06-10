@@ -232,7 +232,7 @@ namespace eBettingSystemV2.Services.Servisi
         
         } //demo
 
-
+        
 
 
 
@@ -321,7 +321,8 @@ namespace eBettingSystemV2.Services.Servisi
             if (_model == null)
             {
 
-                throw new Exception($"Competition sa imenom {name} ne postoji u bazi");
+                //throw new Exception($"Competition sa imenom {name} ne postoji u bazi");
+                return new CompetitionModelLess { Id = 0 };
             }
 
             return Mapper.Map<CompetitionModelLess>(_model);
