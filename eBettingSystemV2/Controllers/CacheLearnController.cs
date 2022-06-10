@@ -13,7 +13,9 @@ using Microsoft.Extensions.Logging;
 using RezultatiImporter.Cache;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Controllers
@@ -99,11 +101,14 @@ namespace eBettingSystemV2.Controllers
                 // Save data in cache and set the relative expiration time to one day
                 _cache.Set(CacheKeys.Entry, cacheEntry, TimeSpan.FromDays(1));
             }
-          
+
+           
+
             string uslov = cacheEntry == null ? "No cached entry found" : cacheEntry.Value.ToString();
 
-            string Text  = $"Current Time: {DateTime.Now.ToString()} \n" +
-                           $"Cache  Time : {uslov} \n";
+            string Text = $"Current Time: {DateTime.Now.ToString()} \n" +
+                           $"Cache  Time : {uslov} \n"; 
+                       
 
 
             return Text;
@@ -136,6 +141,7 @@ namespace eBettingSystemV2.Controllers
         [Route("CacheGetOrCreate async")]
         public async Task<string> CacheGetOrCreateAsynchronous()
         {
+
             var cacheEntry = await
                 _cache.GetOrCreateAsync(CacheKeys.Entry, entry =>
                 {
@@ -162,6 +168,46 @@ namespace eBettingSystemV2.Controllers
 
             return Text;
         }
+
+
+        [HttpGet]
+        [Route("CacheGetOrCreateAbs")]
+        public string CacheGetOrCreateAbs()
+        {
+            var cacheEntry = _cache.GetOrCreate(CacheKeys.Entry, entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10);
+                return DateTime.Now;
+            });
+
+            string Text = $"Current Time: {DateTime.Now.ToString()} \n" +
+                         $"Cache  Time : {cacheEntry.ToString()} \n" +
+                         $"ne trebaju da budu isti";
+
+            return Text;
+        }
+
+
+        [HttpGet]
+        [Route("CacheGetOrCreateAbsSliding")]
+        public string CacheGetOrCreateAbsSliding()
+        {
+            var cacheEntry = _cache.GetOrCreate(CacheKeys.Entry, entry =>
+            {
+                entry.SetSlidingExpiration(TimeSpan.FromSeconds(3));
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(20);
+                return DateTime.Now;
+            });
+
+            string Text = $"Current Time: {DateTime.Now.ToString()} \n" +
+                           $"Cache  Time : {cacheEntry.ToString()} \n" +
+                           $"ne trebaju da budu isti";
+            return Text;
+        }
+
+
+
+
 
 
 
