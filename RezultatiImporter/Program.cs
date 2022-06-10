@@ -12,8 +12,6 @@ namespace RezultatiImporter
     {
         private static Timer aTimer;
         static void Main(string[] args)
-
-
         {
 
             SetTimer();
@@ -196,11 +194,12 @@ namespace RezultatiImporter
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
         }
-
         private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",
                               e.SignalTime);
         }
+
+
     }
 }
