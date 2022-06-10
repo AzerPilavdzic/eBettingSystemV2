@@ -42,6 +42,9 @@ namespace eBettingSystemV2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //new
+            services.AddMemoryCache();
+
 
             services.AddCors(opt =>
             {
@@ -105,8 +108,7 @@ namespace eBettingSystemV2
             //edited
             services.AddControllers().AddNewtonsoftJson();
 
-            //new
-            services.AddMemoryCache();
+          
 
 
             services.AddSwaggerGen(c =>

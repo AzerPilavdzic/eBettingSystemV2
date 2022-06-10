@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using RezultatiImporter.Cache;
+//using ServiceStack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace eBettingSystemV2.Controllers
     {
 
         private IDemo IDemoService { get; set; }
-        private IMemoryCache _cache { get; set;}
+        private IMemoryCache _cache;
 
        
 
@@ -50,53 +51,6 @@ namespace eBettingSystemV2.Controllers
                   
           
         }
-
-        [HttpGet]
-        public string CacheTryGetValueSet()
-        {
-            DateTime? cacheEntry=null;
-
-            // Look for cache key.
-            if (!_cache.TryGetValue(CacheKeys.Entry, out cacheEntry))
-            {
-                // Key not in cache, so get data.
-                cacheEntry = DateTime.Now;
-
-                // Set cache options.
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    // Keep in cache for this time, reset time if accessed.
-                    .SetSlidingExpiration(TimeSpan.FromSeconds(3));
-
-                // Save data in cache.
-                _cache.Set(CacheKeys.Entry, cacheEntry, cacheEntryOptions);
-            }
-
-            string uslov = cacheEntry == null ? "No cached entry found" : cacheEntry.Value.TimeOfDay.ToString();
-
-
-            string Text = $"Current Time: {cacheEntry.Value.ToString()} \n" +
-                          $"Cache  Time :{uslov} \n";
-                
-
-
-                //$"Current Time: \n"+
-                //   $"Cached Time:" +
-                //   cacheEntry == null ? "No cached entry found" : cacheEntry.Value.TimeOfDay.ToString() + "\n";
-
-
-
-            return Text;
-
-
-
-                      
-
-
-
-        }
-
-
-
 
 
 
