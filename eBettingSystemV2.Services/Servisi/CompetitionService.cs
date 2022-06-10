@@ -50,7 +50,7 @@ namespace eBettingSystemV2.Services.Servisi
             AddCountries();
             Console.WriteLine(_sportName);
 
-            AddCompetitions();
+            //AddCompetitions();
 
             //this was a test..
             //GetByObjectName("Compentecija32");

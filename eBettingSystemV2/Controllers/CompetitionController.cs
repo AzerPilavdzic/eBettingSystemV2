@@ -7,6 +7,7 @@ using eBettingSystemV2.Services.Interface;
 using eProdaja.Controllers;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -31,20 +32,24 @@ namespace eBettingSystemV2.Controllers
             "BIH", "CRO", "SLO", "SRB"
         };
 
+        private IMemoryCache _cache { get; set; }
 
 
-        public CompetitionController(ICompetitionService service, ILogger<CompetitionController> logger) : base(service)
+        public CompetitionController(ICompetitionService service, ILogger<CompetitionController> logger, IMemoryCache memoryCache) : base(service)
         {
             ICompetitionService = service;
             _logger = logger;
+            _cache = memoryCache;
         }
 
-             
+                         
 
         [HttpGet]
         [Route("GetAllCompetitions")]
         public override Task<ActionResult<IEnumerable<CompetitionModel>>> Get([FromQuery] CompetitionSearchObject search = null)
         {
+            //var cacheKey = "competitionList";
+
             return base.Get(search);
         }
 
