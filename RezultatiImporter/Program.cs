@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using RezultatiImporter.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,24 @@ namespace RezultatiImporter
 {
     class Program
     {
+      
         private static Timer aTimer;
+
+
+
+
         static void Main(string[] args)
         {
+            var listaSportova = RezultatiService.FetchAllSports();
+            foreach (var item in listaSportova)
+            {
+            RezultatiService.FetchDataBySport(item);
+            }
+            //FetchAll();
+
+            Console.ReadKey(); 
+
+
 
             SetTimer();
             Console.WriteLine("\nPress the Enter key to exit the application...\n");

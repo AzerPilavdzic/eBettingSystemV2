@@ -5,6 +5,7 @@ using eBettingSystemV2.Services.Interface;
 using eBettingSystemV2.Services.Servisi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using RezultatiImporter.Services;
 using ServiceStack;
 using System;
 using System.Collections.Generic;
@@ -83,6 +85,7 @@ namespace eBettingSystemV2
             services.AddTransient<ISportService, SportService>();
             services.AddTransient<ICompetitionService, CompetitionService>();
             services.AddTransient<IDemo, DemoServices>();
+            //services.AddTransient<IRezultatiService, RezultatiService>();
             //services.AddTransient<IMemoryCache, DemoController>();
 
             #endregion 
@@ -114,6 +117,8 @@ namespace eBettingSystemV2
                 c.SwaggerDoc("v2", new OpenApiInfo { Title = "eBettingSystemV2", Version = "v2" });
             });
         }
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
