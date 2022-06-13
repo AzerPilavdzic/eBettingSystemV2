@@ -95,6 +95,9 @@ namespace RezultatiImporter.Services
 
             var competitions = categories;
 
+            if (categories!=null)
+            {
+
             categories.ToList().ForEach(i => listaKategorija.Add(i.InnerText));
             competitions.ToList().ForEach(i => listaNatjecanja.Add(i.InnerText));
 
@@ -137,14 +140,14 @@ namespace RezultatiImporter.Services
 
             podaciSaStranices = _podaciSaStranice;
 
-            long size = 0;
-            using ( Stream s = new MemoryStream())
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(s, podaciSaStranices);
-                size = s.Length;
-                Console.Write(size);
-            }
+            //long size = 0;
+            //using ( Stream s = new MemoryStream())
+            //{
+            //    BinaryFormatter formatter = new BinaryFormatter();
+            //    formatter.Serialize(s, podaciSaStranices);
+            //    size = s.Length;
+            //    Console.Write(size);
+            //}
             Console.ReadKey();
 
             Console.WriteLine("\n:::::::::::::::::::::: "+sport.ToUpper()+ " ::::::::::::::::::::::\n");
@@ -152,8 +155,9 @@ namespace RezultatiImporter.Services
             {
                  Console.WriteLine(item.Country + " : " + item.Competitionname);
             }
-
-
+                return null;
+            }
+            else
             return null;    
         }
     }
