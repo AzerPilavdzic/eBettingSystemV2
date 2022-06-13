@@ -10,4 +10,8 @@
     <PackageReference Include="System.Runtime.Caching" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\eBettingSystemV2.Services\eBettingSystemV2.Services.csproj" />
+  </ItemGroup>
+
 </Project>
