@@ -26,14 +26,14 @@ namespace eBettingSystemV2.Controllers
     public class CacheLearn:Controller
     {
 
-        //private IDemo IDemoService { get; set; }
         private IMemoryCache _cache;
+        private IDemo IDemoService { get; set; }
 
-       
+
 
         public CacheLearn(IDemo service, IMemoryCache memoryCache)
         {
-            //IDemoService = service;
+            IDemoService = service;
             _cache = memoryCache;
         }
 
@@ -206,8 +206,39 @@ namespace eBettingSystemV2.Controllers
         }
 
 
+        [HttpPost]
+        [Route("TakeDataFromCache")]
+        public async Task<List<CompetitionModel>> TakeDataFromCache (List<PodaciSaStranice> podaciSaStranices)
+        {
 
 
+            
+
+            // Look for cache key.
+            if (!_cache.TryGetValue(CacheKeys.Podaci, out podaciSaStranices))
+            {
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddDays(1),
+                    SlidingExpiration = TimeSpan.FromDays(1)
+                };
+
+                // Save data in cache and set the relative expiration time to one day
+                _cache.Set(CacheKeys.Podaci, podaciSaStranices, cacheEntryOptions);
+
+                var result = await IDemoService.AddDataAsync(podaciSaStranices);
+                return result;
+
+            }
+            else
+            {
+                //uporediti sa stranicom
+
+            return null;
+
+            }
+            //return Text;
+        }
 
 
 
