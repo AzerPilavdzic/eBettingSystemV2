@@ -18,5 +18,6 @@ namespace RezultatiImporter.Cache
         public static string Ticks => "_Ticks";
         public static string CancelMsg => "_CancelMsg";
         public static string CancelTokenSource => "_CancelTokenSource";
+        public static string Podaci => "_Podaci";
     }
 }
