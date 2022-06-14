@@ -210,10 +210,7 @@ namespace eBettingSystemV2.Controllers
         [Route("TakeDataFromCache")]
         public async Task<List<CompetitionModel>> TakeDataFromCache (List<PodaciSaStranice> podaciSaStranices)
         {
-
-
             
-
             // Look for cache key.
             if (!_cache.TryGetValue(CacheKeys.Podaci, out podaciSaStranices))
             {
@@ -234,7 +231,7 @@ namespace eBettingSystemV2.Controllers
             {
                 //uporediti sa stranicom
 
-            return null;
+                return null;
 
             }
             //return Text;
