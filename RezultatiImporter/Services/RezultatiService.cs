@@ -155,7 +155,7 @@ namespace RezultatiImporter.Services
             {
                  Console.WriteLine(item.Country + " : " + item.Competitionname);
             }
-                return null;
+                return podaciSaStranices;
             }
             else
             return null;    
