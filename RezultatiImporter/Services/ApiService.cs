@@ -1,4 +1,6 @@
-﻿using Flurl.Http;
+﻿using eBettingSystemV2.Model.Models;
+using eBettingSystemV2.Models;
+using Flurl.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +11,9 @@ namespace RezultatiImporter.Services
 {
     public class ApiService
     {
-        private string _resource = null;
-        public string _endpoint = "https://localhost:7192/";
+        private static string _resource = "CacheLearn/";
+        public static string _endpoint = "https://localhost:44318/";
+        public static string _Command = "TakeDataFromCache";
 
 
         public ApiService(string resource)
@@ -18,12 +21,16 @@ namespace RezultatiImporter.Services
             _resource = resource;
         }
 
-        public async Task<T> Post<T>(object request)
+        public static async Task Post<T>(List<T> request)
         {
+           
+
+
             try
             {
-                var result = await $"{_endpoint}{_resource}".PostJsonAsync(request).ReceiveJson<T>();
-                return result;
+                List<PodaciSaStranice> result = await $"{_endpoint}{_resource}{_Command}".PostJsonAsync(request).ReceiveJson<List<PodaciSaStranice>>();
+                Console.WriteLine(result[0].Competitionname.ToString());
+                //return result;
             }
             catch (FlurlHttpException ex)
             {
@@ -35,11 +42,19 @@ namespace RezultatiImporter.Services
                     stringBuilder.AppendLine($"{error.Key}, ${string.Join(",", error.Value)}");
                 }
 
-                //MessageBox.Show(stringBuilder.ToString(), "Greška", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return default(T);
+                Console.WriteLine("Greška");
+
+
+                //return default(T);
             }
 
         }
+
+
+
+
+
+
 
 
     }

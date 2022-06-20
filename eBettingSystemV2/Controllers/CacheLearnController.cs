@@ -208,30 +208,51 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("TakeDataFromCache")]
-        public async Task<List<CompetitionModel>> TakeDataFromCache (List<PodaciSaStranice> podaciSaStranices)
+        public async Task<List<PodaciSaStranice>> TakeDataFromCache (List<PodaciSaStranice> podaciSaStranices)
         {
+
+
+
+
+
+            List<PodaciSaStranice> podaci2=null;
             
+
             // Look for cache key.
-            if (!_cache.TryGetValue(CacheKeys.Podaci, out podaciSaStranices))
+            if (!_cache.TryGetValue(podaciSaStranices[0].Competitionname, out podaci2))
             {
+                podaci2 = podaciSaStranices;
+
+
                 var cacheEntryOptions = new MemoryCacheEntryOptions
                 {
                     AbsoluteExpiration = DateTime.Now.AddDays(1),
                     SlidingExpiration = TimeSpan.FromDays(1)
                 };
 
-                // Save data in cache and set the relative expiration time to one day
-                _cache.Set(CacheKeys.Podaci, podaciSaStranices, cacheEntryOptions);
 
-                var result = await IDemoService.AddDataAsync(podaciSaStranices);
-                return result;
+                // Save data in cache and set the relative expiration time to one day
+
+                
+
+                _cache.Set(CacheKeys.Podaci, podaci2, cacheEntryOptions);
+
+                var result = await IDemoService.AddDataAsync(podaci2);
+
+                return podaci2;
 
             }
             else
             {
+
+
                 //uporediti sa stranicom
 
-                return null;
+
+                var cacheEntry = _cache.Get<List<PodaciSaStranice>>(CacheKeys.Podaci);
+
+                cacheEntry[0].Competitionname = "cache";
+                return cacheEntry;
 
             }
             //return Text;
