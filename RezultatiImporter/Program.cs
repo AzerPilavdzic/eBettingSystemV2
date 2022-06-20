@@ -21,6 +21,9 @@ namespace RezultatiImporter
 
         static async Task Main(string[] args)
         {
+           
+
+
             var listaSportova = RezultatiService.FetchAllSports();
             foreach (var item in listaSportova)
             {
