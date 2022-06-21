@@ -35,6 +35,7 @@ namespace eBettingSystemV2.Services.Servisi
         }
 
 
+        //converts and checks data meant to be in competition service
         public async Task<List<CompetitionModel>> AddDataAsync(List<PodaciSaStranice> Podaci)
         {
             //lista koja ce biti poslana u InsertOneOrMoreAsync

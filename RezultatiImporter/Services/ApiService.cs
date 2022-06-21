@@ -16,9 +16,9 @@ namespace RezultatiImporter.Services
         public static string _Command = "TakeDataFromCache";
 
 
-        public ApiService(string resource)
+        public ApiService(/*string resource*/)
         {
-            _resource = resource;
+            //_resource = resource;
         }
 
         public static async Task Post<T>(List<T> request)
