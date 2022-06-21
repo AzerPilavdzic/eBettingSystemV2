@@ -7,6 +7,11 @@ namespace eBettingSystemV2.Services.DataBase
 {
     public partial class Competition
     {
+        public Competition()
+        {
+            Events = new HashSet<Event>();
+        }
+
         public int Id { get; set; }
         public string Naziv { get; set; }
         public int Countryid { get; set; }
@@ -14,6 +19,6 @@ namespace eBettingSystemV2.Services.DataBase
 
         public virtual Country Country { get; set; }
         public virtual Sport Sport { get; set; }
-        public virtual Event Event { get; set; }
+        public virtual ICollection<Event> Events { get; set; }
     }
 }
