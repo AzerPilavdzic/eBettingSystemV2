@@ -30,11 +30,16 @@ namespace RezultatiImporter
 
                 foreach (var item in listaSportova)
                 {
-                    _PageDataList = RezultatiService.FetchDataBySport(item);
-                    if (_PageDataList != null)
+                    if (RezultatiService.FetchDataBySport(item)!=null)
                     {
-                        await ApiService.Post<PodaciSaStranice>(_PageDataList);
+                    _PageDataList.AddRange(RezultatiService.FetchDataBySport(item));
                     }
+                }
+
+
+                if (_PageDataList.Count != 0)
+                {
+                    await ApiService.Post<PodaciSaStranice>(_PageDataList);
                 }
             }
             catch (Exception ex)

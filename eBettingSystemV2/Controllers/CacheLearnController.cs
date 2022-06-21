@@ -4,6 +4,7 @@ using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
 using eBettingSystemV2.Services.DataBase;
 using eBettingSystemV2.Services.Interface;
+using eBettingSystemV2.Services.Servisi;
 //using eBettingSystemV2.Models;
 using eProdaja.Controllers;
 using Microsoft.AspNetCore.Cors;
@@ -29,17 +30,24 @@ namespace eBettingSystemV2.Controllers
         private IMemoryCache _cache;
         private IDemo IDemoService { get; set; }
 
+        private ICache CacheService { get; set; }
 
 
-        public CacheLearn(IDemo service, IMemoryCache memoryCache)
+        public CacheLearn(IDemo service, IMemoryCache memoryCache, ICache cacheService)
         {
             IDemoService = service;
             _cache = memoryCache;
+            CacheService = cacheService;
         }
 
 
-       
-     
+        [HttpPost]
+        [Route("SetCacheCompetition")]
+        public async Task<List<PodaciSaStranice>> SetCacheCompetition(List<PodaciSaStranice>podaciSaStranice)
+        {
+            return await CacheService.SetCacheCompetition(podaciSaStranice);
+        
+        }
 
 
         [HttpGet]
