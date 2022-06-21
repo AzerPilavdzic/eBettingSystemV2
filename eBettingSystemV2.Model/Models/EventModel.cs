@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace eBettingSystemV2.Services.DataBase
+namespace eBettingSystemV2.Models
 {
-    public partial class Event
+    public partial class EventModel
     {
         public int EventId { get; set; }
         public string EventName { get; set; }
@@ -20,7 +20,5 @@ namespace eBettingSystemV2.Services.DataBase
         public int? YellowCardsAwayTeam { get; set; }
         public int? RedCardsHomeTeam { get; set; }
         public int? RedCardsAwayTeam { get; set; }
-
-        public virtual Competition Competition { get; set; }
     }
 }

@@ -21,19 +21,38 @@ namespace RezultatiImporter
 
         static async Task Main(string[] args)
         {
-           
-
-
-            var listaSportova = RezultatiService.FetchAllSports();
-            foreach (var item in listaSportova)
+            //fetch sportova
+            try
             {
-              RezultatiService.FetchDataBySport(item);
+
+                var listaSportova = RezultatiService.FetchAllSports();
+                var _PageDataList = new List<PodaciSaStranice>();
+
+                foreach (var item in listaSportova)
+                {
+                    if (RezultatiService.FetchDataBySport(item,false)!=null)
+                    {
+                    _PageDataList.AddRange(RezultatiService.FetchDataBySport(item,true));
+                    }
+                }
+
+
+                if (_PageDataList.Count != 0)
+                {
+                    await ApiService.Post<PodaciSaStranice>(_PageDataList);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             //FetchAll();
 
 
             //await ApiService.Post<PodaciSaStranice>(new PodaciSaStranice { Competitionname = "Test123", Country = "Test123", Sport = "Test123" });
             Console.ReadKey();
+
+
 
 
             var list = new List<PodaciSaStranice>();
@@ -44,6 +63,9 @@ namespace RezultatiImporter
 
             var list3 = new List<PodaciSaStranice>();
             list3.Add(new PodaciSaStranice { Competitionname = "Test666", Country = "Test444", Sport = "Test444" });
+
+
+         
 
             SetTimer();
             await ApiService.Post<PodaciSaStranice>(list);

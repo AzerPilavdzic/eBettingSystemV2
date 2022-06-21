@@ -66,8 +66,8 @@ namespace RezultatiImporter.Services
 
 
         }
-
-        public static List<PodaciSaStranice> FetchDataBySport(string sport)
+    
+        public static List<PodaciSaStranice> FetchDataBySport(string sport, bool ispis=true)
         {
             if (sport.Contains("š"))
             {
@@ -155,15 +155,18 @@ namespace RezultatiImporter.Services
             //}
             Console.ReadKey();
 
-            Console.WriteLine("\n:::::::::::::::::::::: "+sport.ToUpper()+ " ::::::::::::::::::::::\n");
-            foreach (var item in _podaciSaStranice)
-            {
-                 Console.WriteLine(item.Country + " : " + item.Competitionname);
+                if (ispis)
+                {
+
+                    Console.WriteLine("\n:::::::::::::::::::::: " + sport.ToUpper() + " ::::::::::::::::::::::\n");
+                    foreach (var item in _podaciSaStranice)
+                    {
+                        Console.WriteLine(item.Country + " : " + item.Competitionname);
+                    }
+                }
+                    return podaciSaStranices;
             }
-                return podaciSaStranices;
-            }
-            else
-            return null;    
+            return null;
         }
 
         public static void FetchDate()
