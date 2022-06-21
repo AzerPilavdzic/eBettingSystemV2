@@ -48,7 +48,7 @@ namespace eBettingSystemV2.Controllers
             DateTime? cacheEntry=null;
 
             // Look for cache key.
-            if (!_cache.TryGetValue(CacheKeys.Entry, out cacheEntry))
+            if (!_cache.TryGetValue(Models.CacheKeys.Entry, out cacheEntry))
             {
                 // Key not in cache, so get data.
                 cacheEntry = DateTime.Now;
@@ -59,7 +59,7 @@ namespace eBettingSystemV2.Controllers
                     .SetSlidingExpiration(TimeSpan.FromSeconds(3));
 
                 // Save data in cache.
-                _cache.Set(CacheKeys.Entry, cacheEntry, cacheEntryOptions);
+                _cache.Set(Models.CacheKeys.Entry, cacheEntry, cacheEntryOptions);
             }
 
             string uslov = cacheEntry == null ? "No cached entry found" : cacheEntry.Value.TimeOfDay.ToString();
@@ -93,13 +93,13 @@ namespace eBettingSystemV2.Controllers
             DateTime? cacheEntry;
 
             // Look for cache key.
-            if (!_cache.TryGetValue(CacheKeys.Entry, out cacheEntry))
+            if (!_cache.TryGetValue(Models.CacheKeys.Entry, out cacheEntry))
             {
                 // Key not in cache, so get data.
                 cacheEntry = DateTime.Now;
 
                 // Save data in cache and set the relative expiration time to one day
-                _cache.Set(CacheKeys.Entry, cacheEntry, TimeSpan.FromDays(1));
+                _cache.Set(Models.CacheKeys.Entry, cacheEntry, TimeSpan.FromDays(1));
             }
 
            
@@ -121,7 +121,7 @@ namespace eBettingSystemV2.Controllers
         [Route("CacheGetOrCreate")]
         public string CacheGetOrCreate()
         {
-            var cacheEntry = _cache.GetOrCreate(CacheKeys.Entry, entry =>
+            var cacheEntry = _cache.GetOrCreate(Models.CacheKeys.Entry, entry =>
             {
                 entry.SlidingExpiration = TimeSpan.FromSeconds(3);
                 return DateTime.Now;
@@ -143,7 +143,7 @@ namespace eBettingSystemV2.Controllers
         {
 
             var cacheEntry = await
-                _cache.GetOrCreateAsync(CacheKeys.Entry, entry =>
+                _cache.GetOrCreateAsync(Models.CacheKeys.Entry, entry =>
                 {
                     entry.SlidingExpiration = TimeSpan.FromSeconds(3);
                     return Task.FromResult(DateTime.Now);
@@ -160,7 +160,7 @@ namespace eBettingSystemV2.Controllers
         [Route("CacheGet")]
         public string CacheGet()
         {
-            var cacheEntry = _cache.Get<DateTime?>(CacheKeys.Entry);
+            var cacheEntry = _cache.Get<DateTime?>(Models.CacheKeys.Entry);
             
             string Text = $"Current Time: {DateTime.Now.ToString()} \n" +
                           $"Cache  Time : {cacheEntry.Value.ToString()} \n" +
@@ -174,7 +174,7 @@ namespace eBettingSystemV2.Controllers
         [Route("CacheGetOrCreateAbs")]
         public string CacheGetOrCreateAbs()
         {
-            var cacheEntry = _cache.GetOrCreate(CacheKeys.Entry, entry =>
+            var cacheEntry = _cache.GetOrCreate(Models.CacheKeys.Entry, entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10);
                 return DateTime.Now;
@@ -192,7 +192,7 @@ namespace eBettingSystemV2.Controllers
         [Route("CacheGetOrCreateAbsSliding")]
         public string CacheGetOrCreateAbsSliding()
         {
-            var cacheEntry = _cache.GetOrCreate(CacheKeys.Entry, entry =>
+            var cacheEntry = _cache.GetOrCreate(Models.CacheKeys.Entry, entry =>
             {
                 entry.SetSlidingExpiration(TimeSpan.FromSeconds(3));
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(20);
@@ -226,8 +226,8 @@ namespace eBettingSystemV2.Controllers
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions
                 {
-                    AbsoluteExpiration = DateTime.Now.AddDays(1),
-                    SlidingExpiration = TimeSpan.FromDays(1)
+                    AbsoluteExpiration = DateTime.Now.AddSeconds(6),
+                    SlidingExpiration = TimeSpan.FromSeconds(6)
                 };
 
 
@@ -235,7 +235,7 @@ namespace eBettingSystemV2.Controllers
 
                 
 
-                _cache.Set(CacheKeys.Podaci, podaci2, cacheEntryOptions);
+                _cache.Set(Models.CacheKeys.Podaci, podaci2, cacheEntryOptions);
 
                 var result = await IDemoService.AddDataAsync(podaci2);
 
@@ -249,9 +249,19 @@ namespace eBettingSystemV2.Controllers
                 //uporediti sa stranicom
 
 
-                var cacheEntry = _cache.Get<List<PodaciSaStranice>>(CacheKeys.Podaci);
+                var cacheEntry = _cache.Get<List<PodaciSaStranice>>(Models.CacheKeys.Podaci);
 
-                cacheEntry[0].Competitionname = "cache";
+
+
+
+
+
+
+
+
+                //cacheEntry[0].Competitionname = "cache";
+
+
                 return cacheEntry;
 
             }

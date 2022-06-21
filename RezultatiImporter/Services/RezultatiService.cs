@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -30,6 +31,8 @@ namespace RezultatiImporter.Services
             //sportovi za sada
             HtmlWeb web = new HtmlWeb();
             HtmlDocument document = web.Load("https://m.rezultati.com/");
+
+          
 
             var sports = document.DocumentNode.SelectSingleNode("//*[@id='main']/p[1]").InnerText;
 
@@ -161,6 +164,41 @@ namespace RezultatiImporter.Services
             }
             else
             return null;    
+        }
+
+        public static void FetchDate()
+        {
+            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create("https://m.rezultati.com/");
+
+            HttpWebResponse myHttpWebResponse = (HttpWebResponse)null;
+
+            using (myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse())
+            {
+                Console.WriteLine("\r\nThe following headers were received in the response:");
+
+                for (int i = 0; i < myHttpWebResponse.Headers.Count; ++i)
+                    Console.WriteLine("\nHeader Name:{0}, Value :{1}", myHttpWebResponse.Headers.Keys[i], myHttpWebResponse.Headers[i]);
+                // Releases the resources of the response.
+                myHttpWebResponse.Close();
+
+                Console.WriteLine(myHttpWebResponse.LastModified);
+
+            }
+
+         
+
+
+            WebClient client = new WebClient();
+         
+
+
+            string downloadString = client.DownloadString("http://www.gooogle.com");
+
+            
+
+
+            
+
         }
     }
 }
