@@ -201,7 +201,7 @@ namespace eBettingSystemV2.Services.Servisi
 
             }
 
-            Context.SaveChanges();
+            //Context.SaveChanges();
             var filterquery = base.AddFilter(query, search);
 
             if (!string.IsNullOrWhiteSpace(search?.naziv))
