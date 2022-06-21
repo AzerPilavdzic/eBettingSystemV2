@@ -52,6 +52,36 @@ namespace RezultatiImporter.Services
         }
 
 
+        public static async Task PostCompetition<T>(List<T> request)
+        {
+
+            _Command = "SetCacheCompetition";
+
+            try
+            {
+                List<PodaciSaStranice> result = await $"{_endpoint}{_resource}{_Command}".PostJsonAsync(request).ReceiveJson<List<PodaciSaStranice>>();
+                Console.WriteLine(result[0].Competitionname.ToString());
+                //return result;
+            }
+
+            catch (FlurlHttpException ex)
+            {
+                var errors = await ex.GetResponseJsonAsync<Dictionary<string, string[]>>();
+
+                var stringBuilder = new StringBuilder();
+                foreach (var error in errors)
+                {
+                    stringBuilder.AppendLine($"{error.Key}, ${string.Join(",", error.Value)}");
+                }
+
+                Console.WriteLine("Greška");
+
+
+                //return default(T);
+            }
+
+        }
+
 
 
 

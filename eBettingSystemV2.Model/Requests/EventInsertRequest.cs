@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
+namespace eBettingSystemV2.Model.SearchObjects
 
-namespace eBettingSystemV2.Services.DataBase
 {
-    public partial class Event
+    public class EventInsertRequest
     {
-        public int EventId { get; set; }
         public string EventName { get; set; }
         public int CompetitionId { get; set; }
         public DateTime EventStartTime { get; set; }
@@ -20,7 +21,5 @@ namespace eBettingSystemV2.Services.DataBase
         public int? YellowCardsAwayTeam { get; set; }
         public int? RedCardsHomeTeam { get; set; }
         public int? RedCardsAwayTeam { get; set; }
-
-        public virtual Competition Competition { get; set; }
     }
 }
