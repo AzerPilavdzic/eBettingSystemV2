@@ -9,7 +9,7 @@ namespace eBettingSystemV2.Services.Interface
 {
     public interface ICache
     {
-        List<PodaciSaStranice> SetCache(List<PodaciSaStranice> podaciSaStranices);
+        Task<List<PodaciSaStranice>> SetCacheCompetition(List<PodaciSaStranice> podaciSaStranices);
 
 
 

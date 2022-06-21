@@ -1,4 +1,5 @@
-﻿using eBettingSystemV2.Model.SearchObjects;
+﻿using eBettingSystemV2.Model.Models;
+using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,12 @@ namespace eBettingSystemV2.Services.Interface
         CompetitionModelLess>
     {
         Task<CompetitionModelLess> GetIdbyNazivAsync(string name);
-        
-          
+        Task<List<CompetitionModel>> AddDataAsync(List<PodaciSaStranice> Podaci);
 
 
 
-        
+
+
 
 
 
