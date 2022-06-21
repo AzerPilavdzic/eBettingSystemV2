@@ -95,7 +95,7 @@ namespace RezultatiImporter.Services
 
             List<string> listaKategorija = new List<string>();
             List<string> listaNatjecanja = new List<string>();
-
+          
             var categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
 
             var competitions = categories;

@@ -99,6 +99,7 @@ namespace eBettingSystemV2.Controllers
         }
 
         [HttpDelete]
+        [Route("DeleteEvent")]
         public async Task<IActionResult> Delete(int EventId)
         {
             try
@@ -107,12 +108,12 @@ namespace eBettingSystemV2.Controllers
 
                 if (result != 0)
                 {
-                    return Ok($"Event sa Id {EventId} je uspjesno obrisana");
+                    return Ok($"Event sa Id {EventId} je uspjesno izbrisan.");
                 }
                 else
                 {
                     //Console.WriteLine("TESTIRANJE ISPISA U KONZOLI");
-                    return BadRequest($"Event ne postoji ");
+                    return BadRequest($"Event sa ID {EventId} ne postoji.");
                 }
             }
             catch (Exception ex)
