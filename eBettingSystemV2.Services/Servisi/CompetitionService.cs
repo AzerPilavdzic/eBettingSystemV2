@@ -44,10 +44,10 @@ namespace eBettingSystemV2.Services.Servisi
             Mapper = mapper_;
             ICountryService = service;
 
-            GetSportName();
+            //GetSportName();
 
             //pozovi funkciju za dodavanje drzava
-            AddCountries();
+            //AddCountries();
             Console.WriteLine(_sportName);
 
             //AddCompetitions();
@@ -261,19 +261,19 @@ namespace eBettingSystemV2.Services.Servisi
                 listCompetition[i] = _competitionName.ToString();
 
 
-                Context.Competitions.Add(new Competition()
-                {
-                    Sportid = _sportID,
-                    Countryid = drzavaID,
-                    Naziv = listCompetition[i],
-                });
+                //Context.Competitions.Add(new Competition()
+                //{
+                //    Sportid = _sportID,
+                //    Countryid = drzavaID,
+                //    Naziv = listCompetition[i],
+                //});
 
 
                 Console.WriteLine("Drzava ID " + drzavaID + " natjecanje: " + listCompetition[i]);
 
             }
 
-            Context.SaveChanges();
+            //Context.SaveChanges();
             var filterquery = base.AddFilter(query, search);
 
             if (!string.IsNullOrWhiteSpace(search?.naziv))
