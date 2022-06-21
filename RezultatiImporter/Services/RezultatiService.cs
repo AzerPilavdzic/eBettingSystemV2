@@ -63,7 +63,7 @@ namespace RezultatiImporter.Services
 
 
         }
-
+    
         public static List<PodaciSaStranice> FetchDataBySport(string sport)
         {
             if (sport.Contains("š"))
@@ -151,7 +151,7 @@ namespace RezultatiImporter.Services
             //    Console.Write(size);
             //}
             Console.ReadKey();
-
+            
             Console.WriteLine("\n:::::::::::::::::::::: "+sport.ToUpper()+ " ::::::::::::::::::::::\n");
             foreach (var item in _podaciSaStranice)
             {
@@ -159,7 +159,6 @@ namespace RezultatiImporter.Services
             }
                 return podaciSaStranices;
             }
-            else
             return null;    
         }
     }

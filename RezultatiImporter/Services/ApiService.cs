@@ -12,13 +12,13 @@ namespace RezultatiImporter.Services
     public class ApiService
     {
         private static string _resource = "CacheLearn/";
-        public static string _endpoint = "https://localhost:44318/";
+        public static string _endpoint = "https://localhost:5001/";
         public static string _Command = "TakeDataFromCache";
 
 
-        public ApiService(string resource)
+        public ApiService(/*string resource*/)
         {
-            _resource = resource;
+            //_resource = resource;
         }
 
         public static async Task Post<T>(List<T> request)
@@ -32,6 +32,7 @@ namespace RezultatiImporter.Services
                 Console.WriteLine(result[0].Competitionname.ToString());
                 //return result;
             }
+            
             catch (FlurlHttpException ex)
             {
                 var errors = await ex.GetResponseJsonAsync<Dictionary<string, string[]>>();
