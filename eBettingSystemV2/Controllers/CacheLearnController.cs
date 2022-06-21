@@ -237,7 +237,7 @@ namespace eBettingSystemV2.Controllers
 
                 _cache.Set(Models.CacheKeys.Podaci, podaci2, cacheEntryOptions);
 
-                //var result = await IDemoService.AddDataAsync(podaci2);
+                var result = await IDemoService.AddDataAsync(podaci2);
 
                 return podaci2;
 
