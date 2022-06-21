@@ -13,71 +13,108 @@ namespace eBettingSystemV2.Services.Servisi
     public class CacheService:ICache
     {
         private IMemoryCache _cache;
+        private ICompetitionService ICompetitionService { get; set; }
 
 
-        public CacheService(IMemoryCache memoryCache)
+        public CacheService(IMemoryCache memoryCache ,ICompetitionService service3)
         {
 
             _cache = memoryCache;
 
-
+            ICompetitionService = service3;
 
 
 
         }
 
 
-        public  List<PodaciSaStranice> SetCache(List<PodaciSaStranice> podaciSaStranices)
+        public  async Task<List<PodaciSaStranice>> SetCacheCompetition(List<PodaciSaStranice> podaciSaStranices)
         {
-            List<PodaciSaStranice> podaci2 = null;
 
+            //look for cache that expires in 1 day
 
-            // Look for cache key.
-            if (!_cache.TryGetValue(podaciSaStranices[0].Competitionname, out podaci2))
+            string text = null;
+
+            if (!_cache.TryGetValue(Models.CacheKeys.Expire, out text))
             {
+                text = "Expire";
+
+                var cacheEntryOptions2 = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddDays(1),
+                    SlidingExpiration = TimeSpan.FromDays(1)
+                };
+
+                _cache.Set(Models.CacheKeys.Expire, "Expire", cacheEntryOptions2);
+
+                var result = await ICompetitionService.AddDataAsync(podaciSaStranices);
+
+                return podaciSaStranices;
+
+
+            }
+            else //samo dodaj u cache
+            {
+
+                List<PodaciSaStranice> podaci2 = null;
+
                 podaci2 = podaciSaStranices;
 
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions
                 {
-                    AbsoluteExpiration = DateTime.Now.AddSeconds(6),
-                    SlidingExpiration = TimeSpan.FromSeconds(6)
+                    AbsoluteExpiration = DateTime.Now.AddDays(5),
+                    SlidingExpiration = TimeSpan.FromDays(5)
                 };
-
-
-                // Save data in cache and set the relative expiration time to one day
-
-
 
                 _cache.Set(Models.CacheKeys.Podaci, podaci2, cacheEntryOptions);
 
-                //var result = await IDemoService.AddDataAsync(podaci2);
-
-                return podaci2;
-
-            }
-            else
-            {
-
-
-                //uporediti sa stranicom
-
-
-                var cacheEntry =  _cache.Get<List<PodaciSaStranice>>(Models.CacheKeys.Podaci);
-
-
-                //cacheEntry[0].Competitionname = "cache";
-
+                var cacheEntry = _cache.Get<List<PodaciSaStranice>>(Models.CacheKeys.Podaci);
 
                 return cacheEntry;
 
+
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
         }
+
+        //public 
+
+
+
+
+
 
 
     }

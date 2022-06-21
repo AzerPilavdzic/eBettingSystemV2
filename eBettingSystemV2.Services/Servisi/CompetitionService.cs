@@ -28,100 +28,28 @@ namespace eBettingSystemV2.Services.Servisi
     {
 
         static readonly HtmlWeb web = new HtmlWeb();   //avoid hardcode
-        static readonly HtmlDocument document = web.Load("https://m.rezultati.com/");
+        static readonly HtmlDocument document = web.Load("https://m.rezultati.com/"); //questionable code
         private ICountryService ICountryService { get; set; }
+        private ISportService ISportService { get; set; }
+        //private ICompetitionService ICompetitionService { get; set; }
 
-        HtmlNodeCollection categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
+        HtmlNodeCollection categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4"); //questionable code
 
-        public string _sportName { get; set; }
-        public int _sportID { get; set; }
-
-
-        public CompetitionService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_,ICountryService service) : base(context_, mapper_)
+        public CompetitionService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_,
+            ICountryService service1,
+            ISportService service2
+            ) : base(context_, mapper_)
         {
 
             Context = context_;
             Mapper = mapper_;
-            ICountryService = service;
+            ICountryService = service1;
+            ISportService = service2;
+      
 
-            //GetSportName();
-
-            //pozovi funkciju za dodavanje drzava
-            //AddCountries();
-            Console.WriteLine(_sportName);
-
-            //AddCompetitions();
-
-            //this was a test..
-            //GetByObjectName("Compentecija32");
         }
 
-        private void GetSportName()
-        {
-            var _sport = document.DocumentNode.SelectSingleNode("//*[@id='main']/h2").InnerText;
-            var _regexSport = Regex.Match(_sport, "^\\S*").ToString();
-
-            _sportName = _regexSport.ToString();
-
-            //.....TEMPORARY.....
-
-            var sportModel = Context.Sports.Where(x => x.Name.ToLower() == _sportName.ToLower()).FirstOrDefault();
-            _sportID = sportModel.SportsId;
-
-
-
-        }   //demo
-
-        public void AddCountries()
-        {
-            //var categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
-            List<string> listaKategorija = new List<string>();
-
-            //var categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
-
-            categories.ToList().ForEach(i => listaKategorija.Add(i.InnerText));
-
-            for (int i = 0; i < listaKategorija.Count(); i++)
-            {
-                var _match = Regex.Match(listaKategorija[i], @"(\w*)(?=:)");
-                listaKategorija[i] = _match.ToString();
-            }
-
-            HashSet<string> CategoryHashSet = new HashSet<string>();
-
-
-            foreach (var item in listaKategorija)
-            {
-                CategoryHashSet.Add(item);
-            }
-
-
-            var _listaKategorijaFinal = CategoryHashSet.ToList();
-
-            for (int i = 0; i < _listaKategorijaFinal.Count(); i++)
-            {
-                //provjeriti u bazi da li postoji _listaKategorijaFinal[i]
-                //CheckCountryExist(_listaKategorijaFinal[i]);
-                if (GetByObjectName(_listaKategorijaFinal[i]) != null)
-                {
-                    continue;
-                }
-                else
-                {
-                    //prebaciti ovaj dio koda u UpsertOneOrMoreCountries
-                    Context.Countries.Add(new Country()
-                    {
-                        CountryName = _listaKategorijaFinal[i]
-                    });
-
-                }
-
-            }
-
-            Context.SaveChanges();
-        }    //demo
-
-
+      
         //demo klasa
 
         public async void AddData(/*List<PodaciSaStranice> Podaci*/)
@@ -261,12 +189,12 @@ namespace eBettingSystemV2.Services.Servisi
                 listCompetition[i] = _competitionName.ToString();
 
 
-                //Context.Competitions.Add(new Competition()
-                //{
-                //    Sportid = _sportID,
-                //    Countryid = drzavaID,
-                //    Naziv = listCompetition[i],
-                //});
+                Context.Competitions.Add(new Competition()
+                {
+                    //Sportid = _sportID,
+                    Countryid = drzavaID,
+                    Naziv = listCompetition[i],
+                });
 
 
                 Console.WriteLine("Drzava ID " + drzavaID + " natjecanje: " + listCompetition[i]);
@@ -469,6 +397,109 @@ namespace eBettingSystemV2.Services.Servisi
 
 
             
+        }
+
+        public async Task<List<CompetitionModel>> AddDataAsync(List<PodaciSaStranice> Podaci)
+        {
+            //lista koja ce biti poslana u InsertOneOrMoreAsync
+            List<Competition> competitions = new List<Competition>();
+
+            foreach (var b in Podaci)
+            {
+                //geta id by name
+                var Competition = await GetIdbyNazivAsync(b.Competitionname);
+                var Sport = await ISportService.GetSportIdbyNameAsync(b.Sport);
+                var Country = await ICountryService.GetIdByNameAsync(b.Country);
+
+                //ako id 0 dodaj i uzmi id
+                if (Sport.SportsId == 0)
+                {
+                    Sport = await ISportService.InsertAsync(new SportInsertRequest
+                    {
+                        name = b.Sport
+                    });
+
+                };
+
+                if (Country.CountryId == 0)
+                {
+                    Country = await ICountryService.InsertAsync(new CountryInsertRequest
+                    {
+
+                        CountryName = b.Country
+
+                    });
+                }
+
+                var x = new Competition
+                {
+
+                    //kad dobijemo sve id pohranjujemo u competition
+                    Naziv = b.Competitionname,           //competencija1
+                    Id = Competition.Id,  //45
+                    Sportid = Sport.SportsId,        //kosarka 5  ako ne postoji doda i onda vrati id
+                    Countryid = Country.CountryId,     //country ukraine 5
+
+
+                };
+
+                //dodajemo u listu
+                competitions.Add(x);
+
+            }
+
+
+            //convertujemo listu tako da je mozemo koristiti u insertoneormore async
+            var list = Mapper.Map<IEnumerable<CompetitionUpsertRequest>>(competitions);
+
+            //pokrecemo pohranu podataka
+            var result = await InsertOneOrMoreAsync(list);
+
+
+            //competitions = Mapper.Map<List<Competition>>(result);
+
+            //ako kompetition sadrzi 0 onda mjenjamo id sa id iz result
+            if (competitions.Where(X => X.Id == 0).FirstOrDefault() != null)
+            {
+
+                foreach (var a in competitions)
+                {
+                    foreach (var b in result)
+                    {
+                        if (a.Id == 0)
+                        {
+                            a.Id = b.Id;
+
+                        }
+
+
+
+
+
+                    }
+
+
+                }
+            }
+
+
+
+
+
+
+            return Mapper.Map<List<CompetitionModel>>(competitions);
+
+
+
+            //convert listu 
+            //InsertOneOrMoreAsync(lista);
+            //vrati rezultat
+            //var sportoviq = Mapper.Map<List<CompetitionUpsertRequest>>(competitions);
+
+
+
+
+
         }
 
         //..

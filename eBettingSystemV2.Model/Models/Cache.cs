@@ -19,5 +19,6 @@ namespace eBettingSystemV2.Models
         public static string CancelMsg => "_CancelMsg";
         public static string CancelTokenSource => "_CancelTokenSource";
         public static string Podaci => "_Podaci";
+        public static string Expire => "_Expire";
     }
 }

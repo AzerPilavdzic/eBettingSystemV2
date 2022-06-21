@@ -1,4 +1,5 @@
-﻿using eBettingSystemV2.Model.SearchObjects;
+﻿using eBettingSystemV2.Model.Models;
+using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
 using eBettingSystemV2.Services.DataBase;
@@ -122,6 +123,19 @@ namespace eBettingSystemV2.Controllers
            
         }
 
+
+        [HttpPost]
+        [Route("InsertCompetitionUsingNamesOnly")]
+        public async Task<ActionResult<List<CompetitionModel>>> InsertCompetitionUsingNamesOnly(List<PodaciSaStranice> lista)
+        {
+            var result = await ICompetitionService.AddDataAsync(lista);
+            return result;
+
+
+        }
+
+
+
         [HttpPut]
         [Route("UpdateCompetitionById")]
         public override Task<ActionResult<CompetitionModel>> Update(int id, [FromBody] CompetitionUpsertRequest update)
@@ -144,7 +158,6 @@ namespace eBettingSystemV2.Controllers
                 return NotFound($"Competition sa {CompId} ID ne postoji.");
             }
         }
-
 
 
     }
