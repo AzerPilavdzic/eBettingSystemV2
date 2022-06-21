@@ -85,6 +85,7 @@ namespace eBettingSystemV2
             services.AddTransient<ISportService, SportService>();
             services.AddTransient<ICompetitionService, CompetitionService>();
             services.AddTransient<IDemo, DemoServices>();
+            services.AddTransient<ICache,CacheService>();
             //services.AddTransient<IRezultatiService, RezultatiService>();
             //services.AddTransient<IMemoryCache, DemoController>();
 
