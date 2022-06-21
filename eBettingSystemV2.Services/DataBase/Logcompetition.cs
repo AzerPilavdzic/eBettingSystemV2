@@ -9,7 +9,7 @@ namespace eBettingSystemV2.Services.DataBase
     {
         public int Id { get; set; }
         public string Naziv { get; set; }
-        public DateTime Column1 { get; set; }
+        public DateTime Date { get; set; }
         public int? Updated { get; set; }
     }
 }
