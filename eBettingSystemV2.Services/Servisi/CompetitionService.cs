@@ -163,11 +163,6 @@ namespace eBettingSystemV2.Services.Servisi
         
 
 
-
-       
-
-
-
         //get esktenzije
         public override IQueryable<Competition> AddFilter(IQueryable<Competition> query, CompetitionSearchObject search = null)
         {

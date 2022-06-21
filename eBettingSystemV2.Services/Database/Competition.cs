@@ -14,5 +14,6 @@ namespace eBettingSystemV2.Services.DataBase
 
         public virtual Country Country { get; set; }
         public virtual Sport Sport { get; set; }
+        public virtual Event Event { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -20,6 +19,8 @@ namespace eBettingSystemV2.Services.DataBase
 
         public virtual DbSet<Competition> Competitions { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<Event> Events { get; set; }
+        public virtual DbSet<Logcompetition> Logcompetitions { get; set; }
         public virtual DbSet<Sport> Sports { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
 
@@ -27,7 +28,8 @@ namespace eBettingSystemV2.Services.DataBase
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql(ConfigurationManager.AppSettings["DefaultConnection"]);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseNpgsql("Host=192.168.43.21 ; Database=praksa_db;Username=praksa;Password=12345");
             }
         }
 
@@ -71,6 +73,83 @@ namespace eBettingSystemV2.Services.DataBase
                 entity.Property(e => e.CountryName)
                     .IsRequired()
                     .HasColumnType("character varying");
+            });
+
+            modelBuilder.Entity<Event>(entity =>
+            {
+                entity.ToTable("events", "BettingSystem");
+
+                entity.Property(e => e.EventId)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("event_id")
+                    .UseIdentityAlwaysColumn();
+
+                entity.Property(e => e.AwayTeam)
+                    .HasColumnType("character varying")
+                    .HasColumnName("away_team");
+
+                entity.Property(e => e.CompetitionId).HasColumnName("competition_id");
+
+                entity.Property(e => e.EventName)
+                    .IsRequired()
+                    .HasColumnType("character varying")
+                    .HasColumnName("event_name");
+
+                entity.Property(e => e.EventPeriod)
+                    .HasColumnType("character varying")
+                    .HasColumnName("event_period");
+
+                entity.Property(e => e.EventStartTime)
+                    .HasColumnType("date")
+                    .HasColumnName("event_start_time");
+
+                entity.Property(e => e.EventStatus)
+                    .HasColumnType("character varying")
+                    .HasColumnName("event_status");
+
+                entity.Property(e => e.HomeTeam)
+                    .HasColumnType("character varying")
+                    .HasColumnName("home_team");
+
+                entity.Property(e => e.RedCardsAwayTeam).HasColumnName("red_cards_away_team");
+
+                entity.Property(e => e.RedCardsHomeTeam).HasColumnName("red_cards_home_team");
+
+                entity.Property(e => e.Result)
+                    .HasColumnType("character varying")
+                    .HasColumnName("result");
+
+                entity.Property(e => e.YellowCardsAwayTeam).HasColumnName("yellow_cards_away_team");
+
+                entity.Property(e => e.YellowCardsHomeTeam).HasColumnName("yellow_cards_home_team");
+
+                entity.HasOne(d => d.EventNavigation)
+                    .WithOne(p => p.Event)
+                    .HasForeignKey<Event>(d => d.EventId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("events_fk");
+            });
+
+            modelBuilder.Entity<Logcompetition>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("logcompetition", "BettingSystem");
+
+                entity.Property(e => e.Column1)
+                    .HasColumnType("date")
+                    .HasColumnName("column1");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
+
+                entity.Property(e => e.Naziv)
+                    .HasColumnType("character varying")
+                    .HasColumnName("naziv");
+
+                entity.Property(e => e.Updated).HasColumnName("updated");
             });
 
             modelBuilder.Entity<Sport>(entity =>
