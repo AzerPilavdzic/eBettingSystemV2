@@ -30,9 +30,9 @@ namespace RezultatiImporter
 
                 foreach (var item in listaSportova)
                 {
-                    if (RezultatiService.FetchDataBySport(item)!=null)
+                    if (RezultatiService.FetchDataBySport(item,false)!=null)
                     {
-                    _PageDataList.AddRange(RezultatiService.FetchDataBySport(item));
+                    _PageDataList.AddRange(RezultatiService.FetchDataBySport(item,true));
                     }
                 }
 
