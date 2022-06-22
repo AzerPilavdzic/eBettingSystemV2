@@ -74,7 +74,7 @@ namespace eBettingSystemV2.Services
 
             }
 
-            return filterquery;
+            return filterquery.OrderBy(x=>x.CountryName);
 
             //IQueryable<object> T = null;
 
