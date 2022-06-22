@@ -12,13 +12,68 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using eBettingSystemV2.Services.Interface;
 
 namespace eBettingSystemV2
 {
     public class Program
     {
+
+       
+
+
         public static void Main(string[] args)
         {
+            
+           
+
+
+           
+
+           
+
+
+
+            //novi kod za service
+
+            var host = CreateHostBuilder(args).Build();
+            //required using Microsoft.Extensions.DependencyInjection;
+            // required using Microsoft.AspNetCore.Identity;
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                   
+                    var ITimer = services.GetRequiredService<ITimer>();
+                    var ICompetitionService = services.GetRequiredService<ICompetitionService>();
+
+                    //Func<Task<List<CompetitionModel>>> a = () => { return AddDataAsync(Lista); };
+
+                    ICompetitionService.FetchStoreCacheCompetition();
+                    //Action a = () => ICompetitionService.FetchStoreCacheCompetition();
+
+                    //ITimer.TimerSecondsAsync(100, a);
+
+
+                }
+                catch (Exception ex)
+                {
+                    var logger2 = services.GetRequiredService<ILogger<Program>>();
+                    logger2.LogError(ex, "An error occurred while seeding the database.");
+                }
+            }
+            host.Run();
+
+
+
+
+
+
+
+
+
+
 
 
             //logger

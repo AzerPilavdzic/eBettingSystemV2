@@ -41,13 +41,13 @@ namespace eBettingSystemV2.Controllers
         }
 
 
-        [HttpPost]
-        [Route("SetCacheCompetition")]
-        public async Task<List<PodaciSaStranice>> SetCacheCompetition(List<PodaciSaStranice>podaciSaStranice)
-        {
-            return await CacheService.SetCacheCompetition(podaciSaStranice);
+        //[HttpPost]
+        //[Route("SetCacheCompetition")]
+        //public async Task<List<PodaciSaStranice>> SetCacheCompetition(List<PodaciSaStranice>podaciSaStranice)
+        //{
+        //    return await CacheService.SetCacheCompetition(podaciSaStranice);
         
-        }
+        //}
 
 
         [HttpGet]

@@ -17,7 +17,7 @@ namespace eBettingSystemV2.Services.Servisi
 
 
 
-        public List<PodaciSaStranice> FetchSportAndData()
+        public  List<PodaciSaStranice> FetchSportAndData()
         {
             var listaSportova = FetchAllSports();
             var _PageDataList = new List<PodaciSaStranice>();
@@ -161,6 +161,7 @@ namespace eBettingSystemV2.Services.Servisi
                     });
                 }
 
+                
                 podaciSaStranices = _podaciSaStranice;
 
                 //long size = 0;
@@ -171,7 +172,7 @@ namespace eBettingSystemV2.Services.Servisi
                 //    size = s.Length;
                 //    Console.Write(size);
                 //}
-                Console.ReadKey();
+                //Console.ReadKey();
 
                 if (ispis)
                 {

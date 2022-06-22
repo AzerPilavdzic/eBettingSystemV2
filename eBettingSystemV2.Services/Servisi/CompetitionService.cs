@@ -32,12 +32,20 @@ namespace eBettingSystemV2.Services.Servisi
         private ICountryService ICountryService { get; set; }
         private ISportService ISportService { get; set; }
         //private ICompetitionService ICompetitionService { get; set; }
+        private IFetch IFetchService { get; set;}
+
+        private ICache ICacheService { get; set;}
+
+
+
 
         HtmlNodeCollection categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4"); //questionable code
 
         public CompetitionService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_,
             ICountryService service1,
-            ISportService service2
+            ISportService service2,
+            IFetch service3,
+            ICache service4
             ) : base(context_, mapper_)
         {
 
@@ -45,7 +53,10 @@ namespace eBettingSystemV2.Services.Servisi
             Mapper = mapper_;
             ICountryService = service1;
             ISportService = service2;
-      
+            IFetchService = service3;
+            ICacheService = service4;
+
+
 
         }
 
@@ -126,7 +137,6 @@ namespace eBettingSystemV2.Services.Servisi
 
           
         } //demo
-
         public int GetIdbyName(string name)
         {
 
@@ -498,6 +508,38 @@ namespace eBettingSystemV2.Services.Servisi
         }
 
         //..
+
+        public async void FetchStoreCacheCompetition()
+        {
+            
+
+            List<PodaciSaStranice> Lista =  IFetchService.FetchSportAndData();
+
+           
+            Func<Task<List<CompetitionModel>>> a = ( ) => { return AddDataAsync(Lista); };
+
+
+            var Lista2 = await ICacheService.SetCacheCompetition(Lista, a);
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        }
+
+
+
+
 
     }
 }
