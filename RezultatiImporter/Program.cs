@@ -50,7 +50,7 @@ namespace RezultatiImporter
 
 
             //await ApiService.Post<PodaciSaStranice>(new PodaciSaStranice { Competitionname = "Test123", Country = "Test123", Sport = "Test123" });
-            Console.ReadKey();
+            //Console.ReadKey();
 
 
 
