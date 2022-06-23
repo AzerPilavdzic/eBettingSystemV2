@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using eBettingSystemV2.Services.Interface;
 using HtmlAgilityPack;
 using eBettingSystemV2.APIVersionHelper;
 using System.Threading;
