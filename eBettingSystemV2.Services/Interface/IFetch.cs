@@ -14,7 +14,7 @@ namespace eBettingSystemV2.Services.Interface
 
         List<PodaciSaStranice> FetchDataBySport(string sport, bool ispis = true);
 
-
+        abstract List<string> FetchAllEvents();
 
     }
 }

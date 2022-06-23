@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Services.Servisi
 {
-    public class FetchService:IFetch
+    public class FetchService : IFetch
     {
         public static List<PodaciSaStranice> podaciSaStranices = new List<PodaciSaStranice>();
 
@@ -44,7 +44,7 @@ namespace eBettingSystemV2.Services.Servisi
             }
         }
 
-        public  List<string> FetchAllSports()
+        public List<string> FetchAllSports()
         {
             //sportovi za sada
             HtmlWeb web = new HtmlWeb();
@@ -85,7 +85,7 @@ namespace eBettingSystemV2.Services.Servisi
 
         }
 
-        public  List<PodaciSaStranice> FetchDataBySport(string sport, bool ispis = true)
+        public List<PodaciSaStranice> FetchDataBySport(string sport, bool ispis = true)
         {
             if (sport.Contains("š"))
             {
@@ -96,10 +96,6 @@ namespace eBettingSystemV2.Services.Servisi
             {
                 sport = "americki-nogomet";
             }
-
-
-
-
             sport = sport.ToLower();
             HtmlWeb web = new HtmlWeb();
             HtmlDocument document = web.Load("https://m.rezultati.com/");
@@ -188,11 +184,18 @@ namespace eBettingSystemV2.Services.Servisi
             return null;
         }
 
+        public static List<string> eventsList = new List<string>();
+        public static HtmlNodeCollection _eventsNode;
+        public List<string> FetchAllEvents()
+        {
+            HtmlWeb web = new HtmlWeb();
+
+            HtmlDocument document = web.Load("https://m.rezultati.com/"); //LoadFromWebAsync
+            _eventsNode = document.DocumentNode.SelectNodes("//*[@id='score-data']/text()");
+            _eventsNode.ToList().ForEach(i => eventsList.Add(i.InnerText));
 
 
-
-
-
-
+            return eventsList;
+        }
     }
 }

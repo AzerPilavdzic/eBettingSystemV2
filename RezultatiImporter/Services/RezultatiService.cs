@@ -153,7 +153,7 @@ namespace RezultatiImporter.Services
             //    size = s.Length;
             //    Console.Write(size);
             //}
-            Console.ReadKey();
+            //Console.ReadKey();
 
                 if (ispis)
                 {

@@ -13,24 +13,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using eBettingSystemV2.Services.Interface;
+using HtmlAgilityPack;
+using eBettingSystemV2.APIVersionHelper;
+using System.Threading;
+using System.Timers;
+using eBettingSystemV2.Services.Servisi;
 
 namespace eBettingSystemV2
 {
     public class Program
     {
-
-       
-
-
         public static void Main(string[] args)
         {
-            
-           
 
 
-           
+            //TimerService timerService = new TimerService();
 
-           
+
+
 
 
 
@@ -47,6 +47,15 @@ namespace eBettingSystemV2
                    
                     var ITimer = services.GetRequiredService<ITimer>();
                     var ICompetitionService = services.GetRequiredService<ICompetitionService>();
+
+                    var _timerService = services.GetRequiredService<ITimer>();
+
+                    
+                     
+                    //_timerService.SetTimer();
+                    //ITimer.aTimer.Stop();
+                    //ITimer.aTimer.Dispose();
+
 
                     //Func<Task<List<CompetitionModel>>> a = () => { return AddDataAsync(Lista); };
 
@@ -76,6 +85,7 @@ namespace eBettingSystemV2
 
 
 
+            Console.WriteLine("Terminating the application...");
             //logger
             var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
@@ -132,6 +142,10 @@ namespace eBettingSystemV2
 
 
             CreateHostBuilder(args).Build().Run();
+
+
+
+          
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -146,8 +160,7 @@ namespace eBettingSystemV2
                 logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
                 })
                 .UseNLog();  // NLog: Setup NLog for Dependency injection
-            
-            
+
             
     }
 }
