@@ -21,7 +21,7 @@ namespace eBettingSystemV2.Services.Interface
         Task<CompetitionModelLess> GetIdbyNazivAsync(string name);
         Task<List<CompetitionModel>> AddDataAsync(List<PodaciSaStranice> Podaci);
 
-
+        public void FetchStoreCacheCompetition();
 
 
 

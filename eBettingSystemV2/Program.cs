@@ -145,18 +145,57 @@ namespace eBettingSystemV2
 
         public static void Main(string[] args)
         {
-            FetchService fetchService = new FetchService();
+            
+           
 
-            //FetchService
 
-            //CallMethodTimer.TimerSeconds(5, GroupedNodesAsync);
-            SetTimer();
+           
 
-            Console.WriteLine("\nPress the Enter key to exit the application...\n");
-            Console.WriteLine("The application started at {0:HH:mm:ss.fff}", DateTime.Now);
-            Console.ReadLine();
-            aTimer.Stop();
-            aTimer.Dispose();
+           
+
+
+
+            //novi kod za service
+
+            var host = CreateHostBuilder(args).Build();
+            //required using Microsoft.Extensions.DependencyInjection;
+            // required using Microsoft.AspNetCore.Identity;
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                   
+                    var ITimer = services.GetRequiredService<ITimer>();
+                    var ICompetitionService = services.GetRequiredService<ICompetitionService>();
+
+                    //Func<Task<List<CompetitionModel>>> a = () => { return AddDataAsync(Lista); };
+
+                    ICompetitionService.FetchStoreCacheCompetition();
+                    //Action a = () => ICompetitionService.FetchStoreCacheCompetition();
+
+                    //ITimer.TimerSecondsAsync(100, a);
+
+
+                }
+                catch (Exception ex)
+                {
+                    var logger2 = services.GetRequiredService<ILogger<Program>>();
+                    logger2.LogError(ex, "An error occurred while seeding the database.");
+                }
+            }
+            host.Run();
+
+
+
+
+
+
+
+
+
+
+
 
             Console.WriteLine("Terminating the application...");
             //logger
