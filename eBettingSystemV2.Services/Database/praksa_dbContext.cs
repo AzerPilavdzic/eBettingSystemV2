@@ -135,7 +135,7 @@ namespace eBettingSystemV2.Services.DataBase
 
                 entity.ToTable("logcompetition", "BettingSystem");
 
-                entity.Property(e => e.Column1)
+                entity.Property(e => e.Date)
                     .HasColumnType("date")
                     .HasColumnName("column1");
 
