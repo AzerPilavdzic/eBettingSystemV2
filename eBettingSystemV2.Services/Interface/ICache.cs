@@ -10,7 +10,7 @@ namespace eBettingSystemV2.Services.Interface
 {
     public interface ICache
     {
-        Task<List<PodaciSaStranice>> SetCacheCompetition(List<PodaciSaStranice> podaciSaStranices, Func<Task<List<CompetitionModel>>> AddDataAsync);
+        Task<List<PodaciSaStranice>> SetCacheCompetition(List<PodaciSaStranice> podaciSaStranices);
 
 
 

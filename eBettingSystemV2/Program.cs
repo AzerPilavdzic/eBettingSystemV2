@@ -13,24 +13,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using eBettingSystemV2.Services.Interface;
+using HtmlAgilityPack;
+using eBettingSystemV2.APIVersionHelper;
+using System.Threading;
+using System.Timers;
+using eBettingSystemV2.Services.Servisi;
+using System.Configuration;
 
 namespace eBettingSystemV2
 {
     public class Program
     {
-
-       
-
-
         public static void Main(string[] args)
         {
-            
-           
 
 
-           
+            //TimerService timerService = new TimerService();
 
-           
+
+
 
 
 
@@ -39,30 +40,18 @@ namespace eBettingSystemV2
             var host = CreateHostBuilder(args).Build();
             //required using Microsoft.Extensions.DependencyInjection;
             // required using Microsoft.AspNetCore.Identity;
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                   
-                    var ITimer = services.GetRequiredService<ITimer>();
-                    var ICompetitionService = services.GetRequiredService<ICompetitionService>();
+            /* using*/
+            var scope = host.Services.CreateScope();           
+            var services = scope.ServiceProvider;               
+            var ITimer = services.GetRequiredService<ITimer>();                                     
+            ITimer.SetTimer();
+               
 
-                    //Func<Task<List<CompetitionModel>>> a = () => { return AddDataAsync(Lista); };
-
-                    ICompetitionService.FetchStoreCacheCompetition();
-                    //Action a = () => ICompetitionService.FetchStoreCacheCompetition();
-
-                    //ITimer.TimerSecondsAsync(100, a);
+                    
 
 
-                }
-                catch (Exception ex)
-                {
-                    var logger2 = services.GetRequiredService<ILogger<Program>>();
-                    logger2.LogError(ex, "An error occurred while seeding the database.");
-                }
-            }
+             
+            
             host.Run();
 
 
@@ -76,6 +65,7 @@ namespace eBettingSystemV2
 
 
 
+            Console.WriteLine("Terminating the application...");
             //logger
             var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
@@ -132,6 +122,10 @@ namespace eBettingSystemV2
 
 
             CreateHostBuilder(args).Build().Run();
+
+
+
+          
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -146,8 +140,7 @@ namespace eBettingSystemV2
                 logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
                 })
                 .UseNLog();  // NLog: Setup NLog for Dependency injection
-            
-            
+
             
     }
 }

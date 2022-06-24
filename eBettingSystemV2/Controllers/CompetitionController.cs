@@ -67,7 +67,7 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await ICompetitionService.GetIdbyNazivAsync(Naziv);
+                var result = ICompetitionService.GetIdbyNazivAsync(Naziv);
                 return result;
             }
             catch (Exception ex)

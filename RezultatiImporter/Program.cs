@@ -50,7 +50,7 @@ namespace RezultatiImporter
 
 
             //await ApiService.Post<PodaciSaStranice>(new PodaciSaStranice { Competitionname = "Test123", Country = "Test123", Sport = "Test123" });
-            Console.ReadKey();
+            //Console.ReadKey();
 
 
 
@@ -67,10 +67,10 @@ namespace RezultatiImporter
 
          
 
-            SetTimer();
-            await ApiService.Post<PodaciSaStranice>(list);
-            await ApiService.Post<PodaciSaStranice>(list2);
-            await ApiService.Post<PodaciSaStranice>(list3);
+            //SetTimer();
+            //await ApiService.Post<PodaciSaStranice>(list);
+            //await ApiService.Post<PodaciSaStranice>(list2);
+            //await ApiService.Post<PodaciSaStranice>(list3);
 
 
 
