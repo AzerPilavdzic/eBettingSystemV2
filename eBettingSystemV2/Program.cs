@@ -18,6 +18,7 @@ using eBettingSystemV2.APIVersionHelper;
 using System.Threading;
 using System.Timers;
 using eBettingSystemV2.Services.Servisi;
+using System.Configuration;
 
 namespace eBettingSystemV2
 {
@@ -39,39 +40,18 @@ namespace eBettingSystemV2
             var host = CreateHostBuilder(args).Build();
             //required using Microsoft.Extensions.DependencyInjection;
             // required using Microsoft.AspNetCore.Identity;
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                   
-                    var ITimer = services.GetRequiredService<ITimer>();
-                    var ICompetitionService = services.GetRequiredService<ICompetitionService>();
-
-                    var _timerService = services.GetRequiredService<ITimer>();
+            /* using*/
+            var scope = host.Services.CreateScope();           
+            var services = scope.ServiceProvider;               
+            var ITimer = services.GetRequiredService<ITimer>();                                     
+            ITimer.SetTimer();
+               
 
                     
-                     
-                    //_timerService.SetTimer();
-                    //ITimer.aTimer.Stop();
-                    //ITimer.aTimer.Dispose();
 
 
-                    //Func<Task<List<CompetitionModel>>> a = () => { return AddDataAsync(Lista); };
-
-                    ICompetitionService.FetchStoreCacheCompetition();
-                    //Action a = () => ICompetitionService.FetchStoreCacheCompetition();
-
-                    //ITimer.TimerSecondsAsync(100, a);
-
-
-                }
-                catch (Exception ex)
-                {
-                    var logger2 = services.GetRequiredService<ILogger<Program>>();
-                    logger2.LogError(ex, "An error occurred while seeding the database.");
-                }
-            }
+             
+            
             host.Run();
 
 
