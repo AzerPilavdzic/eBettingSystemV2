@@ -132,7 +132,7 @@ namespace eBettingSystemV2.Services.Servisi
             config = null;
 
 
-            IFetchCacheService.FetchStoreCacheCompetition();
+            //IFetchCacheService.FetchStoreCacheCompetition();
 
             
             i++;
