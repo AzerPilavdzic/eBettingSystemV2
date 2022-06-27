@@ -53,7 +53,7 @@ namespace eBettingSystemV2.Services.Servisi
                 var result =await ICompetitionService.AddDataAsync(podaciSaStranices);
                 //List<CompetitionModel> result = AddDataAsync.Invoke();
 
-                ILogCompetitionService.AddEntry("Competition 1 day Update (works)", DateTime.Now,1);
+                ILogCompetitionService.AddEntry("Competition 1 day Update (works)", DateTime.Now,result.Count);
 
 
                 return podaciSaStranices;

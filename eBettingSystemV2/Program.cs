@@ -43,7 +43,10 @@ namespace eBettingSystemV2
             /* using*/
             var scope = host.Services.CreateScope();           
             var services = scope.ServiceProvider;               
-            var ITimer = services.GetRequiredService<ITimer>();                                     
+            var ITimer = services.GetRequiredService<ITimer>();
+            var CleanSql = services.GetRequiredService<ICountryNPGSQL>();
+
+            CleanSql.TestNPGSQL();
             ITimer.SetTimer();
                
 
