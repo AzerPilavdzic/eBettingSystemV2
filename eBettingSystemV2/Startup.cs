@@ -90,6 +90,7 @@ namespace eBettingSystemV2
             services.AddTransient<IFetch,FetchService>();
             services.AddTransient<ITimer,TimerService>();
             services.AddTransient<ILogCompetition, LogCompetitionService>();
+            services.AddTransient<IFetchCacheInsert, FetchCacheInsertService>();
 
             //services.AddTransient<IRezultatiService, RezultatiService>();
             //services.AddTransient<IMemoryCache, DemoController>();
