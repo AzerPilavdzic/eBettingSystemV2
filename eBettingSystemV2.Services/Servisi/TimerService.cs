@@ -1,5 +1,8 @@
-﻿using eBettingSystemV2.Services.Interface;
+﻿using eBettingSystemV2.Services.DataBase;
+using eBettingSystemV2.Services.Interface;
 using HtmlAgilityPack;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -24,6 +27,8 @@ namespace eBettingSystemV2.Services.Servisi
         public static HtmlNodeCollection events;
         public static List<string> eventList = new List<string>();
 
+        public IEventService _eventService { get; set; }
+        public IFetchCacheInsert _fetchService { get; set; }
         public int i = 0;
 
 
@@ -45,56 +50,29 @@ namespace eBettingSystemV2.Services.Servisi
         //}
        
 
-        public void EventsTESTBEZASYNCA()
+        public TimerService(IEventService eventService, IFetchCacheInsert fetchService)
         {
-            //try
-            //{
-
-
-
-            Console.WriteLine("POZIV " + ++brojac + ". PUT ");
-            HtmlWeb web = new HtmlWeb();
-
-            HtmlDocument document = web.Load("https://m.rezultati.com/"); //LoadFromWebAsync
-            events = document.DocumentNode.SelectNodes("//*[@id='score-data']/text()");
-            events.ToList().ForEach(i => eventList.Add(i.InnerText));
-
-            foreach (var eventObject in eventList)
-            {
-                Console.WriteLine(eventObject.ToString());
-                //
-            }
-
-            //u zasebnom threadu pokusati uraditi provjere i dodavanje u bazu
-
-
-
-
-            Console.WriteLine("BEZ ASYNCA " + DateTime.Now.ToString());
-
-            //Console.WriteLine("POZIV " + ++brojac + ". PUT ");
-            //return true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
-            //return false;
+            _eventService = eventService;
+            _fetchService = fetchService;
         }
 
         public void SetTimer()
         {
             aTimer = new System.Timers.Timer(10000);
             aTimer.Elapsed += OnTimedEventDay;
+            aTimer = new System.Timers.Timer(2000);
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = false;
-            aTimer.Enabled = true;
-
-
-          
-           
+            //AKO HOCSE DA DODAJE, MORA ENABLE BIT TRUE.
+            aTimer.Enabled = false;
         }
 
+        public void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            Console.WriteLine(e.SignalTime);
+            _fetchService.InsertEvents();
+            Console.Clear();
+            aTimer.Start();
            
 
         public void OnTimedEvent(object source, ElapsedEventArgs e)
@@ -141,6 +119,7 @@ namespace eBettingSystemV2.Services.Servisi
 
 
         }
+
 
     }
 }

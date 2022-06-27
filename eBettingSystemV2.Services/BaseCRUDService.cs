@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Services
@@ -29,12 +30,13 @@ namespace eBettingSystemV2.Services
         : base(context, mapper) { }
 
 
+
+
         //ne koristi se vise
+
         public virtual Tless Insert(TInsert insert)    //ne koristi se vise
         {
-
-           
-
+            
             if (BeforeInsertBool(insert))
             {
                 return null;
@@ -48,6 +50,7 @@ namespace eBettingSystemV2.Services
 
             BeforeInsert(insert, entity);
 
+            
             Context.SaveChanges();
 
             return Mapper.Map<Tless>(entity);
@@ -222,6 +225,12 @@ namespace eBettingSystemV2.Services
         {
             return true;
         }
+
+        //public virtual bool BeforeInsertBoolAsync(TInsert insert)
+        //{
+        //    return base.before;
+        //}
+
         public virtual IEnumerable<TDb> AddRange(IEnumerable<TUpdate> insertlist ,DbSet<TDb> set)
         {
             IEnumerable<TDb> entity = Mapper.Map<IEnumerable<TDb>>(insertlist);

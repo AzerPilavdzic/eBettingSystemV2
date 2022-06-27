@@ -9,6 +9,6 @@ namespace eBettingSystemV2.Services.Interface
     public interface IFetchCacheInsert
     {
         Task FetchStoreCacheCompetition();
-
+        void InsertEvents();
     }
 }
