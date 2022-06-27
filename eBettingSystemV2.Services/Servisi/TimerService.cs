@@ -73,15 +73,6 @@ namespace eBettingSystemV2.Services.Servisi
             _fetchService.InsertEvents();
             Console.Clear();
             aTimer.Start();
-           
-
-        public void OnTimedEvent(object source, ElapsedEventArgs e)
-        {
-                Console.WriteLine(e.SignalTime);
-                EventsTESTBEZASYNCA();
-
-
-
 
 
         }
