@@ -9,7 +9,7 @@ namespace eBettingSystemV2.Models
     {
         public int EventId { get; set; }
         public string EventName { get; set; }
-        public int CompetitionId { get; set; }
+        public int ?CompetitionId { get; set; }
         public DateTime? EventStartTime { get; set; }
         public string EventStatus { get; set; }
         public string EventPeriod { get; set; }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static eBettingSystemV2.Model.Models.FetchEventModel;
 
 namespace eBettingSystemV2.Services.Servisi
 {
@@ -14,10 +15,34 @@ namespace eBettingSystemV2.Services.Servisi
     {
         public static List<PodaciSaStranice> podaciSaStranices = new List<PodaciSaStranice>();
 
+        public System.Timers.Timer aTimer { get; set; } = new System.Timers.Timer();
+        public static int brojac = 0;
+        public static HtmlNodeCollection events;
+        public static List<Podaci> eventList = new List<Podaci>();
+        public static IEventService _eventService { get; set; }
+
+        public List<Podaci> EventsTESTBEZASYNCA()
+        {
+            eventList.Clear();
 
 
+            Console.WriteLine("POZIV " + ++brojac + ". PUT ");
+            HtmlWeb web = new HtmlWeb();
 
-        public  List<PodaciSaStranice> FetchSportAndData()
+            HtmlDocument document = web.Load("https://m.rezultati.com/"); //LoadFromWebAsync
+            events = document.DocumentNode.SelectNodes("//*[@id='score-data']/text()");
+            events.ToList().ForEach(i => eventList.Add(new Podaci() {
+            EventName = i.InnerText
+            }));
+
+
+            Console.WriteLine("BEZ ASYNCA " + DateTime.Now.ToString());
+            return eventList;
+
+        }
+
+
+        public List<PodaciSaStranice> FetchSportAndData()
         {
             var listaSportova = FetchAllSports();
             var _PageDataList = new List<PodaciSaStranice>();

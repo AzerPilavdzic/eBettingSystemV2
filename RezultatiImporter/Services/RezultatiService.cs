@@ -23,7 +23,7 @@ namespace RezultatiImporter.Services
         {
             Context = context;
         }
-
+        
 
         //vrati object
         public static List<string> FetchAllSports()
