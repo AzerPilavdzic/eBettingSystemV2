@@ -13,17 +13,17 @@ namespace eBettingSystemV2.Services.Servisi
     public class CacheService:ICache
     {
         private IMemoryCache _cache;
-        //private ICompetitionService ICompetitionService { get; set; }
+        private ICompetitionService ICompetitionService { get; set; }
 
         private ILogCompetition ILogCompetitionService { get; set;}
 
 
-        public CacheService(IMemoryCache memoryCache /*,ICompetitionService service1*/,ILogCompetition service2)
+        public CacheService(IMemoryCache memoryCache, ICompetitionService service1, ILogCompetition service2)
         {
 
             _cache = memoryCache;
 
-            //ICompetitionService = service1;
+            ICompetitionService = service1;
             ILogCompetitionService = service2;
 
 
@@ -31,7 +31,7 @@ namespace eBettingSystemV2.Services.Servisi
         }
 
 
-        public  async Task<List<PodaciSaStranice>> SetCacheCompetition(List<PodaciSaStranice> podaciSaStranices, Func<Task<List<CompetitionModel>>> AddDataAsync)
+        public async Task<List<PodaciSaStranice>> SetCacheCompetition(List<PodaciSaStranice> podaciSaStranices)
         {
 
             //look for cache that expires in 1 day
@@ -50,10 +50,10 @@ namespace eBettingSystemV2.Services.Servisi
 
                 _cache.Set(Models.CacheKeys.Expire, "Expire", cacheEntryOptions2);
 
-                //var result = await ICompetitionService.AddDataAsync(podaciSaStranices);
-                List<CompetitionModel> result =  AddDataAsync.Invoke().Result;
+                var result =await ICompetitionService.AddDataAsync(podaciSaStranices);
+                //List<CompetitionModel> result = AddDataAsync.Invoke();
 
-                ILogCompetitionService.AddEntry("Competition 1 day Update", DateTime.Now,result.Count);
+                ILogCompetitionService.AddEntry("Competition 1 day Update (works)", DateTime.Now,1);
 
 
                 return podaciSaStranices;

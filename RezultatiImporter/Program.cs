@@ -71,10 +71,10 @@ namespace RezultatiImporter
 
 
 
-            SetTimer();
-            await ApiService.Post<PodaciSaStranice>(list);
-            await ApiService.Post<PodaciSaStranice>(list2);
-            await ApiService.Post<PodaciSaStranice>(list3);
+            //SetTimer();
+            //await ApiService.Post<PodaciSaStranice>(list);
+            //await ApiService.Post<PodaciSaStranice>(list2);
+            //await ApiService.Post<PodaciSaStranice>(list3);
 
 
 

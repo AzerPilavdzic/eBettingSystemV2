@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace eBettingSystemV2.Services.Servisi
 {
@@ -34,7 +35,7 @@ namespace eBettingSystemV2.Services.Servisi
         //private ICompetitionService ICompetitionService { get; set; }
         private IFetch IFetchService { get; set;}
 
-        private ICache ICacheService { get; set;}
+      
 
 
 
@@ -44,8 +45,7 @@ namespace eBettingSystemV2.Services.Servisi
         public CompetitionService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_,
             ICountryService service1,
             ISportService service2,
-            IFetch service3,
-            ICache service4
+            IFetch service3
             ) : base(context_, mapper_)
         {
 
@@ -54,7 +54,7 @@ namespace eBettingSystemV2.Services.Servisi
             ICountryService = service1;
             ISportService = service2;
             IFetchService = service3;
-            ICacheService = service4;
+           
 
 
 
@@ -245,20 +245,33 @@ namespace eBettingSystemV2.Services.Servisi
 
         }
 
-        public async Task<CompetitionModelLess> GetIdbyNazivAsync(string name)
+        public CompetitionModelLess GetIdbyNazivAsync(string name)
         {
-            var _model = await Context.Competitions
-                .Where(x => x.Naziv.ToLower() == name.ToLower())
-                .FirstOrDefaultAsync();
-
-            if (_model == null)
+            try
             {
 
-                //throw new Exception($"Competition sa imenom {name} ne postoji u bazi");
-                return new CompetitionModelLess { Id = 0 };
+                var _model = Context.Competitions
+                    .Where(x => x.Naziv.ToLower() == name.ToLower())
+                    .FirstOrDefault();
+
+                if (_model == null)
+                {
+
+                    //throw new Exception($"Competition sa imenom {name} ne postoji u bazi");
+                    return new CompetitionModelLess { Id = 0 };
+                }
+
+                return Mapper.Map<CompetitionModelLess>(_model);
+
+            }
+            catch (Exception e)
+            {
+
+                throw;
             }
 
-            return Mapper.Map<CompetitionModelLess>(_model);
+
+            
 
 
 
@@ -406,101 +419,118 @@ namespace eBettingSystemV2.Services.Servisi
 
         public async Task<List<CompetitionModel>> AddDataAsync(List<PodaciSaStranice> Podaci)
         {
-            //lista koja ce biti poslana u InsertOneOrMoreAsync
-            List<Competition> competitions = new List<Competition>();
-
-            foreach (var b in Podaci)
+            try
             {
-                //geta id by name
-                var Competition = await GetIdbyNazivAsync(b.Competitionname);
-                var Sport = await ISportService.GetSportIdbyNameAsync(b.Sport);
-                var Country = await ICountryService.GetIdByNameAsync(b.Country);
 
-                //ako id 0 dodaj i uzmi id
-                if (Sport.SportsId == 0)
+
+
+                //lista koja ce biti poslana u InsertOneOrMoreAsync
+                List<Competition> competitions = new List<Competition>();
+
+                foreach (var b in Podaci)
                 {
-                    Sport = await ISportService.InsertAsync(new SportInsertRequest
+                    //geta id by name
+                    
+
+                    var Sport = await ISportService.GetSportIdbyNameAsync(b.Sport);
+                    var Competition = GetIdbyNazivAsync(b.Competitionname);
+                    var Country = await ICountryService.GetIdByNameAsync(b.Country);
+
+                    //ako id 0 dodaj i uzmi id
+                    if (Sport.SportsId == 0)
                     {
-                        name = b.Sport
-                    });
+                        Sport = await ISportService.InsertAsync(new SportInsertRequest
+                        {
+                            name = b.Sport
+                        });
 
-                };
+                    };
 
-                if (Country.CountryId == 0)
-                {
-                    Country = await ICountryService.InsertAsync(new CountryInsertRequest
+                    if (Country.CountryId == 0)
+                    {
+                        Country = await ICountryService.InsertAsync(new CountryInsertRequest
+                        {
+
+                            CountryName = b.Country
+
+                        });
+                    }
+
+                    var x = new Competition
                     {
 
-                        CountryName = b.Country
+                        //kad dobijemo sve id pohranjujemo u competition
+                        Naziv = b.Competitionname,           //competencija1
+                        Id = Competition.Id,  //45
+                        Sportid = Sport.SportsId,        //kosarka 5  ako ne postoji doda i onda vrati id
+                        Countryid = Country.CountryId,     //country ukraine 5
 
-                    });
+
+                    };
+
+                    //dodajemo u listu
+                    competitions.Add(x);
+
                 }
 
-                var x = new Competition
+
+                //convertujemo listu tako da je mozemo koristiti u insertoneormore async
+                var list = Mapper.Map<IEnumerable<CompetitionUpsertRequest>>(competitions);
+
+                //pokrecemo pohranu podataka
+                var result = await InsertOneOrMoreAsync(list);
+
+
+                //competitions = Mapper.Map<List<Competition>>(result);
+
+                //ako kompetition sadrzi 0 onda mjenjamo id sa id iz result
+                if (competitions.Where(X => X.Id == 0).FirstOrDefault() != null)
                 {
 
-                    //kad dobijemo sve id pohranjujemo u competition
-                    Naziv = b.Competitionname,           //competencija1
-                    Id = Competition.Id,  //45
-                    Sportid = Sport.SportsId,        //kosarka 5  ako ne postoji doda i onda vrati id
-                    Countryid = Country.CountryId,     //country ukraine 5
-
-
-                };
-
-                //dodajemo u listu
-                competitions.Add(x);
-
-            }
-
-
-            //convertujemo listu tako da je mozemo koristiti u insertoneormore async
-            var list = Mapper.Map<IEnumerable<CompetitionUpsertRequest>>(competitions);
-
-            //pokrecemo pohranu podataka
-            var result = await InsertOneOrMoreAsync(list);
-
-
-            //competitions = Mapper.Map<List<Competition>>(result);
-
-            //ako kompetition sadrzi 0 onda mjenjamo id sa id iz result
-            if (competitions.Where(X => X.Id == 0).FirstOrDefault() != null)
-            {
-
-                foreach (var a in competitions)
-                {
-                    foreach (var b in result)
+                    foreach (var a in competitions)
                     {
-                        if (a.Id == 0)
+                        foreach (var b in result)
                         {
-                            a.Id = b.Id;
+                            if (a.Id == 0)
+                            {
+                                a.Id = b.Id;
+
+                            }
+
+
+
+
 
                         }
 
 
-
-
-
                     }
-
-
                 }
+
+
+
+
+
+
+                return Mapper.Map<List<CompetitionModel>>(competitions);
+
+
+
+                //convert listu 
+                //InsertOneOrMoreAsync(lista);
+                //vrati rezultat
+                //var sportoviq = Mapper.Map<List<CompetitionUpsertRequest>>(competitions);
+
             }
+            catch(Exception ex) 
+            {
 
 
 
-
-
-
-            return Mapper.Map<List<CompetitionModel>>(competitions);
-
-
-
-            //convert listu 
-            //InsertOneOrMoreAsync(lista);
-            //vrati rezultat
-            //var sportoviq = Mapper.Map<List<CompetitionUpsertRequest>>(competitions);
-
+                return null;
+            
+            
+            }
 
 
 
@@ -508,34 +538,7 @@ namespace eBettingSystemV2.Services.Servisi
         }
 
         //..
-
-        public async void FetchStoreCacheCompetition()
-        {
-            
-
-            List<PodaciSaStranice> Lista =  IFetchService.FetchSportAndData();
-
-           
-            Func<Task<List<CompetitionModel>>> a = ( ) => { return AddDataAsync(Lista); };
-
-
-            var Lista2 = await ICacheService.SetCacheCompetition(Lista, a);
-
-
-
-
-
-
-
-
-
-
-
         
-        
-        
-        
-        }
 
 
 

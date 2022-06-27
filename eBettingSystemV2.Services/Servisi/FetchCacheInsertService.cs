@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace eBettingSystemV2.Services.Servisi
 {
 
-
+    
     public class FetchCacheInsertService : IFetchCacheInsert
     {
 
@@ -31,8 +31,8 @@ namespace eBettingSystemV2.Services.Servisi
 
             IFetchService = Service1;
             ICacheService = Service2;
-
-
+        
+        
         }
 
         public async Task FetchStoreCacheCompetition()
@@ -46,6 +46,7 @@ namespace eBettingSystemV2.Services.Servisi
 
 
 
+            var Lista2 = await ICacheService.SetCacheCompetition(Lista);
 
         }
 
@@ -63,7 +64,7 @@ namespace eBettingSystemV2.Services.Servisi
                 {
                     EventName = eventObject.EventName
                 });
-            }
+        }
 
         }
 

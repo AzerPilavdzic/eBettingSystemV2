@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace eBettingSystemV2.Services.Interface
 {
@@ -18,10 +19,10 @@ namespace eBettingSystemV2.Services.Interface
         CompetitionUpsertRequest,
         CompetitionModelLess>
     {
-        Task<CompetitionModelLess> GetIdbyNazivAsync(string name);
+        CompetitionModelLess GetIdbyNazivAsync(string name);
         Task<List<CompetitionModel>> AddDataAsync(List<PodaciSaStranice> Podaci);
 
-        public void FetchStoreCacheCompetition();
+       
 
 
 

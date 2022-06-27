@@ -44,7 +44,7 @@ namespace eBettingSystemV2.Services.Servisi
             foreach (var b in Podaci)
             {
                 //geta id by name
-                var Competition = await ICompetitionService.GetIdbyNazivAsync(b.Competitionname);
+                //var Competition = await ICompetitionService.GetIdbyNazivAsync(b.Competitionname);
                 var Sport = await ISportService.GetSportIdbyNameAsync(b.Sport);
                 var Country = await ICountryService.GetIdByNameAsync(b.Country);
 
@@ -73,7 +73,7 @@ namespace eBettingSystemV2.Services.Servisi
 
                     //kad dobijemo sve id pohranjujemo u competition
                     Naziv = b.Competitionname,           //competencija1
-                    Id = Competition.Id,  //45
+                    //Id = Competition.Id,  //45
                     Sportid = Sport.SportsId,        //kosarka 5  ako ne postoji doda i onda vrati id
                     Countryid = Country.CountryId,     //country ukraine 5
 
