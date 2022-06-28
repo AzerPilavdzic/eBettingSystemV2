@@ -1,12 +1,18 @@
-﻿using eBettingSystemV2.Services.Interface;
+﻿using eBettingSystemV2.Model.Models;
+using eBettingSystemV2.Models;
+using eBettingSystemV2.Services.DataBase;
+using eBettingSystemV2.Services.Interface;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using eBettingSystemV2.Services.Extensions;
 
 namespace eBettingSystemV2.Services.Servisi
 {
@@ -53,7 +59,7 @@ namespace eBettingSystemV2.Services.Servisi
 
 
                     cmd.Parameters.AddWithValue("Hello world");
-                    await cmd.ExecuteNonQueryAsync();
+                    //await cmd.ExecuteNonQueryAsync();
                 }
 
 
@@ -68,9 +74,112 @@ namespace eBettingSystemV2.Services.Servisi
             
             }
 
+            // Get  All Country
+            //T test = default(T);
+            //var test2 = test.GetType();
+            //g.Field = "A string";
+            ////...
+            //Console.WriteLine("Generic.Field           = \"{0}\"", g.Field);
+            //Console.WriteLine("Generic.Field.GetType() = {0}", g.Field.GetType().FullName);
+
+            int i = 0;
+
+
+            //-----
+            //try
+            //{
+            //    await using (var cmd = new NpgsqlCommand("SELECT * FROM \"BettingSystem\".\"Country\" ", conn))
+            //    await using (var reader = await cmd.ExecuteReaderAsync())
+            //    {
+            //        while (await reader.ReadAsync())
+            //        {
+            //            Console.WriteLine($"{reader.GetValue(0)} -- {reader.GetString(1)}");                                             
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{                      
+            //}
+            //dapper
+
+
+            //try
+            //{
+            //    var conn2 = new NpgsqlConnection(connString);
+            //    var cmd2 = new NpgsqlCommand("SELECT * FROM \"BettingSystem\".\"Country\" ", conn2);
+            //    conn2.Open();
+            //    var reader = cmd2.ExecuteReader();
 
 
 
+            //    while (reader.Read())
+            //    {
+            //        CountryModel Country = new CountryModel();
+            //        Country.CountryId = reader.GetRecord<int>("CountryId");
+            //        Country.CountryName = reader.GetRecord<string>("CountryName");
+
+            //        //Rasponse.Languages.Add(language);
+            //        Console.WriteLine($"{Country.CountryId} -- {Country.CountryName}");
+
+            //    }
+
+            //    conn2.Close();
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw;
+            //}
+
+
+
+
+            //parametri ukoliko ih ima  : 
+
+            //try
+            //{
+            //    NpgsqlCommand command = conn.CreateCommand();
+            //    command.Parameters.Add(new NpgsqlParameter("@CountryName", "Backlangalesh4"));
+            //    //command.Parameters.Add(new NpgsqlParameter("@name", name));
+            //    command.CommandText = string.Format(@"Insert into ""BettingSystem"".""Country""(""CountryName"")
+            //                                      VALUES(@CountryName) returning ""CountryName"" , ""CountryId"";");
+            //    var reader = command.ExecuteReader();
+
+
+            //    while (reader.Read())
+            //    {
+            //        CountryModel Country = new CountryModel();
+            //        Country.CountryId = reader.GetRecord<int>("CountryId");
+            //        Country.CountryName = reader.GetRecord<string>("CountryName");
+
+            //        //Rasponse.Languages.Add(language);
+            //        Console.WriteLine($"{Country.CountryId} -- {Country.CountryName}");
+
+            //    }
+            //}
+            //catch (Exception ex)
+            //{ 
+
+
+
+
+            //}
+
+            NpgsqlCommand command = conn.CreateCommand();
+            command.Parameters.Add(new NpgsqlParameter("@CountryName", "Backlangalesh9"));
+            //command.Parameters.Add(new NpgsqlParameter("@name", name));
+            command.CommandText = string.Format(@"Insert into ""BettingSystem"".""Country""(""CountryName"")
+                                                  VALUES(@CountryName) returning ""CountryId"",""CountryName"";");
+            try
+            {
+                int id = (int)command.ExecuteScalar();
+                Rasponse.IsSuccess = id > 0;
+                Rasponse.ReturningId = id;
+            }
+            catch (Exception ex)
+            {
+                Rasponse.IsSuccess = false;
+                Rasponse.ErrorMessage = ex.Message.ToString();
+            }
 
 
 
@@ -79,18 +188,6 @@ namespace eBettingSystemV2.Services.Servisi
 
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }
