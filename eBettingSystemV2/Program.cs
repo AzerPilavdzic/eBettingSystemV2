@@ -33,8 +33,21 @@ namespace eBettingSystemV2
             //novi kod za service
 
             var host = CreateHostBuilder(args).Build();
-            var _scope = host.Services.CreateScope();
-            var _services = _scope.ServiceProvider;
+
+            //required using Microsoft.Extensions.DependencyInjection;
+            // required using Microsoft.AspNetCore.Identity;
+            /* using*/
+            var scope = host.Services.CreateScope();           
+            var services = scope.ServiceProvider;               
+            var ITimer = services.GetRequiredService<ITimer>();
+            var CleanSql = services.GetRequiredService<ICountryNPGSQL>();
+
+            CleanSql.TestNPGSQL();
+            ITimer.SetTimer();
+               
+
+                    
+
 
             var _ITimer = _services.GetRequiredService<ITimer>();
             _ITimer.SetTimer(); 
