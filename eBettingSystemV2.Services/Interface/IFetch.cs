@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static eBettingSystemV2.Model.Models.FetchEventModel;
 
 namespace eBettingSystemV2.Services.Interface
 {
@@ -16,5 +17,6 @@ namespace eBettingSystemV2.Services.Interface
 
         abstract List<string> FetchAllEvents();
 
+        public List<Podaci> EventsTESTBEZASYNCA();
     }
 }

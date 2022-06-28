@@ -26,6 +26,7 @@ namespace eBettingSystemV2.Services.Servisi
        >,
        IEventService
     {
+
         public EventService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
         {
 
@@ -34,6 +35,30 @@ namespace eBettingSystemV2.Services.Servisi
 
         }
 
+        public async Task<EventModelLess> BeforeInsertBoolAsync(EventInsertRequest insert)
+        {
+            var entity = await Context.Events.Where(x => x.EventName.ToLower() == insert.EventName.ToLower()).FirstOrDefaultAsync();
+            if (entity == null)
+            {
+                return null;
+            }
+            throw new Exception("EXCEPTION: EVENT SA TIM IMENOM VEC POSTOJI.");
+        }
+
+        public override Task<EventModelLess> InsertAsync(EventInsertRequest insert)
+        {
+            if (!BeforeInsertBool(insert))
+            {
+                throw new Exception("Event sa tim imenom vec postoji.");
+            }
+            return base.InsertAsync(insert);
+        }
+
+        public override EventModelLess Insert(EventInsertRequest insert)
+        {
+            //Context = new praksa_dbContext();
+            return base.Insert(insert);
+        }
 
     }
 }

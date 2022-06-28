@@ -11,14 +11,22 @@ namespace eBettingSystemV2.Services.Servisi
 {
 
     
-    public class FetchCacheInsertService:IFetchCacheInsert
+    public class FetchCacheInsertService : IFetchCacheInsert
     {
 
         private IFetch IFetchService { get; set; }
         private ICache ICacheService { get; set; }
+        private IEventService IEventService { get; set; }
+
+        public FetchCacheInsertService(IFetch fetchService, IEventService eventService, ICache ICacheServicee)
+        {
+            IFetchService = fetchService;
+            IEventService = eventService;
+            ICacheService = ICacheServicee;
+        }
 
 
-        public FetchCacheInsertService(IFetch Service1,ICache Service2)
+        public FetchCacheInsertService(IFetch Service1, ICache Service2)
         {
 
             IFetchService = Service1;
@@ -34,14 +42,31 @@ namespace eBettingSystemV2.Services.Servisi
             List<PodaciSaStranice> Lista = IFetchService.FetchSportAndData();
 
 
+            //var Lista2 = await ICacheService.SetCacheCompetition(Lista);
+
+
 
             var Lista2 = await ICacheService.SetCacheCompetition(Lista);
 
-
-
-
         }
 
+        public void InsertEvents()
+        {
+
+            var eventList = IFetchService.EventsTESTBEZASYNCA();
+
+
+
+            foreach (var eventObject in eventList)
+            {
+                //Console.WriteLine(eventObject.ToString());
+                IEventService.InsertAsync(new Model.SearchObjects.EventInsertRequest()
+                {
+                    EventName = eventObject.EventName
+                });
+        }
+
+        }
 
 
 

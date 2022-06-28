@@ -8,11 +8,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace RezultatiImporter 
+namespace RezultatiImporter
 {
     class Program
     {
-      
+
         private static Timer aTimer;
 
         public ApiService Service_ { get; set; } = new ApiService();
@@ -21,6 +21,10 @@ namespace RezultatiImporter
 
         static async Task Main(string[] args)
         {
+
+            Console.WriteLine(DateTime.Now.ToString()+ "CONSOLE READ KEY ");
+
+            Console.ReadKey();
             //fetch sportova
             try
             {
@@ -30,9 +34,9 @@ namespace RezultatiImporter
 
                 foreach (var item in listaSportova)
                 {
-                    if (RezultatiService.FetchDataBySport(item,false)!=null)
+                    if (RezultatiService.FetchDataBySport(item, false) != null)
                     {
-                    _PageDataList.AddRange(RezultatiService.FetchDataBySport(item,true));
+                        _PageDataList.AddRange(RezultatiService.FetchDataBySport(item, true));
                     }
                 }
 
@@ -65,7 +69,7 @@ namespace RezultatiImporter
             list3.Add(new PodaciSaStranice { Competitionname = "Test666", Country = "Test444", Sport = "Test444" });
 
 
-         
+
 
             //SetTimer();
             //await ApiService.Post<PodaciSaStranice>(list);
@@ -74,18 +78,18 @@ namespace RezultatiImporter
 
 
 
-           
+
             Console.WriteLine("\nPress the Enter key to exit the application...\n");
             Console.WriteLine("The application started at {0:HH:mm:ss.fff}", DateTime.Now);
             Console.ReadLine();
             aTimer.Stop();
-            aTimer.Dispose();
+            //aTimer.Dispose();
             Console.WriteLine("Terminating the application...");
             //}
             Console.WriteLine("========================================================");
 
-            
-            
+
+
 
 
 
@@ -105,10 +109,10 @@ namespace RezultatiImporter
             Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",
                               e.SignalTime);
 
+        
 
-            
 
-           
+
 
         }
 

@@ -18,7 +18,9 @@ using eBettingSystemV2.APIVersionHelper;
 using System.Threading;
 using System.Timers;
 using eBettingSystemV2.Services.Servisi;
+using System.Globalization;
 using System.Configuration;
+
 
 namespace eBettingSystemV2
 {
@@ -28,16 +30,10 @@ namespace eBettingSystemV2
         {
 
 
-            //TimerService timerService = new TimerService();
-
-
-
-
-
-
             //novi kod za service
 
             var host = CreateHostBuilder(args).Build();
+
             //required using Microsoft.Extensions.DependencyInjection;
             // required using Microsoft.AspNetCore.Identity;
             /* using*/
@@ -53,19 +49,11 @@ namespace eBettingSystemV2
                     
 
 
-             
-            
+            var _ITimer = _services.GetRequiredService<ITimer>();
+            _ITimer.SetTimer(); 
+
+                                                                         
             host.Run();
-
-
-
-
-
-
-
-
-
-
 
 
             Console.WriteLine("Terminating the application...");
@@ -90,23 +78,6 @@ namespace eBettingSystemV2
                 // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
                 NLog.LogManager.Shutdown();
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             //var host = CreateHostBuilder(args).Build();
             //using (var scope = host.Services.CreateScope())
             //{
@@ -118,13 +89,8 @@ namespace eBettingSystemV2
             ////test
             //host.Run();
 
-
-
-
-
-
-
             CreateHostBuilder(args).Build().Run();
+
 
 
 

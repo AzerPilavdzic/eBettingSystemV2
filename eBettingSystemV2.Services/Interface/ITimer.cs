@@ -13,7 +13,7 @@ namespace eBettingSystemV2.Services.Interface
         
         public void SetTimer();
         public void OnTimedEvent(Object source, ElapsedEventArgs e);
-        public void EventsTESTBEZASYNCA();
+        //public void EventsTESTBEZASYNCA();
 
         public System.Timers.Timer aTimer { get; set; }
         public System.Timers.Timer DayTimer { get; set; }
