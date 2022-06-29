@@ -47,11 +47,6 @@ namespace eBettingSystemV2
                
 
                     
-
-
-            var _ITimer = _services.GetRequiredService<ITimer>();
-            _ITimer.SetTimer(); 
-
                                                                          
             host.Run();
 
