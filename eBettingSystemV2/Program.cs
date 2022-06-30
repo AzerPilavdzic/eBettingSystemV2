@@ -20,7 +20,7 @@ using System.Timers;
 using eBettingSystemV2.Services.Servisi;
 using System.Globalization;
 using System.Configuration;
-
+using eBettingSystemV2.Model.SearchObjects;
 
 namespace eBettingSystemV2
 {
@@ -40,9 +40,10 @@ namespace eBettingSystemV2
             var scope = host.Services.CreateScope();           
             var services = scope.ServiceProvider;               
             var ITimer = services.GetRequiredService<ITimer>();
-            var CleanSql = services.GetRequiredService<ICountryNPGSQL>();
+            var CleanSql = services.GetRequiredService<eBettingSystemV2.Services.CountryNPGSQL.ICountryNPGSQL>();
 
-            CleanSql.TestNPGSQL();
+            var list=CleanSql.GetNPGSQLGeneric(new CountrySearchObject(){ }).Result;
+
             ITimer.SetTimer();
                
 

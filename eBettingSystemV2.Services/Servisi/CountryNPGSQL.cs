@@ -164,24 +164,58 @@ namespace eBettingSystemV2.Services.Servisi
 
             //}
 
-            NpgsqlCommand command = conn.CreateCommand();
-            command.Parameters.Add(new NpgsqlParameter("@CountryName", "Backlangalesh9"));
-            //command.Parameters.Add(new NpgsqlParameter("@name", name));
-            command.CommandText = string.Format(@"Insert into ""BettingSystem"".""Country""(""CountryName"")
-                                                  VALUES(@CountryName) returning ""CountryId"",""CountryName"";");
-            try
-            {
-                int id = (int)command.ExecuteScalar();
-                Rasponse.IsSuccess = id > 0;
-                Rasponse.ReturningId = id;
-            }
-            catch (Exception ex)
-            {
-                Rasponse.IsSuccess = false;
-                Rasponse.ErrorMessage = ex.Message.ToString();
-            }
+            //NpgsqlCommand command = conn.CreateCommand();
+            //command.Parameters.Add(new NpgsqlParameter("@CountryName", "Backlangalesh9"));
+            ////command.Parameters.Add(new NpgsqlParameter("@name", name));
+            //command.CommandText = string.Format(@"Insert into ""BettingSystem"".""Country""(""CountryName"")
+            //                                      VALUES(@CountryName) returning ""CountryId"",""CountryName"";");
+            //try
+            //{
+            //    int id = (int)command.ExecuteScalar();
+            //    Rasponse<string>.IsSuccess = id > 0;
+            //    Rasponse<string>.ReturningId = id;
+            //}
+            //catch (Exception ex)
+            //{
+            //    Rasponse<string>.IsSuccess = false;
+            //    Rasponse<string>.ErrorMessage = ex.Message.ToString();
+            //}
 
 
+            //NpgsqlCommand command = conn.CreateCommand();
+            //command.CommandText = string.Format($@"select *  from ""BettingSystem"".""{typeParameterType}"" ");
+
+            //GenericRasponseClass<T1> genericmodel = new GenericRasponseClass<T1>();
+            //Rasponse<T1> Rasponsa = new Rasponse<T1>();
+            //Rasponsa.TableName = typeParameterType;
+
+            //var reader = command.ExecuteReader();
+
+
+
+            //while (reader.Read())
+            //{
+
+            //    genericmodel.Id = reader.GetRecord<int>(reader.GetName(0));
+
+            //    genericmodel.Atribute1Class = reader.GetRecord<T1>(reader.GetName(1));
+
+            //    if (reader.GetDataTypeName(1) == "")
+            //    {
+
+
+
+            //    }
+
+
+            //    //Rasponse.Languages.Add(language);
+            //    Console.WriteLine($"{genericmodel.Id} -- {genericmodel.Atribute1Class}");
+
+            //    Rasponsa.ListGeneric.Add(genericmodel);
+
+
+
+            //}
 
 
 
@@ -224,7 +258,7 @@ namespace eBettingSystemV2.Services.Servisi
 //....command.CommandText = string.Format(@"Insert into languages.languages(name,language_culture,display_order,is_default,parent_language_id)  VALUES(@name,@language_culture,@display_order,@is_default,@parent_language_id) ");
 
 //upis u bazu:
-//  try
+//try
 //{
 //    int id = (int)command.ExecuteScalar();
 //    response.IsSuccess = id > 0;
