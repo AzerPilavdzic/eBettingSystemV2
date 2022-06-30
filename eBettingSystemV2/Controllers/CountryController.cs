@@ -72,9 +72,18 @@ namespace eBettingSystemV2.Controllers
        
         [HttpGet]
         [Route("GetCountryById/{id}")]
-        public override Task<ActionResult<CountryModel>> GetById(int id)
+        public override async Task<ActionResult<CountryModel>> GetById(int id)
         {
-            return base.GetById(id);
+            var Model = await CountryNPGSQL.GetByIdAsync(id);
+
+            if (Model == null)
+            {
+                return NotFound("Podatak ne postoji u bazi");
+            }
+            else
+            {
+                return Ok(Model);
+            }
         }
 
         [HttpGet]
@@ -96,9 +105,26 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("InsertCountry")]
-        public override Task<ActionResult<CountryModel>> Insert(CountryInsertRequest insert)
+        public override async Task<ActionResult<CountryModel>> Insert(CountryInsertRequest insert)
         {
-            return base.Insert(insert);
+            try
+            {
+                var result = await CountryNPGSQL.InsertAsync(insert);
+
+                if (result == null)
+                {
+                    return BadRequest("Ime vec postoji");
+                }
+                else
+                {
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
         }
 
         [HttpPost]

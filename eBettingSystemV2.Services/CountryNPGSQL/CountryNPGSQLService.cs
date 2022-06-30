@@ -44,27 +44,19 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
             //search.Naziv = "Engleska";
             //search.CountryId = 12;
-
-
-
-            int i = 0;
-
+        
             if (!string.IsNullOrWhiteSpace(search?.Naziv))
             {
                 query += $@"where (lower(""CountryName"") LIKE lower('%{search.Naziv}%')) ";
-
-                i++;
-
-                
+                          
             }
-
-            if (search.CountryId != null && i==0)
+            if (search.CountryId != null && string.IsNullOrWhiteSpace(search?.Naziv))
             {
                 query += $@"where ""CountryId"" = {search.CountryId} ";
 
             }
 
-            if (search.CountryId != null && i == 1)
+            if (search.CountryId != null && !string.IsNullOrWhiteSpace(search?.Naziv))
             {
                 query += $@"or ""CountryId"" = {search.CountryId} ";
 
@@ -73,6 +65,43 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
             return query;
 
 
+        }
+
+
+        //Insert extensions
+
+        public override string GetAtributes()
+        {
+           
+            return $@"""CountryName""";
+        }
+
+        public override string GetValues(CountryInsertRequest insert)
+        {
+            return $@"'{insert.CountryName}'";
+        }
+
+        public override string GetIdName()
+        {
+            return $@"""CountryId"",""CountryName""";
+        }
+
+
+
+        public override bool BeforeInsertBool(CountryInsertRequest insert)
+        {
+            using var conn = new NpgsqlConnection(connString);
+            conn.Open();
+
+            var List = conn.Query($@"Select * from ""BettingSystem"".""Country"" 
+             where (lower(""CountryName"") = lower('{insert.CountryName}'))");
+            var entity = List.FirstOrDefault();
+
+            if (entity == null)
+            {
+                return true;
+            }
+            throw new Exception("EXCEPTION: DRZAVA SA TIM IMENOM VEC POSTOJI.");
         }
 
 

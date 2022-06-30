@@ -17,8 +17,10 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         //Task<IEnumerable<GenericRasponseClass<T1>>> GetNPGSQLGeneric(TSearch search = null);
 
         Task<IEnumerable<T>> GetNPGSQLGeneric(TSearch search = null);
+        Task<T> GetByIdAsync(int id);
 
-      
+
+
 
     }
 }

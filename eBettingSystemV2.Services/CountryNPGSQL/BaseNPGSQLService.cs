@@ -25,8 +25,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         public IConfiguration Configuration { get; }
 
         public IMapper Mapper { get; set; }
-        
-      
+              
         public string connString { get; set;} 
         public BaseNPGSQLService(IConfiguration Service1 ,IMapper Service3 )
         {
@@ -81,6 +80,29 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
 
             
+
+        }
+
+        public async virtual Task<T>GetByIdAsync(int id)
+        {
+            string Query = null;
+            string typeParameterType = typeof(TDb).Name;
+            Query += $@"select *  from ""BettingSystem"".""{typeParameterType}"" ";
+
+            Query += $@"where ""CountryId"" = {id}; ";
+
+            await using var conn = new NpgsqlConnection(connString);
+            await conn.OpenAsync();
+
+            var quary = await conn.QueryAsync<TDb>(Query);
+
+            var entity = quary.FirstOrDefault();
+
+            //var list = entity.ToList();
+
+            //var entity = set.Find(id);
+
+            return Mapper.Map<T>(entity);
 
         }
 

@@ -14,9 +14,7 @@ namespace eBettingSystemV2.Services.Extensions
         public static int Returning_Id { get; set; }
         public static string ErrorMessage { get; set; }
         public static int ReturningId { get; set; }
-
         public string TableName { get; set;}
-
         public List<GenericRasponseClass<T1>> ListGeneric { get; set; } = new List<GenericRasponseClass<T1>>();
 
 
