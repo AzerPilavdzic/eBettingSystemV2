@@ -1,7 +1,13 @@
 ﻿namespace eBettingSystemV2.Model.Models
 {
-    public class GenericRasponseClass<T>
+    public class GenericRasponseClass<T1>
     {
-        public T data;
+        public int BrojAtributa { get; set; }
+        public int Id {get;set;}
+        public T1 Atribute1Class {get;set;} //class
+
+
+
+
     }
 }
