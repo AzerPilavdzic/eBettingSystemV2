@@ -23,7 +23,7 @@ namespace eBettingSystemV2.Controllers
         public static List<Country> Test = new List<Country>();
         private ICountryService ICountryService { get; set; }
         private ICountryNPGSQL CountryNPGSQL { get; set;}
-        private readonly ILogger<TeamsController> _logger;
+        private readonly ILogger<CountryController> _logger;
 
 
 
@@ -33,7 +33,7 @@ namespace eBettingSystemV2.Controllers
         };
 
        
-        public CountryController(ICountryService service, ICountryNPGSQL service2,ILogger<TeamsController> logger) : base(service)
+        public CountryController(ICountryService service, ICountryNPGSQL service2,ILogger<CountryController> logger) : base(service)
         {
             ICountryService = service;
             CountryNPGSQL = service2;
@@ -129,9 +129,20 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("UpsertCountries")]
-        public override Task<ActionResult<CountryModelLess>> InsertById(int Id, CountryInsertRequest Insert)
+        public async override Task<ActionResult<CountryModelLess>> InsertById(int Id, CountryInsertRequest Insert)
         {
-            return base.InsertById(Id, Insert);
+            try
+            {
+                var result = await CountryNPGSQL.UpsertbyIdAsync(Insert, Id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
+            
         }
 
 
@@ -159,9 +170,10 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateCountry/{id}")]
-        public override Task<ActionResult<CountryModel>> Update(int id, [FromBody] CountryUpsertRequest update)
+        public override async Task<ActionResult<CountryModel>> Update(int id, [FromBody] CountryUpsertRequest update)
         {
-            return base.Update(id, update);
+            var result = await CountryNPGSQL.UpdateAsync(id, update);
+            return Ok(result);
         }
 
         [HttpDelete]

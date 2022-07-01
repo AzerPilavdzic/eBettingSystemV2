@@ -17,6 +17,8 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         where T1:class //atribute from generic class
     {
         Task<Tless> InsertAsync(TInsert insert);
+        Task<Tless> UpsertbyIdAsync(TInsert Insert, int Id);
+        Task<T> UpdateAsync(int id, TUpdate update);
 
 
 

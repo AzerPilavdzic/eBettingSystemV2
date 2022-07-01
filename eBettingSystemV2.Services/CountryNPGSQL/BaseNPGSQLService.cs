@@ -23,9 +23,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         where T1: class
     {
         public IConfiguration Configuration { get; }
-
-        public IMapper Mapper { get; set; }
-              
+        public IMapper Mapper { get; set; }             
         public string connString { get; set;} 
         public BaseNPGSQLService(IConfiguration Service1 ,IMapper Service3 )
         {
@@ -37,6 +35,9 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
         }
 
+        //Funkcije
+
+        //Get Funkcije
         public async virtual Task<IEnumerable<T>> GetNPGSQLGeneric(TSearch search = null)
         {
             try
@@ -82,14 +83,13 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
             
 
         }
-
         public async virtual Task<T>GetByIdAsync(int id)
         {
             string Query = null;
             string typeParameterType = typeof(TDb).Name;
             Query += $@"select *  from ""BettingSystem"".""{typeParameterType}"" ";
 
-            Query += $@"where ""CountryId"" = {id}; ";
+            Query += $@"where {GetTheNameOfIdentityColumn()} = {id}; ";
 
             await using var conn = new NpgsqlConnection(connString);
             await conn.OpenAsync();
@@ -105,11 +105,18 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
             return Mapper.Map<T>(entity);
 
         }
-
-
+        //Get Extenzije
         public virtual string AddFilter(string query,TSearch search = null)
         {
             return query;
+        }
+
+        //query ekstenzije
+        public virtual string GetTheNameOfIdentityColumn()
+        { 
+        
+           return "";
+        
         }
 
        
