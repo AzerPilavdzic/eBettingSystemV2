@@ -152,8 +152,8 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await base.InsertOneOrMore(insertlist);
-                return result;
+                var result = await CountryNPGSQL.InsertOneOrMoreAsync(insertlist);
+                return Ok(result);
             }
             catch (Exception ex)
             {
