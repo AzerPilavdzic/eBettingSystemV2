@@ -39,6 +39,8 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         public CountryNPGSQLService(IConfiguration Service1, IMapper Service3)
         : base(Service1,Service3) { }
 
+
+        // Get Ekstenzije
         public override string AddFilter(string query, CountrySearchObject search = null)
         {
 
@@ -68,26 +70,49 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         }
 
 
+
+
         //Insert extensions
 
-        public override string GetAtributes()
+
+        //query ekstenzije
+        public override string GetCoalesce(CountryUpsertRequest Update)
+        {
+            return $@"
+               {GetTheNameOfIdentityColumn()}=coalesce({Update.CountryId},""BettingSystem"".""Country"".{GetTheNameOfIdentityColumn()}),
+               {GetAtribute1()}=coalesce('{Update.CountryName}',""BettingSystem"".""Country"".{GetAtribute1()})
+                    ";       
+           
+
+        }
+        public override string GetTheNameOfIdentityColumn()
+        {
+            return $@"""CountryId""";
+        }
+        public override string GetAtribute1()
         {
            
             return $@"""CountryName""";
         }
-
-        public override string GetValues(CountryInsertRequest insert)
-        {
-            return $@"'{insert.CountryName}'";
-        }
-
-        public override string GetIdName()
+        public override string GetAllAtributes()
         {
             return $@"""CountryId"",""CountryName""";
         }
+        public override string GetValue1(CountryInsertRequest insert)
+        {
+            return $@"'{insert.CountryName}'";
+        }
+        public override string GetValue1(CountryUpsertRequest Update)
+        {
+            return $@"'{Update.CountryName}'"; ;
+        }
+        public override string GetValuesAll(CountryInsertRequest insert, int id)
+        {
+            return $@"{id},'{insert.CountryName}'";
+        }       
 
 
-
+        //insert esktenzije
         public override bool BeforeInsertBool(CountryInsertRequest insert)
         {
             using var conn = new NpgsqlConnection(connString);
@@ -102,6 +127,53 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
                 return true;
             }
             throw new Exception("EXCEPTION: DRZAVA SA TIM IMENOM VEC POSTOJI.");
+        }
+
+
+
+        //Upsert Extenzije
+
+        public override bool checkIfNameSame(CountryInsertRequest insert, Country entry)
+        {
+            if (insert.CountryName == entry?.CountryName)
+            {
+
+                return true;
+
+
+            }
+            return false;
+        }
+        public override void BeforeInsertVoid(CountryInsertRequest insert)
+        {
+            using var conn = new NpgsqlConnection(connString);
+            conn.Open();
+
+            var List = conn.Query($@"Select * from ""BettingSystem"".""Country"" 
+             where (lower(""CountryName"") = lower('{insert.CountryName}'))");
+            var entity = List.FirstOrDefault();
+
+            if (entity != null)
+            {
+                throw new Exception("EXCEPTION: DRZAVA SA TIM IMENOM VEC POSTOJI.");
+            }
+            conn.Close();
+           
+        }
+        public override void BeforeInsertVoid(CountryUpsertRequest Update)
+        {
+            using var conn = new NpgsqlConnection(connString);
+            conn.Open();
+
+            var List = conn.Query($@"Select * from ""BettingSystem"".""Country"" 
+             where (lower(""CountryName"") = lower('{Update.CountryName}'))");
+            var entity = List.FirstOrDefault();
+
+            if (entity != null)
+            {
+                throw new Exception("EXCEPTION: DRZAVA SA TIM IMENOM VEC POSTOJI.");
+            }
+            conn.Close();
         }
 
 
