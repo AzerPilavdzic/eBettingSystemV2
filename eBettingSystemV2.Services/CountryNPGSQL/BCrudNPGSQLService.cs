@@ -71,77 +71,101 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
 
         }
-        public virtual async Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TUpdate> List)
+        public virtual async Task<IEnumerable<T>> UpsertOneOrMoreAsync(IEnumerable<TUpdate> List)
         {
             //for tomorrow;
 
 
-            var list = BeforeInsertFilterList(List);
+            var list = BeforeInsertFilterList(List); //ako ime vec postoji u bazi izbaci iz liste
+
 
             string Query  = null;
-            string AddQuery = null;
+            string AddQuery = null;//dodatak za ako korisnik ne unose id
             string typeParameterType = typeof(TDb).Name;
 
-            Query += $@"insert into ""BettingSystem"".""{typeParameterType}""";
-            AddQuery += $@"insert into ""BettingSystem"".""{typeParameterType}""";
 
-
-            var Atributes = GetAllAtributes();
-            Query += $@"({Atributes})";
-
-            Query += "Values";
-            for(int i=0;i<list.Count();i++)
+            if (list.Count() != 0)
             {
-                  Query += "(";
-                  Query += GetValuesAll(list[i]);
-                  Query += ")";
+                Query += $@"insert into ""BettingSystem"".""{typeParameterType}""";
+                AddQuery += $@"insert into ""BettingSystem"".""{typeParameterType}"""; //dodatak za ako korisnik ne unose id
+
+
+                var Atributes = GetAllAtributes();
+                Query += $@"({Atributes})";
+
+                Query += "Values";
+                for (int i = 0; i < list.Count(); i++)
+                {
+                    Query += "(";
+                    Query += GetValuesAll(list[i]);
+                    Query += ")";
+
+                    if ((i + 1) != list.Count())
+                    {
+                        Query += ",";
+
+                    }
+
+                }
+                Query += $@"ON CONFLICT ({PrimaryKey}) DO ";
+                Query += $@"UPDATE SET {GetAtribute1()} = EXCLUDED.{GetAtribute1()}";
+
+                var allatributes = GetAllAtributes();
+
+                Query += $@" returning {allatributes}";
+
+                await using var conn = new NpgsqlConnection(connString);
+                await conn.OpenAsync();
+
+                var entity = await conn.QueryAsync<T>(Query);
+                //IEnumerable<Tless> OutPut = OutputList;
+
+                conn.Close();
+
+                return entity;
+            }
+
+            throw new Exception("Lista nije validna");
+
+
+        }
+
+        public virtual async Task<IEnumerable<T>> InsertOneOrMoreAsync(IEnumerable<TInsert>List)
+        {
+            string Query = null;
+            string typeParameterType = typeof(TDb).Name;
+            var list = List.ToList();
+            var Atributes = GetAllAtributesBesidesPrimary(List.FirstOrDefault().GetType());
+
+
+            Query += $@"insert into ""BettingSystem"".""{typeParameterType}""";
+            Query += $@"({Atributes})";
+            Query += " Values";
+            for (int i = 0; i < list.Count(); i++)
+            {
+                Query += "(";
+                Query += GetValuesAllBesidesPrimary(list[i]);
+                Query += ")";
 
                 if ((i + 1) != list.Count())
                 {
-                   Query += ",";  
-                
+                    Query += ",";
+
                 }
 
-            }
-            Query+=$@"ON CONFLICT ({PrimaryKey}) DO ";
-            Query+=$@"UPDATE SET {GetAtribute1()} = EXCLUDED.{GetAtribute1()}";
-
-            var allatributes = GetAllAtributes();
-
-            Query += $@" returning {allatributes}";
+            }         
+            Query += $@" On Conflict ({GetAtribute1()}) DO NOTHING";
+            Query += $@" Returning {GetAllAtributes()}";
 
             await using var conn = new NpgsqlConnection(connString);
             await conn.OpenAsync();
 
-            var entity = await conn.QueryAsync<Tless>(Query);
+            var entity = await conn.QueryAsync<T>(Query);
             //IEnumerable<Tless> OutPut = OutputList;
 
+            conn.Close();
+
             return entity;
-
-            //return Mapper.Map<Tless>(entity);
-
-
-            // IEnumerable<CountryUpsertRequest> OutPut = OutputList;
-
-
-
-
-
-
-
-
-
-            //var set = Context.Set<TDb>();
-
-            //var entity = AddRange(List, set);
-
-
-            //await Context.SaveChangesAsync();
-
-         
-
-         
-
 
 
 
@@ -162,7 +186,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
             {
                 Query = $@"INSERT INTO ""BettingSystem"".""{typeParameterType}"" ({GetAllAtributes()})
                                 VALUES({GetValuesAll(Insert, Id)}) 
-                                ON CONFLICT({GetTheNameOfIdentityColumn()}) 
+                                ON CONFLICT({PrimaryKey}) 
                                 DO 
                                 UPDATE SET {GetAtribute1()} = {GetValue1(Insert)}
                                 returning {GetAllAtributes()}";
@@ -209,7 +233,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
                            SET
                            {GetCoalesce(update)}
                            WHERE 
-                           {GetTheNameOfIdentityColumn()}={id}
+                           {PrimaryKey}={id}
                            returning {GetAllAtributes()}";
                     
                 await using var conn = new NpgsqlConnection(connString);
@@ -227,6 +251,39 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
                 throw new Exception("Drzava sa tim imenom vec postoji");
             }
         }
+
+        //Delete metode
+        public virtual async Task<int> DeleteAsync(int id)
+        {
+
+            BeforeDelete(id);
+
+            string Query = null;
+            string typeParameterType = typeof(TDb).Name;
+
+            Query += $@"DELETE FROM ""BettingSystem"".""{typeParameterType}""";
+            Query += $@"Where {PrimaryKey} = {id} ";
+            Query += $@"Returning {GetAllAtributes()}";
+
+
+
+            await using var conn = new NpgsqlConnection(connString);
+            await conn.OpenAsync();
+
+            var entity = await conn.QueryFirstOrDefaultAsync<TDb>(Query);
+
+            conn.Close();
+
+            if(entity == null)
+            {
+                return -1;
+            }
+
+            return id;
+            
+        }
+
+
 
         //Update Upsert extenzije
         public virtual TUpdate Coalesce(TUpdate update, TDb entry)
@@ -269,13 +326,27 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         {
             return $@"";
         }
+        public virtual string GetValuesAllBesidesPrimary(TInsert Insert)
+        {
+            return "";
+        }
         public virtual string GetAtribute1()
+        {
+            return "";
+        }
+        public virtual string GetAllAtributesBesidesPrimary(Type Tip)
         {
             return "";
         }
         public virtual string GetAllAtributes()
         {
             return "";
+        }
+        public virtual string GetAllAtributes(TInsert insert)
+        {
+
+            return "";
+        
         }
 
         
@@ -308,8 +379,13 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         {
 
         }
+        public virtual void BeforeDelete(int id)
+        {
 
-        
+
+        }
+
+
 
     }
 }

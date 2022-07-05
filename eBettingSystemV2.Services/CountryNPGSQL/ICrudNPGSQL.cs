@@ -19,7 +19,11 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         Task<Tless> InsertAsync(TInsert insert);
         Task<Tless> UpsertbyIdAsync(TInsert Insert, int Id);
         Task<T> UpdateAsync(int id, TUpdate update);
-        Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TUpdate> List);
+        Task<IEnumerable<T>> UpsertOneOrMoreAsync(IEnumerable<TUpdate> List);
+        Task<IEnumerable<T>> InsertOneOrMoreAsync(IEnumerable<TInsert> List);
+        Task<int> DeleteAsync(int id);
+
+
 
 
 

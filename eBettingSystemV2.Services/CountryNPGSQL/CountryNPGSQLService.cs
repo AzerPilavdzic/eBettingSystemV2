@@ -40,8 +40,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         public CountryNPGSQLService(IConfiguration Service1, IMapper Service3)
         : base(Service1,Service3) {
 
-            PrimaryKey = $@"""CountryId""";
-
+            PrimaryKey = $@"""CountryId""";           
             var list = typeof(CountryModel).GetProperties();
 
             foreach (var a in list)
@@ -49,17 +48,39 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
                 if (a.Name != "CountryId")
                 {
                     var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
-
                     ListaAtributa.Add(text);                               
-                }
-
-            
-            }
-          
-           
-           
-
+                }         
+            }                         
         }
+
+
+        //Get Funkcije
+        public async Task<CountryModelLess> GetIdByNameAsync(string name)
+        {
+
+            string Query = null;
+            string typeParameterType = typeof(Country).Name;
+            Query += $@"select *  from ""BettingSystem"".""{typeParameterType}"" ";
+            Query += $@"where {GetAtribute1()} = '{name}'; ";
+
+            await using var conn = new NpgsqlConnection(connString);
+            await conn.OpenAsync();
+
+            var quary = await conn.QueryAsync<CountryModelLess>(Query);
+            var entity = quary.FirstOrDefault();
+
+            if(entity==null)
+            {
+                return new CountryModelLess { CountryId = 0 };
+
+            }
+
+            conn.Close();
+            return entity;
+        
+        }
+
+
 
 
         // Get Ekstenzije
@@ -124,16 +145,12 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
             //ako je 0 to je null ,ako je string to je null
 
             return $@"
-               {GetTheNameOfIdentityColumn()}=coalesce({Update.CountryId},""BettingSystem"".""Country"".{GetTheNameOfIdentityColumn()}),
+               {PrimaryKey}=coalesce({Update.CountryId},""BettingSystem"".""Country"".{PrimaryKey}),
                {GetAtribute1()}=coalesce('{Update.CountryName}',""BettingSystem"".""Country"".{GetAtribute1()})
                     ";       
            
 
-        }
-        public override string GetTheNameOfIdentityColumn()
-        {
-            return $@"""CountryId""";
-        }
+        }      
         public override string GetAtribute1()
         {
            
@@ -142,6 +159,82 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         public override string GetAllAtributes()
         {
             return $@"""CountryId"",""CountryName""";
+        }
+        public override string GetAllAtributes(CountryInsertRequest insert)
+        {
+            var list = typeof(CountryInsertRequest).GetProperties();
+            List<string> ListaA = new List<string>();
+
+            foreach (var a in list)
+            {
+                if (a.Name != "CountryId")
+                {
+                    var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
+
+                    ListaA.Add(text);
+                }
+            }
+
+            var returnstring = "";
+
+
+
+            for (int i = 0; i<ListaA.Count(); i++)
+            {
+
+                returnstring += ListaA[i];
+
+                if ((i + 1) != ListaA.Count())
+                {
+                    returnstring += ",";
+                
+                
+                }
+            
+            }
+
+            return returnstring;
+
+
+        }
+        public override string GetAllAtributesBesidesPrimary(Type Tip)
+        {
+            ListaAtributa.Clear();
+
+            var list = Tip.GetProperties();
+
+            foreach (var a in list)
+            {              
+                if (a.Name != "CountryId")
+                {
+                    var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
+                    ListaAtributa.Add(text);
+                }
+            }
+
+            var returnstring = "";
+
+
+
+            for (int i = 0; i < ListaAtributa.Count(); i++)
+            {
+
+                returnstring += ListaAtributa[i];
+
+                if ((i + 1) != ListaAtributa.Count())
+                {
+                    returnstring += ",";
+
+
+                }
+
+            }
+
+            ListaAtributa.Clear();
+
+            return returnstring;
+
+         
         }
         public override string GetValue1(CountryInsertRequest insert)
         {
@@ -158,6 +251,10 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         public override string GetValuesAll(CountryUpsertRequest insert)
         {
             return $@"{insert.CountryId},'{insert.CountryName}'";
+        }
+        public override string GetValuesAllBesidesPrimary(CountryInsertRequest Insert)
+        {
+            return $@"'{Insert.CountryName}'";
         }
 
 
@@ -262,6 +359,45 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
                 throw new Exception("EXCEPTION: DRZAVA SA TIM IMENOM VEC POSTOJI.");
             }
             conn.Close();
+        }
+        public override void BeforeDelete(int id)
+        {
+
+
+
+            string Query = null;
+            string Query2 = null;
+            string TableName  = "teams";
+            string TableName2 = "competition";
+            string foreignkey = "countryid";
+
+            Query  += $@"Select * from ""BettingSystem"".{TableName}";
+            Query2 += $@"Select * from ""BettingSystem"".{TableName2}";
+            Query  += $@" Where {foreignkey} = {id}";
+            Query2 += $@" Where {foreignkey} = {id}";
+           
+            using var conn = new NpgsqlConnection(connString);
+            conn.OpenAsync();
+
+            var entry = conn.QueryFirstOrDefault<Team>(Query);
+            var dalipostojicompetition = conn.QueryFirstOrDefault<Competition>(Query2);
+
+            conn.Close();
+
+            if (entry != null)
+            {
+
+                throw new Exception("Team got a relation with the Country you want to Delete");
+
+
+            }
+
+            if (dalipostojicompetition != null)
+            {
+
+                throw new Exception("the Country you want to delete got a relation with a entry from the table Competition");
+
+            }
         }
 
 

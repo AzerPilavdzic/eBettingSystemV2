@@ -92,11 +92,12 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await ICountryService.GetIdByNameAsync(CountryName);
+                var result = await CountryNPGSQL.GetIdByNameAsync(CountryName);
                 return result;
             }
             catch (Exception ex)
             {
+                _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
 
@@ -148,7 +149,28 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("UpsertOneOrMoreCountries")]
-        public override async Task<ActionResult<IEnumerable<CountryModelLess>>> InsertOneOrMore(IEnumerable<CountryUpsertRequest> insertlist)
+        public override async Task<ActionResult<IEnumerable<CountryModel>>> UpsertOneOrMore(IEnumerable<CountryUpsertRequest> insertlist)
+        {
+            try
+            {
+                var result = await CountryNPGSQL.UpsertOneOrMoreAsync(insertlist);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+
+
+
+            
+        }
+
+        [HttpPost]
+        [Route("InsertOneOrMoreCountries")]
+        public override async Task<ActionResult<IEnumerable<CountryModel>>> InsertOneOrMore(IEnumerable<CountryInsertRequest> insertlist)
         {
             try
             {
@@ -157,13 +179,9 @@ namespace eBettingSystemV2.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
-
-
-
-
-            
         }
 
 
@@ -184,9 +202,9 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await ICountryService.DeleteAsync(CountryId);
+                var result = await CountryNPGSQL.DeleteAsync(CountryId);
 
-                if (result != 0)
+                if (result >= 0)
                 {
                     return Ok($"Drzava sa Id {CountryId} je uspjesno obrisana");
                 }
@@ -198,6 +216,7 @@ namespace eBettingSystemV2.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
 
