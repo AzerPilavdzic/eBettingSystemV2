@@ -7,7 +7,7 @@ namespace eBettingSystemV2.Models
 {
     public class CountryModel
     {
-        public int CountryId { get; set; }
-        public string CountryName { get; set; }
+        public int CountryId { get; set; } //naziv mora biti tacno iz baze
+        public string CountryName { get; set; } //naziv more biti tacno iz baze
     }
 }

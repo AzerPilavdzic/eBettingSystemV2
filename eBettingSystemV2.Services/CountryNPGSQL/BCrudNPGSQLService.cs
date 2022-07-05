@@ -35,10 +35,10 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
             BeforeInsertVoid(insert);
 
-            if (!BeforeInsertBool(insert))
-            {
-                return null;
-            }
+            //if (!BeforeInsertBool(insert))
+            //{
+            //    return null;
+            //}
             //provjere
 
             string Query = null;
@@ -68,6 +68,81 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
             BeforeInsert(insert, entity);
          
             return Mapper.Map<Tless>(entity);
+
+
+        }
+        public virtual async Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TUpdate> List)
+        {
+            //for tomorrow;
+
+
+            var list = BeforeInsertFilterList(List);
+
+            string Query  = null;
+            string AddQuery = null;
+            string typeParameterType = typeof(TDb).Name;
+
+            Query += $@"insert into ""BettingSystem"".""{typeParameterType}""";
+            AddQuery += $@"insert into ""BettingSystem"".""{typeParameterType}""";
+
+
+            var Atributes = GetAllAtributes();
+            Query += $@"({Atributes})";
+
+            Query += "Values";
+            for(int i=0;i<list.Count();i++)
+            {
+                  Query += "(";
+                  Query += GetValuesAll(list[i]);
+                  Query += ")";
+
+                if ((i + 1) != list.Count())
+                {
+                   Query += ",";  
+                
+                }
+
+            }
+            Query+=$@"ON CONFLICT ({PrimaryKey}) DO ";
+            Query+=$@"UPDATE SET {GetAtribute1()} = EXCLUDED.{GetAtribute1()}";
+
+            var allatributes = GetAllAtributes();
+
+            Query += $@" returning {allatributes}";
+
+            await using var conn = new NpgsqlConnection(connString);
+            await conn.OpenAsync();
+
+            var entity = await conn.QueryAsync<Tless>(Query);
+            //IEnumerable<Tless> OutPut = OutputList;
+
+            return entity;
+
+            //return Mapper.Map<Tless>(entity);
+
+
+            // IEnumerable<CountryUpsertRequest> OutPut = OutputList;
+
+
+
+
+
+
+
+
+
+            //var set = Context.Set<TDb>();
+
+            //var entity = AddRange(List, set);
+
+
+            //await Context.SaveChangesAsync();
+
+         
+
+         
+
+
 
 
         }
@@ -168,9 +243,8 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
         }
 
+
         //quary extenzije
-
-
         public virtual string GetCoalesce(TUpdate Update)
         {
             return "";
@@ -191,6 +265,10 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         {
             return $@"";
         }
+        public virtual string GetValuesAll(TUpdate insert)
+        {
+            return $@"";
+        }
         public virtual string GetAtribute1()
         {
             return "";
@@ -204,6 +282,12 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
 
         //before Extenzije
+
+        public virtual List<TUpdate> BeforeInsertFilterList(IEnumerable<TUpdate> List)
+        {
+
+            return List.ToList();
+        }
         public virtual void BeforeInsertVoid(TInsert insert)
         {
 
@@ -213,6 +297,10 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         
         }
         public virtual bool BeforeInsertBool(TInsert insert)
+        {
+            return true;
+        }
+        public virtual bool BeforeInsertBool(TUpdate Update)
         {
             return true;
         }

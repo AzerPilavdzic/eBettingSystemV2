@@ -19,6 +19,7 @@ using eBettingSystemV2.Services.Interface;
 using Npgsql;
 using Microsoft.Data.SqlClient;
 using Dapper;
+using NUnit.Framework;
 //using TourismAgency.Services.Database;
 
 namespace eBettingSystemV2.Services.CountryNPGSQL
@@ -37,47 +38,91 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         , ICountryNPGSQL
     {
         public CountryNPGSQLService(IConfiguration Service1, IMapper Service3)
-        : base(Service1,Service3) { }
+        : base(Service1,Service3) {
+
+            PrimaryKey = $@"""CountryId""";
+
+            var list = typeof(CountryModel).GetProperties();
+
+            foreach (var a in list)
+            {
+                if (a.Name != "CountryId")
+                {
+                    var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
+
+                    ListaAtributa.Add(text);                               
+                }
+
+            
+            }
+          
+           
+           
+
+        }
 
 
         // Get Ekstenzije
         public override string AddFilter(string query, CountrySearchObject search = null)
         {
+                  
+            
+            //foreach (var a in list)
+            //{
+            //    string name = a.Name;
+
+            //    var objectneki = a.GetCustomAttributes(true);
+
+            //    foreach (object attr in objectneki)
+            //    {
+            //        //AuthorAttribute authAttr = attr as AuthorAttribute;
+            //        string propName = a.Name;
+            //        string auth = attr.ToString();
+
+
+            //    }
+            
+            //}
+
+
 
             //search.Naziv = "Engleska";
             //search.CountryId = 12;
-        
-            if (!string.IsNullOrWhiteSpace(search?.Naziv))
+
+            if (!string.IsNullOrWhiteSpace(search?.CountryName))
             {
-                query += $@"where (lower(""CountryName"") LIKE lower('%{search.Naziv}%')) ";
+                query += $@"where (lower(""CountryName"") LIKE lower('%{search.CountryName}%')) ";
                           
             }
-            if (search.CountryId != null && string.IsNullOrWhiteSpace(search?.Naziv))
+            if (search.CountryId != null && string.IsNullOrWhiteSpace(search?.CountryName))
             {
-                query += $@"where ""CountryId"" = {search.CountryId} ";
+                query += $@"where {PrimaryKey} = {search.CountryId} ";
 
             }
 
-            if (search.CountryId != null && !string.IsNullOrWhiteSpace(search?.Naziv))
+            if (search.CountryId != null && !string.IsNullOrWhiteSpace(search?.CountryName))
             {
-                query += $@"or ""CountryId"" = {search.CountryId} ";
+                query += $@"or {PrimaryKey} = {search.CountryId} ";
 
             }
+                   
+
+
+
+
 
             return query;
 
 
         }
 
-
-
-
         //Insert extensions
-
 
         //query ekstenzije
         public override string GetCoalesce(CountryUpsertRequest Update)
         {
+            //ako je 0 to je null ,ako je string to je null
+
             return $@"
                {GetTheNameOfIdentityColumn()}=coalesce({Update.CountryId},""BettingSystem"".""Country"".{GetTheNameOfIdentityColumn()}),
                {GetAtribute1()}=coalesce('{Update.CountryName}',""BettingSystem"".""Country"".{GetAtribute1()})
@@ -109,7 +154,11 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         public override string GetValuesAll(CountryInsertRequest insert, int id)
         {
             return $@"{id},'{insert.CountryName}'";
-        }       
+        }
+        public override string GetValuesAll(CountryUpsertRequest insert)
+        {
+            return $@"{insert.CountryId},'{insert.CountryName}'";
+        }
 
 
         //insert esktenzije
@@ -122,17 +171,21 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
              where (lower(""CountryName"") = lower('{insert.CountryName}'))");
             var entity = List.FirstOrDefault();
 
-            if (entity == null)
+            if (entity != null)
             {
                 return true;
             }
-            throw new Exception("EXCEPTION: DRZAVA SA TIM IMENOM VEC POSTOJI.");
+            else
+            {
+
+                return false;
+            
+            }
         }
 
 
 
         //Upsert Extenzije
-
         public override bool checkIfNameSame(CountryInsertRequest insert, Country entry)
         {
             if (insert.CountryName == entry?.CountryName)
@@ -143,6 +196,41 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
             }
             return false;
+        }
+
+        public override List<CountryUpsertRequest> BeforeInsertFilterList(IEnumerable<CountryUpsertRequest> List)
+        {
+            using var conn = new NpgsqlConnection(connString);
+            conn.OpenAsync();
+            var Query = "";
+            List<CountryUpsertRequest> OutputList = new List<CountryUpsertRequest>();
+
+            foreach (var item in List)
+            {
+                //ako korisnik nije unjeo id               
+                Query = $@"Select * From ""BettingSystem"".""Country"" 
+                        Where {GetAtribute1()} ='{item.CountryName}'";
+
+                var entity = conn.Query<CountryUpsertRequest>(Query).FirstOrDefault();
+                
+                if (entity != null)
+                {
+                    continue;
+                
+                }
+
+                OutputList.Add(item);
+            }
+
+           
+
+            return OutputList;
+
+
+
+
+
+
         }
         public override void BeforeInsertVoid(CountryInsertRequest insert)
         {

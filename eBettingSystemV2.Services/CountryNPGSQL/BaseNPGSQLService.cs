@@ -23,8 +23,10 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         where T1: class
     {
         public IConfiguration Configuration { get; }
-        public IMapper Mapper { get; set; }             
-        public string connString { get; set;} 
+        public IMapper Mapper { get; set; }// ne treba ovdje             
+        public string connString { get; set;}
+        public string PrimaryKey { get; set; } = "";
+        public List<string> ListaAtributa { get; set; } = new List<string>();
         public BaseNPGSQLService(IConfiguration Service1 ,IMapper Service3 )
         {
             Configuration = Service1;          
@@ -89,20 +91,24 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
             string typeParameterType = typeof(TDb).Name;
             Query += $@"select *  from ""BettingSystem"".""{typeParameterType}"" ";
 
-            Query += $@"where {GetTheNameOfIdentityColumn()} = {id}; ";
+            Query += $@"where {PrimaryKey} = {id}; ";
 
             await using var conn = new NpgsqlConnection(connString);
             await conn.OpenAsync();
 
-            var quary = await conn.QueryAsync<TDb>(Query);
+            var quary = await conn.QueryAsync<T>(Query);
 
             var entity = quary.FirstOrDefault();
+
+            return entity;
+
+
 
             //var list = entity.ToList();
 
             //var entity = set.Find(id);
 
-            return Mapper.Map<T>(entity);
+            //return Mapper.Map<T>(entity);
 
         }
         //Get Extenzije
