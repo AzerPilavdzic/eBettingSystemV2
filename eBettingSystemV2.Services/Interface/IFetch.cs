@@ -23,6 +23,8 @@ namespace eBettingSystemV2.Services.Interface
 
         public Task FetchEventData();
 
+        public List<FetchEventModel> FetchAllEvents2();
+
 
     }
 }
