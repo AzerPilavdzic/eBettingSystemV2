@@ -1,4 +1,5 @@
-﻿using eBettingSystemV2.Model.Models;
+﻿using AutoMapper;
+using eBettingSystemV2.Model.Models;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.Interface;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static eBettingSystemV2.Model.Models.FetchEventModel;
 
 namespace eBettingSystemV2.Services.Servisi
 {
@@ -50,28 +52,40 @@ namespace eBettingSystemV2.Services.Servisi
 
         }
 
+       
+
         public void InsertEvents()
         {
+            //IFetchService.FetchEventKeys();
+             IFetchService.FetchEventData();
 
-            var eventList = IFetchService.EventsTESTBEZASYNCA();
+
+        //var eventList = IFetchService.EventsTESTBEZASYNCA();
+
+            //List<Model.SearchObjects.EventUpsertRequest> naziv = new List<Model.SearchObjects.EventUpsertRequest>();
+
+            //foreach (var item in eventList)
+            //{
+            //    naziv.Add(new Model.SearchObjects.EventUpsertRequest() {
+            //    EventName=item.EventName,
+            //    EventKey=item.LinkId,
+            //    Result=item.Result
+            //    });
+            //}
 
 
 
-            foreach (var eventObject in eventList)
-            {
+
+            //IEnumerable<Model.SearchObjects.EventUpsertRequest> list = naziv;
+
+            //foreach (var eventObject in eventList)
+            //{
                 //Console.WriteLine(eventObject.ToString());
-                IEventService.InsertAsync(new Model.SearchObjects.EventInsertRequest()
-                {
-                    EventName = eventObject.EventName
-                });
+                //IEventService.InsertOneOrMoreAsync(naziv);
+            
+            //}
+            //naziv.Clear();
+            //eventList.Clear();
         }
-
-        }
-
-
-
-
-
-
     }
 }
