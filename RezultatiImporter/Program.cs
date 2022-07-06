@@ -22,9 +22,9 @@ namespace RezultatiImporter
         static async Task Main(string[] args)
         {
 
-            Console.WriteLine(DateTime.Now.ToString()+ "CONSOLE READ KEY ");
+            //Console.WriteLine(DateTime.Now.ToString() + "CONSOLE READ KEY ");
+            //Console.ReadKey();
 
-            Console.ReadKey();
             //fetch sportova
             try
             {
@@ -109,7 +109,7 @@ namespace RezultatiImporter
             Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",
                               e.SignalTime);
 
-        
+
 
 
 

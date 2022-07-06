@@ -14,5 +14,11 @@ namespace eBettingSystemV2.Services.Interface
                 EventInsertRequest,
                 EventUpsertRequest,
                 EventModelLess>
-    { }
+    { 
+    
+        Task<EventModelLess> GetIdByNameAsync(string name);
+        EventUpsertRequest GetByEventKey(string eventKey);
+
+
+    }
 }

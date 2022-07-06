@@ -29,6 +29,7 @@ namespace eBettingSystemV2.Services.Servisi
 
         public IEventService _eventService { get; set; }
         public IFetchCacheInsert _fetchService { get; set; }
+        public IFetch _fetchData { get; set; }
         public int i = 0;
 
 
@@ -50,28 +51,31 @@ namespace eBettingSystemV2.Services.Servisi
         //}
        
 
-        public TimerService(IEventService eventService, IFetchCacheInsert fetchService)
+        public TimerService(IEventService eventService, IFetchCacheInsert fetchService, IFetch fetchData)
         {
             _eventService = eventService;
             _fetchService = fetchService;
+            _fetchData = fetchData;
         }
 
         public void SetTimer()
         {
             aTimer = new System.Timers.Timer(10000);
             aTimer.Elapsed += OnTimedEventDay;
-            aTimer = new System.Timers.Timer(2000);
+            aTimer = new System.Timers.Timer(10000);
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = false;
             //AKO HOCSE DA DODAJE, MORA ENABLE BIT TRUE.
-            aTimer.Enabled = false;
+            aTimer.Enabled = true;
         }
 
         public void OnTimedEvent(object source, ElapsedEventArgs e)
         {
             Console.WriteLine(e.SignalTime);
-            _fetchService.InsertEvents();
-            Console.Clear();
+            //_fetchService.InsertEvents();
+             _fetchData.FetchEventData();
+            //_fetchData.FetchEventKeys();
+            //Console.Clear();
             aTimer.Start();
 
 

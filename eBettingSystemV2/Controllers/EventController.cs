@@ -49,9 +49,19 @@ namespace eBettingSystemV2.Controllers
         [Route("GetEventIdByName/{EventName}")]
         public async Task<ActionResult<EventModelLess>> GetEventIdByName(string EventName)
         {
-            return BadRequest("Action is not implemented.");
+            try
+            {
+                var result = await IEventService.GetIdByNameAsync(EventName);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
+
+
 
 
         [HttpPost]

@@ -18,5 +18,11 @@ namespace eBettingSystemV2.Services.Interface
         abstract List<string> FetchAllEvents();
 
         public List<Podaci> EventsTESTBEZASYNCA();
+
+        public List<string> FetchEventKeys();
+
+        public Task FetchEventData();
+
+
     }
 }
