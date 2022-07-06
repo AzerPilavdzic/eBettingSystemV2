@@ -14,8 +14,10 @@ namespace eBettingSystemV2.Model.Models
 
         public class Podaci
         {
-           public string LinkId { get; set; }
-           public string EventName { get; set; }
+            public string LinkId { get; set; }
+            public string EventName { get; set; }
+            public string Result { get; set; }
+
         }
     }
 }

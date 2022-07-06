@@ -126,7 +126,7 @@ namespace eBettingSystemV2.Services.Servisi
 
             var sportoviq = Mapper.Map<IQueryable<CompetitionUpsertRequest>>(competitions);
 
-            InsertOneOrMoreAsync(sportoviq);
+            await InsertOneOrMoreAsync(sportoviq);
             
             //45 
             //naci ce competition sa id 45 
@@ -334,22 +334,30 @@ namespace eBettingSystemV2.Services.Servisi
             Competition aa = null;
 
             //provjerava exceptione
-            foreach (var a in insertlist)
+            foreach (var a in insertlist)                                               
             {
                 var sportpostoji = Context.Sports.Find(a.sportid);
                 var countrypostoji = Context.Countries.Find(a.countryid);
+                var CompetitionNameExist = Context.Competitions.Where(x=>x.Naziv==a.naziv).Select(x=>x.Naziv).FirstOrDefault();
 
-                if(sportpostoji == null)
+                if (sportpostoji == null)
                 {
-                    throw new Exception ($"Competition {a.naziv} Nije moguce napraviti vezu sa tabelom sport jer Sport sa sportsID {a.sportid} ne postoji ");
+                    throw new Exception($"Competition {a.naziv} Nije moguce napraviti vezu sa tabelom sport jer Sport sa sportsID {a.sportid} ne postoji ");
 
                 }
                 if (countrypostoji == null)
                 {
                     throw new Exception($"Competition {a.naziv} Nije moguce napraviti vezu sa tabelom sport jer Sport sa sportsID {a.countryid} ne postoji ");
+                }                                           
+
+                if (CompetitionNameExist != null && a.id==0)
+                {
+
+                    throw new Exception($"Competition vec postoji");
                 }
 
             }
+
 
 
             foreach (var a in insertlist)
@@ -367,6 +375,7 @@ namespace eBettingSystemV2.Services.Servisi
                     continue;
 
                 }
+
 
                 var entry = set.Find(a.id);
 
