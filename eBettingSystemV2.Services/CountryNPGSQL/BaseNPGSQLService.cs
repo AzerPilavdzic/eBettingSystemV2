@@ -118,12 +118,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         }
 
         //query ekstenzije
-        public virtual string GetTheNameOfIdentityColumn()
-        { 
         
-           return "";
-        
-        }
 
        
     }

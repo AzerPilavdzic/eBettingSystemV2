@@ -16,7 +16,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
              CountryModelLess,
              string>
     {
-        
+        Task<CountryModelLess> GetIdByNameAsync(string name);
 
 
 

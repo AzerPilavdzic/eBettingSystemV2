@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eBettingSystemV2.Services
+namespace eBettingSystemV2.Services.Linq.Interface
 {
-    public interface ITeamService:
+    public interface ITeamService :
         ICRUDService<TeamModel,
             TeamSearchObject,
             TeamUpsertRequest,

@@ -2,6 +2,8 @@ using eBettingSystemV2.Controllers;
 using eBettingSystemV2.Services;
 using eBettingSystemV2.Services.DataBase;
 using eBettingSystemV2.Services.Interface;
+using eBettingSystemV2.Services.Linq.Interface;
+using eBettingSystemV2.Services.Linq.Servisi;
 using eBettingSystemV2.Services.Servisi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
