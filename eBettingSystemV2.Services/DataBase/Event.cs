@@ -20,6 +20,7 @@ namespace eBettingSystemV2.Services.DataBase
         public int? YellowCardsAwayTeam { get; set; }
         public int? RedCardsHomeTeam { get; set; }
         public int? RedCardsAwayTeam { get; set; }
+        public string EventKey { get; set; }
 
         public virtual Competition Competition { get; set; }
     }

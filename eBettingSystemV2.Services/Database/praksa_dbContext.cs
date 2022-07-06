@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -30,7 +31,7 @@ namespace eBettingSystemV2.Services.DataBase
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Host=192.168.43.21 ; Database=praksa_db;Username=praksa;Password=12345");
+                optionsBuilder.UseNpgsql(ConfigurationManager.AppSettings["DefaultConnection"]);
             }
         }
 
@@ -87,6 +88,12 @@ namespace eBettingSystemV2.Services.DataBase
                 entity.Property(e => e.AwayTeam)
                     .HasColumnType("character varying")
                     .HasColumnName("away_team");
+
+                entity.Property(e => e.EventKey)
+                    .IsRequired()
+                    .HasColumnType("character varying")
+                    .HasColumnName("eventkey");
+
 
                 entity.Property(e => e.CompetitionId).HasColumnName("competition_id");
 

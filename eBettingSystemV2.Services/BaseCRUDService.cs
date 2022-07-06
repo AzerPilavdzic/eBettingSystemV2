@@ -191,9 +191,10 @@ namespace eBettingSystemV2.Services
 
         }  //treba preimenovati metodu u UpsertbyIdAsync
 
+
+
         public virtual async Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TUpdate> List)
         {
-
             
             var set = Context.Set<TDb>();
 

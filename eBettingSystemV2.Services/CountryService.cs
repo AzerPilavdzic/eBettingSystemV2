@@ -126,8 +126,8 @@ namespace eBettingSystemV2.Services
             {
                 if (Context.Countries.Where(X=>X.CountryName==a.CountryName).FirstOrDefault()!=null)
                 {
-
-                    throw new Exception($"Entry with the name {a.CountryName} already exist in the database");
+                    continue;
+                    //throw new Exception($"Entry with the name {a.CountryName} already exist in the database");
                 
                 }
 
