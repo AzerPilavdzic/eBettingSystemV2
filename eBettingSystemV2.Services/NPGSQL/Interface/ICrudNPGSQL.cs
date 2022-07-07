@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using eBettingSystemV2.Services.NPGSQL.Interface;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eBettingSystemV2.Services.CountryNPGSQL
+namespace eBettingSystemV2.Services.NPGSQL.Interface
 {
     public interface ICrudNPGSQL<T, TSearch, TInsert, TUpdate,Tless,T1> : 
         IBaseNPGSQL<T, TSearch,Tless,T1> 

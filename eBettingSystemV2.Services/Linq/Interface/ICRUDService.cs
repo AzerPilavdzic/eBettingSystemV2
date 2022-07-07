@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using eBettingSystemV2.Services.Linq.Interface;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eBettingSystemV2.Services
+namespace eBettingSystemV2.Services.Linq.Interface
 {
     public interface ICRUDService<T, TSearch, TInsert, TUpdate,Tless> : 
         IService<T, TSearch,Tless> 

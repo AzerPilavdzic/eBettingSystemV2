@@ -1,6 +1,7 @@
 ﻿
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Services;
+using eBettingSystemV2.Services.Linq.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
