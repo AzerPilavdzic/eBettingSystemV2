@@ -10,7 +10,7 @@ namespace eBettingSystemV2.Model.Models
     {
         public string CompetitionName { get; set; }
 
-        List<Podaci> _eventi { get; set; }
+        public List<Podaci> _eventi { get; set; }
 
         public class Podaci
         {

@@ -155,95 +155,11 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         {
            
             return $@"""CountryName""";
-        }
-        public override string GetAllAtributes()
-        {
-            return $@"""CountryId"",""CountryName""";
-        }
-        public override string GetAllAtributes(CountryInsertRequest insert)
-        {
-            var list = typeof(CountryInsertRequest).GetProperties();
-            List<string> ListaA = new List<string>();
-
-            foreach (var a in list)
-            {
-                if (a.Name != "CountryId")
-                {
-                    var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
-
-                    ListaA.Add(text);
-                }
-            }
-
-            var returnstring = "";
-
-
-
-            for (int i = 0; i<ListaA.Count(); i++)
-            {
-
-                returnstring += ListaA[i];
-
-                if ((i + 1) != ListaA.Count())
-                {
-                    returnstring += ",";
-                
-                
-                }
-            
-            }
-
-            return returnstring;
-
-
-        }
-        public override string GetAllAtributesBesidesPrimary(Type Tip)
-        {
-            ListaAtributa.Clear();
-
-            var list = Tip.GetProperties();
-
-            foreach (var a in list)
-            {              
-                if (a.Name != "CountryId")
-                {
-                    var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
-                    ListaAtributa.Add(text);
-                }
-            }
-
-            var returnstring = "";
-
-
-
-            for (int i = 0; i < ListaAtributa.Count(); i++)
-            {
-
-                returnstring += ListaAtributa[i];
-
-                if ((i + 1) != ListaAtributa.Count())
-                {
-                    returnstring += ",";
-
-
-                }
-
-            }
-
-            ListaAtributa.Clear();
-
-            return returnstring;
-
-         
-        }
+        }            
         public override string GetValue1(CountryInsertRequest insert)
         {
             return $@"'{insert.CountryName}'";
-        }
-        public override string GetValue1(CountryUpsertRequest Update)
-        {
-            return $@"'{Update.CountryName}'"; ;
-        }
+        }    
         public override string GetValuesAll(CountryInsertRequest insert, int id)
         {
             return $@"{id},'{insert.CountryName}'";
