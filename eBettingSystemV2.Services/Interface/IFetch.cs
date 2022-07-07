@@ -23,6 +23,7 @@ namespace eBettingSystemV2.Services.Interface
 
         public Task FetchEventData();
 
+        public IEnumerable<Tuple<string, string>> FetchEventsForUpdate();
 
     }
 }

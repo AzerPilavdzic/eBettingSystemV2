@@ -18,7 +18,9 @@ namespace eBettingSystemV2.Services.Servisi
 
         public System.Timers.Timer aTimer { get; set; } = new System.Timers.Timer();
         public static int brojac = 0;
+
         public static HtmlNodeCollection events;
+
         public static List<Podaci> eventList = new List<Podaci>();
         public static IEventService _eventService { get; set; }
 
@@ -28,6 +30,12 @@ namespace eBettingSystemV2.Services.Servisi
         public static List<string> EventKeysList = new List<string>();
 
 
+
+
+        public static HtmlWeb web = new HtmlWeb();
+        public static HtmlDocument document = web.Load("https://m.rezultati.com/");
+
+
         public FetchService(IEventService eventService)
         {
             _eventService = eventService;
@@ -35,33 +43,35 @@ namespace eBettingSystemV2.Services.Servisi
 
         public List<Podaci> EventsTESTBEZASYNCA()
         {
-            eventList.Clear();
-
-            List<Tuple<string, string>> tuples = new List<Tuple<string, string>>();
-
-
-
-
-            Console.WriteLine("POZIV " + ++brojac + ". PUT ");
-            HtmlWeb web = new HtmlWeb();
-
-            HtmlDocument document = web.Load("https://m.rezultati.com/"); //LoadFromWebAsync
-                                                                          //events = document.DocumentNode.SelectNodes("//*[@id='score-data']/text()");
-
-            //var nestotot = document.GetElementbyId("detail").GetAttributeValue("div",string.Empty);
-
-            //prije nego sto vrati listu, provjeriti da li postoje          
-            var _PageDataList = new List<Podaci>();
-            //_PageDataList.AddRange(FetchAllEvents().Distinct());
-
-            //events.ToList().ForEach(i => eventList.Add(new Podaci() {
-            //EventName = i.InnerText
-            //}));
+            //MISLIM DA MOZEMO IZBRISATI OVU FUNKCIJU
+            //MISLIM DA MOZEMO IZBRISATI OVU FUNKCIJU
+            //MISLIM DA MOZEMO IZBRISATI OVU FUNKCIJU
+            //MISLIM DA MOZEMO IZBRISATI OVU FUNKCIJU
 
 
-            Console.WriteLine("BEZ ASYNCA " + DateTime.Now.ToString());
 
-            return _PageDataList;
+            //eventList.Clear();
+
+            //List<Tuple<string, string>> tuples = new List<Tuple<string, string>>();
+
+            //Console.WriteLine("POZIV " + ++brojac + ". PUT ");
+            //HtmlWeb web = new HtmlWeb();
+
+            //HtmlDocument document = web.Load("https://m.rezultati.com/");
+
+            ////prije nego sto vrati listu, provjeriti da li postoje          
+            //var _PageDataList = new List<Podaci>();
+            ////_PageDataList.AddRange(FetchAllEvents().Distinct());
+
+            ////events.ToList().ForEach(i => eventList.Add(new Podaci() {
+            ////EventName = i.InnerText
+            ////}));
+
+
+            //Console.WriteLine("BEZ ASYNCA " + DateTime.Now.ToString());
+
+            //return _PageDataList;
+            return null;
 
         }
 
@@ -176,6 +186,7 @@ namespace eBettingSystemV2.Services.Servisi
                 foreach (var item in listaNatjecanja)
                 {
                     CompetitionHashSet.Add(item);
+                    //dodaj eventove od tog competitiona
                 }
 
                 var _CompetitionHashSetList = CompetitionHashSet.ToList();
@@ -191,19 +202,19 @@ namespace eBettingSystemV2.Services.Servisi
                     });
                 }
 
+                return _podaciSaStranice;
+                //    podaciSaStranices = _podaciSaStranice;
 
-                podaciSaStranices = _podaciSaStranice;
+                //    if (ispis)
+                //    {
 
-                if (ispis)
-                {
-
-                    Console.WriteLine("\n:::::::::::::::::::::: " + sport.ToUpper() + " ::::::::::::::::::::::\n");
-                    foreach (var item in _podaciSaStranice)
-                    {
-                        Console.WriteLine(item.Country + " : " + item.Competitionname);
-                    }
-                }
-                return podaciSaStranices;
+                //        Console.WriteLine("\n:::::::::::::::::::::: " + sport.ToUpper() + " ::::::::::::::::::::::\n");
+                //        foreach (var item in _podaciSaStranice)
+                //        {
+                //            Console.WriteLine(item.Country + " : " + item.Competitionname);
+                //        }
+                //    }
+                //    return podaciSaStranices;
             }
             return null;
         }
@@ -236,40 +247,62 @@ namespace eBettingSystemV2.Services.Servisi
             }
 
             return EventsFetched;
+        }
+
+        public IEnumerable<Tuple<string, string>> FetchEventsForUpdate()
+        {
+            var AllEventsList = _eventService.Get();
+
+            List<string> EventName = new();
+            List<string> EventKey = new();
+
+            //List<Tuple<string, string>> EventNameKey = new();
 
 
-            ////eventsKeyListFetched.RemoveAll(item => item == " ");
+            HtmlWeb web = new HtmlWeb();
+
+            HtmlDocument document = web.Load("https://m.rezultati.com/"); //LoadFromWebAsync
+            _eventsNode = document.DocumentNode.SelectNodes("//*[@id='score-data']/text()");
+            var _TimeNode = document.DocumentNode.SelectNodes("//*[@id='score-data']/span");
+
+            var _KeyNode = document.DocumentNode.SelectNodes("//*[@id='score-data']/a");
+
+            var eventsListFetched = _eventsNode.ToList().Where(x => x.InnerHtml.ToString() != " ").ToList();
+
+            List<string> EventsFetched = new List<string>();
+
+            for (int i = 0; i < _TimeNode.Count(); i++)
+            {
+                if (!_TimeNode[i].InnerText.Contains("'"))
+                {
+                    continue;
+                }
+
+                string hrefValue = _KeyNode[i].GetAttributeValue("href", string.Empty);
+                // Get the value of the HREF attribute
+                string RegexEventKeyMatch = @"(?<=/utakmica/)(.)*";
+                var _match = Regex.Match(hrefValue, RegexEventKeyMatch).ToString();
+                _match = _match.Remove(_match.Length - 1);
 
 
-            //for (int i = 0; i < eventsKeyListFetched.Count(); i++)
-            //{
-            //    eventsList.Add(new Podaci()
-            //    {
-            //        EventName = EventsFetched[i],
-            //        LinkId = eventsKeyListFetched[i],
-            //        Result=  FetchEventResult(eventsKeyListFetched[i])
 
-            //    });
-            //    //Console.WriteLine(eventsList[i].EventName + " || " + eventsList[i].LinkId);
-            //    //FetchEventResult(eventsList[i].LinkId);
-            //}
+                EventKey.Add(_match.ToString());
+                EventName.Add(_eventsNode[i].InnerText);
+            }
+            var MergedEventNameKey = EventName.Zip(EventKey, (a, b) => Tuple.Create(a, b));
 
-            //eventsKeyListFetched.Clear();
-            //return eventsList;
+
+            return MergedEventNameKey;
+
         }
 
         public List<string> FetchEventKeys()
         {
+
             EventKeysList.Clear();
-            HtmlWeb web = new HtmlWeb();
 
-            HtmlDocument document = web.Load("https://m.rezultati.com/"); //LoadFromWebAsync
+            //LoadFromWebAsync
 
-
-
-            HtmlWeb hw = new HtmlWeb();
-            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-            document = hw.Load("https://m.rezultati.com/");
 
             //regex koji fetcha event keyeve
             string RegexEventKeyMatch = @"(?<=/utakmica/)(.)*";
@@ -287,12 +320,18 @@ namespace eBettingSystemV2.Services.Servisi
             return EventKeysList;
         }
 
+       
+
+
         public async Task FetchEventData()
         {
+
+
             List<string> ListEventStatus = new List<string>() {
-            "Not started","Live","Cancelled", "Ended"
+            "Not started","Live","Odgodjeno", "Kraj"
             };
 
+            var ListaZaUpdate = FetchEventsForUpdate();
 
             List<string> EventName = FetchAllEvents();
             List<string> EventKey = FetchEventKeys();
@@ -306,21 +345,16 @@ namespace eBettingSystemV2.Services.Servisi
 
 
 
-            foreach (var EventNameKey in MergedEventNameKey)
+
+            //foreach (var item in ListaZaUpdate)
+            foreach (var item in MergedEventNameKey)
             {
-                //Result,Status,StartTime
-
-
-                HtmlWeb web = new HtmlWeb();
-                //da li ima razlike sa load from web async
-                //HtmlDocument document = web.Load(" https://m.rezultati.com/utakmica/" + EventNameKey.Item2); //LoadFromWebAsync
-
 
                 //svakom iteracijom ucitava sa stranice i utice na brzinu izvrsavanja.
                 //too slow.
-                HtmlDocument document = web.Load("https://m.rezultati.com/utakmica/" + EventNameKey.Item2); //LoadFromWebAsync
-                
-                //HtmlDocument document = await web.LoadFromWebAsync(" https://m.rezultati.com/utakmica/" + "OlAuWGfm"); //LoadFromWebAsync
+                HtmlDocument document = web.Load("https://m.rezultati.com/utakmica/" + item.Item2); //LoadFromWebAsync
+
+
 
                 //ako je lajv, ima 3||4 diva
                 //div klasa details
@@ -332,7 +366,7 @@ namespace eBettingSystemV2.Services.Servisi
 
                 string[] split = shortEventName.Split();
 
-                string HomeShortName = split[0]; // [BAR]
+                string HomeShortName = split[0]; //[BAR]
                 string AwayShortName = split[2];  //[REAL]
 
                 int YellowCardsHome = 0;
@@ -340,7 +374,14 @@ namespace eBettingSystemV2.Services.Servisi
                 int YellowCardsAway = 0;
                 int RedCardsAway = 0;
 
-
+                //int inkrement = 0;
+                //inkrement++;
+                //var liststring = keyevi;
+                //new Podaci()
+                //{
+                //    EventName[i];
+                //listKeyeva[inkrement];
+                //}
 
                 //svi kartoni                                                      //*[@id="detail-tab-content"]/div/div/p 
                 var YellowCardsNodeCollection = document.DocumentNode.SelectNodes("//*[@id='detail-tab-content']/div/div/p[contains(@class, 'i-field icon y-card')]");
@@ -361,34 +402,50 @@ namespace eBettingSystemV2.Services.Servisi
                 string _Result = "";
                 string _Period = "";
 
-                string[] homeAway = EventNameKey.Item1.Split(" - ");
+                string[] homeAway = item.Item1.Split(" - ");
 
                 //za insert u tabelu naziv home i away tima
                 string _home = homeAway[0].ToString();
                 string _away = homeAway[1].ToString();
 
 
+
+                //ListEventStatus[0]=> Not started
+                //ListEventStatus[1]=> Live
+                //ListEventStatus[2]=> Odgodjeno
+                //ListEventStatus[3]=> Kraj
                 switch (DetailsNodeCollection.Count())
                 {
                     case 1:
                         _StartTime = DateTime.Parse(DetailsNodeCollection[0].InnerText);
-                        _Status = "Not started";
+                        _Status = ListEventStatus[0];
                         _Result = _StartTime.ToString("HH:mm");
                         _Period = _Status;
                         break;
 
                     case 2:
+                        var state = document.DocumentNode.SelectSingleNode("//*[@id='main']/div[1]").InnerText;
+                        if (state=="Odgođeno")
+                        {
                         _StartTime = DateTime.Parse(DetailsNodeCollection[1].InnerText);
-                        _Status = "Odgodjeno";
-                        _Result = "Odgodjeno";
+                        _Status = ListEventStatus[2];
+                        _Result = ListEventStatus[2];
                         break;
+                        }
 
+                        else
+                        {
+                            _StartTime = DateTime.Parse(DetailsNodeCollection[1].InnerText);
+                            _Status = ListEventStatus[0];
+                            _Result = ListEventStatus[0];
+                            break;
+                        }
 
                     case 3:
-                        if (DetailsNodeCollection[1].InnerText == "Kraj")
+                        if (DetailsNodeCollection[1].InnerText == ListEventStatus[3])
                         {
                             _StartTime = DateTime.Parse(DetailsNodeCollection[2].InnerText);
-                            _Status = "Kraj";
+                            _Status = ListEventStatus[3];
                             _Result = DetailsNodeCollection[0].InnerText;
                             //Ukoliko meč nije uživo period meča nek bude isti kao status meča
                             _Period = _Status;
@@ -397,14 +454,13 @@ namespace eBettingSystemV2.Services.Servisi
                         else
                         {
                             _StartTime = DateTime.Parse(DetailsNodeCollection[2].InnerText);
-                            _Status = "LIVE";
+                            _Status = ListEventStatus[1]; //live
                             _Result = DetailsNodeCollection[0].InnerText;
                             break;
                         }
 
                     case 4:
                         _StartTime = DateTime.Parse(DetailsNodeCollection[3].InnerText);
-                        //_Status = "LIVE";
                         _Status = DetailsNodeCollection[1].InnerText;
                         _Result = DetailsNodeCollection[0].InnerText;
                         _Period = _Status;
@@ -413,15 +469,15 @@ namespace eBettingSystemV2.Services.Servisi
                         //default: throw new Exception("Greska u fetchanju DetailsNodeCollectiona. FetchService Prvi Switch");
 
                 }
-
+               
                 switch (_Status)
                 {
-                    case "LIVE":
+                    case "Live":
                         _Period = DetailsNodeCollection[1].InnerText;
                         break;
 
                     case "Odgodjeno":
-                        _Period = "Not started";
+                        _Period = ListEventStatus[0];
                         _Result = _Period;
                         break;
 
@@ -434,14 +490,12 @@ namespace eBettingSystemV2.Services.Servisi
 
                 eventUpsertRequests.Add(new EventUpsertRequest()
                 {
-
-                    //EventId=evet
-                    EventName = EventNameKey.Item1,
+                    EventName = item.Item1,
                     HomeTeam = _home,
                     AwayTeam = _away,
-                    EventKey = EventNameKey.Item2,
+                    EventKey = item.Item2,
 
-                    EventStartTime = _StartTime,
+                    EventStartTime = _StartTime,    
                     Result = _Result,
                     EventStatus = _Status,
                     EventPeriod = _Period,
@@ -454,12 +508,9 @@ namespace eBettingSystemV2.Services.Servisi
             }
 
 
-           await _eventService.InsertOneOrMoreAsync(eventUpsertRequests);
+            await _eventService.InsertOneOrMoreAsync(eventUpsertRequests);
 
         }
-
-
-
 
         //return "return od metode FetchService";
 
