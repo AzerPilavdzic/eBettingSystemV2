@@ -13,8 +13,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using eBettingSystemV2.Services.Linq.Servisi;
+using eBettingSystemV2.Services.Linq.Interface;
 
-namespace eBettingSystemV2.Services
+namespace eBettingSystemV2.Services.Linq.Servisi
 {
     public class BaseCRUDService<T, TDb, TSearch, TInsert, TUpdate,Tless>
         : BaseService<T, TDb, TSearch,Tless>,

@@ -15,14 +15,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using eBettingSystemV2.Model.Models;
-using eBettingSystemV2.Services.Interface;
+//using eBettingSystemV2.Services.Interface;
 using Npgsql;
 using Microsoft.Data.SqlClient;
 using Dapper;
 using NUnit.Framework;
+using eBettingSystemV2.Services.NPGSQL.Service;
+using eBettingSystemV2.Services.NPGSQL.Interface;
 //using TourismAgency.Services.Database;
 
-namespace eBettingSystemV2.Services.CountryNPGSQL
+namespace eBettingSystemV2.Services.NPGSQL.Service
 {
     public class CountryNPGSQLService :     
         BCrudNPGSQLService
@@ -35,7 +37,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         CountryModelLess,
         string
         >      
-        , ICountryNPGSQL
+        ,ICountryNPGSQL
     {
         public CountryNPGSQLService(IConfiguration Service1, IMapper Service3)
         : base(Service1,Service3) {
@@ -315,12 +317,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
             }
         }
-
-
-
-
-
-
+     
     }
 }
 

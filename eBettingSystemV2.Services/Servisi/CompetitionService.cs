@@ -13,6 +13,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
+using eBettingSystemV2.Services.Linq.Servisi;
+using eBettingSystemV2.Services.Linq.Interface;
 
 namespace eBettingSystemV2.Services.Servisi
 {

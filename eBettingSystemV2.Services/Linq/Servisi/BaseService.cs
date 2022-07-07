@@ -4,6 +4,7 @@
 using AutoMapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Services.DataBase;
+using eBettingSystemV2.Services.Linq.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eBettingSystemV2.Services
+namespace eBettingSystemV2.Services.Linq.Servisi
 {
     public class BaseService<T,TDb,TSearch,Tless>:
         IService<T, TSearch,Tless>

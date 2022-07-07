@@ -13,9 +13,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using eBettingSystemV2.Services.Linq.Servisi;
+using eBettingSystemV2.Services.Linq.Interface;
+
 //using TourismAgency.Services.Database;
 
-namespace eBettingSystemV2.Services
+namespace eBettingSystemV2.Services.Linq.Servisi
 {
     public class CountryService :
         BaseCRUDService

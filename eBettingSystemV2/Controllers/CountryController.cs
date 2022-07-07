@@ -1,8 +1,9 @@
 ﻿using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
-using eBettingSystemV2.Services.CountryNPGSQL;
 using eBettingSystemV2.Services.DataBase;
+using eBettingSystemV2.Services.Linq.Interface;
+using eBettingSystemV2.Services.NPGSQL.Interface;
 //using eBettingSystemV2.Models;
 using eProdaja.Controllers;
 using Microsoft.AspNetCore.Cors;
@@ -55,6 +56,7 @@ namespace eBettingSystemV2.Controllers
             try
             {
                 var List = await CountryNPGSQL.GetNPGSQLGeneric(search);
+                //var List = await ICountryService.Get(search);
 
                 if (List.Count() == 0)
                     //search.
