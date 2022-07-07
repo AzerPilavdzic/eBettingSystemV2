@@ -108,11 +108,11 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("UpsertOneOrMoreCompetitions")]
-        public override async Task<ActionResult<IEnumerable<CompetitionModelLess>>> InsertOneOrMore(IEnumerable<CompetitionUpsertRequest> insertlist)
+        public override async Task<ActionResult<IEnumerable<CompetitionModel>>> UpsertOneOrMore(IEnumerable<CompetitionUpsertRequest> insertlist)
         {
             try
             {
-                var result = await base.InsertOneOrMore(insertlist);
+                var result = await base.UpsertOneOrMore(insertlist);
                 return result;
             }
             catch (Exception ex)

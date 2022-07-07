@@ -57,7 +57,7 @@ namespace eProdaja.Controllers
 
         [HttpPost]
         //[Route("BASE2")]
-        public virtual async Task<ActionResult<IEnumerable<Tless>>> InsertOneOrMore(IEnumerable<TUpdate> insertlist)
+        public virtual async Task<ActionResult<IEnumerable<T>>> UpsertOneOrMore(IEnumerable<TUpdate> insertlist)
         {
             var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).InsertOneOrMoreAsync(insertlist);
 
@@ -78,6 +78,31 @@ namespace eProdaja.Controllers
 
 
         }
+
+        [HttpPost]
+        [Route("2")]
+        public virtual async Task<ActionResult<IEnumerable<T>>> InsertOneOrMore(IEnumerable<TInsert> insertlist)
+        {
+            //var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).InsertOneOrMoreAsync(insertlist);
+
+
+
+            //if (result == null)
+            //{
+            //    return BadRequest("Null");
+
+            //}
+            //else
+            //{
+
+            return Ok();
+
+            //}
+
+
+
+        }
+
 
 
         [HttpPut("{id}")]
