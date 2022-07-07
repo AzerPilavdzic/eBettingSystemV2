@@ -62,16 +62,20 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
                 await using var conn = new NpgsqlConnection(connString);
                 await conn.OpenAsync();
 
-                var entity = await conn.QueryAsync<TDb>(Query);
+                var entity = await conn.QueryAsync<T>(Query);
 
 
                 var quary = entity.ToList().AsQueryable();
 
-                var list = entity.ToList();
+                return quary;
 
 
-                return Mapper.Map<IEnumerable<T>>(list);
-                //return list;
+                //var list = entity.ToList();
+
+                //return Mapper.Map<IEnumerable<T>>(list);
+
+                
+                
             }
             catch (Exception e)
             {
@@ -117,9 +121,12 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
             return query;
         }
 
+
         //query ekstenzije
+
         
 
-       
+
+
     }
 }
