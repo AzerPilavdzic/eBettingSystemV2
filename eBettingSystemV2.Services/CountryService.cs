@@ -61,11 +61,11 @@ namespace eBettingSystemV2.Services
         {
             var filterquery = base.AddFilter(query, search);
 
-            if (!string.IsNullOrWhiteSpace(search?.Naziv))
+            if (!string.IsNullOrWhiteSpace(search?.CountryName))
             {
                 filterquery = filterquery.Where(x=>x.CountryName!=null)
                     .Where(X => X.CountryName.ToLower()
-                    .StartsWith(search.Naziv.ToLower()));
+                    .StartsWith(search.CountryName.ToLower()));
             }
 
             if (search.CountryId != null)

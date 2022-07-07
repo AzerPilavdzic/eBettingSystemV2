@@ -20,7 +20,7 @@ using System.Timers;
 using eBettingSystemV2.Services.Servisi;
 using System.Globalization;
 using System.Configuration;
-
+using eBettingSystemV2.Model.SearchObjects;
 
 namespace eBettingSystemV2
 {
@@ -33,12 +33,21 @@ namespace eBettingSystemV2
             //novi kod za service
 
             var host = CreateHostBuilder(args).Build();
-            var _scope = host.Services.CreateScope();
-            var _services = _scope.ServiceProvider;
 
-            var _ITimer = _services.GetRequiredService<ITimer>();
-            _ITimer.SetTimer(); 
+            //required using Microsoft.Extensions.DependencyInjection;
+            // required using Microsoft.AspNetCore.Identity;
+            /* using*/
+            var scope = host.Services.CreateScope();           
+            var services = scope.ServiceProvider;               
+            var ITimer = services.GetRequiredService<ITimer>();
+            var CleanSql = services.GetRequiredService<eBettingSystemV2.Services.CountryNPGSQL.ICountryNPGSQL>();
 
+            var list=CleanSql.GetNPGSQLGeneric(new CountrySearchObject(){ }).Result;
+
+            ITimer.SetTimer();
+               
+
+                    
                                                                          
             host.Run();
 

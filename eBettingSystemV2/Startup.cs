@@ -2,6 +2,8 @@ using eBettingSystemV2.Controllers;
 using eBettingSystemV2.Services;
 using eBettingSystemV2.Services.DataBase;
 using eBettingSystemV2.Services.Interface;
+using eBettingSystemV2.Services.Linq.Interface;
+using eBettingSystemV2.Services.Linq.Servisi;
 using eBettingSystemV2.Services.Servisi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -91,6 +93,9 @@ namespace eBettingSystemV2
             services.AddTransient<ITimer,TimerService>();
             services.AddTransient<ILogCompetition, LogCompetitionService>();
             services.AddTransient<IFetchCacheInsert, FetchCacheInsertService>();
+            services.AddTransient<ICountryNPGSQL, CountryNPGSQL>();
+            services.AddTransient<eBettingSystemV2.Services.CountryNPGSQL.ICountryNPGSQL, eBettingSystemV2.Services.CountryNPGSQL.CountryNPGSQLService>();
+            
 
             //services.AddTransient<IRezultatiService, RezultatiService>();
             //services.AddTransient<IMemoryCache, DemoController>();

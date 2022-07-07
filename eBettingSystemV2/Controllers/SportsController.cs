@@ -96,9 +96,9 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("UpsertOneOrMoreSports")]
-        public override Task<ActionResult<IEnumerable<SportModelLess>>> InsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
+        public override Task<ActionResult<IEnumerable<SportModel>>> UpsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
         {
-            return base.InsertOneOrMore(insertlist);
+            return base.UpsertOneOrMore(insertlist);
         }
 
 
