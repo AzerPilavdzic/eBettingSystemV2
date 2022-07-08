@@ -89,9 +89,28 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetTeamById/{id}")]
-        public override Task<ActionResult<TeamModel>> GetById(int id)
+        public override async Task<ActionResult<TeamModel>> GetById(int id)
         {
-            return base.GetById(id);    
+            try
+            {
+                var Model = await ITeamNPGSQL.GetByIdAsync(id);
+
+                if (Model == null)
+                {
+                    return NotFound("Podatak ne postoji u bazi");
+                }
+                else
+                {
+                    return Ok(Model);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+
+
+            }
         }
 
 
