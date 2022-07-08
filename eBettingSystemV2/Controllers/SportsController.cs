@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using eBettingSystemV2.Services.Linq.Interface;
+using eBettingSystemV2.Services.NPGSQL.Interface;
 
 namespace eBettingSystemV2.Controllers
 {
@@ -22,18 +24,17 @@ namespace eBettingSystemV2.Controllers
         public static List<Country> Test = new List<Country>();
 
         private ISportService ISportService { get; set; }
+
+        public ISportsNPGSQL ISportsNPGSQL { get; set; }
+
+
         private readonly ILogger<SportController> _logger;
 
 
-        private static readonly string[] Summaries = new[]
-        {
-            "BIH", "CRO", "SLO", "SRB"
-        };
-
-
-        public SportController(ISportService service, ILogger<SportController> logger) : base(service)
+        public SportController(ISportService service, ISportsNPGSQL service2, ILogger<SportController> logger) : base(service)
         {
             ISportService = service;
+            ISportsNPGSQL = service2;
             _logger = logger;
 
         }

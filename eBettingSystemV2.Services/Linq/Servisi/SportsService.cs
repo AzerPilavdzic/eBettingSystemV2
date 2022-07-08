@@ -10,7 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using eBettingSystemV2.Services.Linq.Servisi;
-namespace eBettingSystemV2.Services
+using eBettingSystemV2.Services.Linq.Interface;
+
+namespace eBettingSystemV2.Services.Linq.Servisi
 {
 
     public class SportService :

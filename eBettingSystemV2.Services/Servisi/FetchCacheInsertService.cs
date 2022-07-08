@@ -57,7 +57,7 @@ namespace eBettingSystemV2.Services.Servisi
         public void InsertEvents()
         {
             //IFetchService.FetchEventKeys();
-             IFetchService.FetchEventData();
+             //IFetchService.FetchEventData();
 
 
         //var eventList = IFetchService.EventsTESTBEZASYNCA();

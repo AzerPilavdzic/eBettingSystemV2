@@ -25,7 +25,7 @@ namespace eBettingSystemV2.Services.Interface
 
         public IEnumerable<Tuple<string, string>> FetchEventsForUpdate();
 
-        public List<string> FetchCompetitionsname(string sport);
+        public List<string> FetchCompetitionsName(string sport);
 
     }
 }

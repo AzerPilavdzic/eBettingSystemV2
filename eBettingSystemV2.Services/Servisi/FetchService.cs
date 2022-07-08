@@ -234,24 +234,6 @@ namespace eBettingSystemV2.Services.Servisi
             return EventsFetched;
 
 
-            ////eventsKeyListFetched.RemoveAll(item => item == " ");
-
-
-            //for (int i = 0; i < eventsKeyListFetched.Count(); i++)
-            //{
-            //    eventsList.Add(new Podaci()
-            //    {
-            //        EventName = EventsFetched[i],
-            //        LinkId = eventsKeyListFetched[i],
-            //        Result=  FetchEventResult(eventsKeyListFetched[i])
-
-            //    });
-            //    //Console.WriteLine(eventsList[i].EventName + " || " + eventsList[i].LinkId);
-            //    //FetchEventResult(eventsList[i].LinkId);
-            //}
-
-            //eventsKeyListFetched.Clear();
-            //return eventsList;
         }
 
         public List<string> FetchEventKeys()
@@ -421,8 +403,7 @@ namespace eBettingSystemV2.Services.Servisi
 
         public async Task FetchEventData()
         {
-
-
+            #region ne koristi se 
 
             //List<string> EventName = FetchAllEvents();
             //List<string> EventKey = FetchEventKeys();
@@ -494,6 +475,7 @@ namespace eBettingSystemV2.Services.Servisi
 
 
             //await _eventService.InsertOneOrMoreAsync(eventUpsertRequests);
+            #endregion
 
         }
 
@@ -516,7 +498,6 @@ namespace eBettingSystemV2.Services.Servisi
             HtmlDocument document = web.Load("https://m.rezultati.com/"); //LoadFromWebAsync
             _eventsNode = document.DocumentNode.SelectNodes("//*[@id='score-data']/text()");
             var _TimeNode = document.DocumentNode.SelectNodes("//*[@id='score-data']/span");
-
             var _KeyNode = document.DocumentNode.SelectNodes("//*[@id='score-data']/a");
 
             var eventsListFetched = _eventsNode.ToList().Where(x => x.InnerHtml.ToString() != " ").ToList();
@@ -525,6 +506,7 @@ namespace eBettingSystemV2.Services.Servisi
 
             for (int i = 0; i < _TimeNode.Count(); i++)
             {
+                //update evenata koji su live. (obrada manje requestova)
                 if (!_TimeNode[i].InnerText.Contains("'"))
                 {
                     continue;
@@ -551,7 +533,7 @@ namespace eBettingSystemV2.Services.Servisi
 
         //moje rijesenje 
         //fetcha competitions po sportu 
-        public List<string> FetchCompetitionsname(string sport)
+        public List<string> FetchCompetitionsName(string sport)
         {
             if (sport.Contains("š"))
             {
@@ -582,32 +564,14 @@ namespace eBettingSystemV2.Services.Servisi
             {
                 competitions.ToList().ForEach(i => listaNatjecanja.Add(i.InnerText));
 
-
+                HashSet<string> CompetitionHashSet = new HashSet<string>();
 
                 for (int i = 0; i < listaNatjecanja.Count(); i++)
                 {
                     var _matchCompetitions = Regex.Match(listaNatjecanja[i], @"(?<=: )(?:(?! -).)*"); //regex za natjecanja/competitione               
                     listaNatjecanja[i] = _matchCompetitions.ToString();
-
+                    CompetitionHashSet.Add(listaNatjecanja[i]);
                 }
-
-                HashSet<string> CompetitionHashSet = new HashSet<string>();
-
-                foreach (var item in listaNatjecanja)
-                {
-                    CompetitionHashSet.Add(item);
-                }
-
-                var _CompetitionHashSetList = CompetitionHashSet.ToList();
-
-                for (int i = 0; i < CompetitionHashSet.Count(); i++)
-                {
-                    listaNatjecanja.Add(_CompetitionHashSetList[i]);
-
-
-                }
-
-
             }
             //_competitionService.InsertOneOrMoreAsync();
             return listaNatjecanja;
@@ -618,8 +582,7 @@ namespace eBettingSystemV2.Services.Servisi
 
         public List<FetchEventModel> FetchAllEvents2()
         {
-            //OVA SE TRBA POZIVATI SAMO JEDNOM DNEVNO.
-            //insertuje competitione
+            //Funkcija FetchDataBySport insertuje u bazu sve competitione koji postoje za proslijedjeni sport.
             //FetchDataBySport("nogomet");
 
 
@@ -627,12 +590,12 @@ namespace eBettingSystemV2.Services.Servisi
             HtmlWeb web = new HtmlWeb();
             HtmlDocument document = web.Load("https://m.rezultati.com/"); //LoadFromWebAsync
 
-            var CompetitionNaziv = FetchCompetitionsname("nogomet");
+            //moze se koristiti FetchDataBySport (samo promijeniti povratni tip u List<string>) ili FetchCompetitionsName
+            var CompetitionNaziv = FetchCompetitionsName("nogomet");
 
 
 
-
-            //fetch eventove od prvog competitiona do drugog 
+            //fetch eventove od X competitiona do Y 
             int pocetakIncrementa = 0;
             int a = 0;
             string competition = "Competition " + a;
@@ -641,14 +604,12 @@ namespace eBettingSystemV2.Services.Servisi
             List<FetchEventModel> FetchModel = new List<FetchEventModel>();
 
             EventKeysList.Clear();
+
+            //fetch event keyeva preko kojih se preuzimaju svi detalji o eventovima. (kartoni, rezultat, StartTime....)
             var eventsKeyList = FetchEventKeys();
 
 
-
-            //EventsTESTBEZASYNCA();
             eventsList.Clear();
-
-
 
             _eventsNode = document.DocumentNode.SelectNodes("//*[@id='score-data']/text()");
 
@@ -660,53 +621,35 @@ namespace eBettingSystemV2.Services.Servisi
             {
 
                 var competitionID =  _competitionService.GetIdbyNazivAsync(CompetitionNaziv[y]);
-                // if (competitionID==null)
-                // {
-                ////     _competitionService.Insert(new() { 
-                //     Naziv= CompetitionNaziv[y],
-                //     Countryid=12,
-                //     Sportid=44
-                //     });
-                 //}
 
                 FetchModel.Add(
                     new FetchEventModel
                     {
                        // CompetitionId = competitionID.Id,
                         CompetitionName = CompetitionNaziv[y],
+                        CompetitionId=competitionID.Id,
                         _eventi = new List<EventUpsertRequest>()
-
+                         
                     }) ;
                 a++;
 
-                int pocetni = 0;
-
-                int zavrsni = 1;
-
-                //preceding - sibling::h4 = 'Two' and following-sibling::h4 = 'Three'
-                //div[preceding - sibling::h4[1] = 'Two']
-
-
-                //_eventsNode = document.DocumentNode.SelectNodes("//*[@id='score-data']/text()");
                 _eventsNode = document.DocumentNode.SelectNodes($"//*[@id='score-data']//text()[preceding-sibling::h4[{y + 1}] and not(preceding-sibling::h4[position() > {y + 1}])]");
 
                 eventsListFetched = _eventsNode.ToList().Where(x => x.InnerHtml.ToString() != " ").ToList();
 
                 for (int i = 0; i < eventsListFetched.Count(); i++)
                 {
-
-                    
-
                     HtmlWeb _web = new HtmlWeb();
                     //too slow.
-                    HtmlDocument _document = web.Load("https://m.rezultati.com/utakmica/" + eventsKeyList[pocetakIncrementa]); //LoadFromWebAsync
+                    HtmlDocument _document = web.Load("https://m.rezultati.com/utakmica/" + eventsKeyList[pocetakIncrementa]);
 
 
-                    //HTML NODES
+                    #region HTML Nodovi
                     var DetailsNodeCollection = _document.DocumentNode.SelectNodes("//*[@id='main']/div[contains(@class, 'detail')]");
                     var YellowCardsNodeCollection = _document.DocumentNode.SelectNodes("//*[@id='detail-tab-content']/div/div/p[contains(@class, 'i-field icon y-card')]");
                     var RedCardsNodeCollection = _document.DocumentNode.SelectNodes("//*[@id='detail-tab-content']/div/div/p[contains(@class, 'i-field icon r-card')]");
                     var shortNameNode = _document.DocumentNode.SelectSingleNode("/html/head/title");
+                    #endregion
 
 
                     FetchEventDetails(DetailsNodeCollection);
@@ -717,17 +660,17 @@ namespace eBettingSystemV2.Services.Servisi
 
                     if (!eventsListFetched[i].InnerText.ToString().Contains("-"))
                     {
-                        //string[] _homeAway = eventsListFetched[i].InnerText.Split(" - ");
+                        //funkcija dodjeljuje vrijednosti unutar propertija _home i _away koje cemo proslijediti u bazu.
                         EventHomeAwayName(eventsListFetched[i].InnerText + eventsListFetched[i + 1].InnerText);
-
                         
-                        //CompetitionNaziv[y]
+
 
                         FetchModel[y]._eventi.Add(new EventUpsertRequest
                         {
+                            CompetitionId = FetchModel[y].CompetitionId,
+                            
                             EventName = eventsListFetched[i].InnerText + eventsListFetched[i].InnerText,
                             EventKey = eventsKeyList[pocetakIncrementa],
-                            CompetitionId = competitionID.Id,
                             EventPeriod = _Period,
                             EventStatus = _Status,
                             Result = _Result,
@@ -750,7 +693,7 @@ namespace eBettingSystemV2.Services.Servisi
                     EventHomeAwayName(eventsListFetched[i].InnerText);
                     FetchModel[y]._eventi.Add(new EventUpsertRequest
                     {
-                        CompetitionId = competitionID.Id,
+                        CompetitionId = FetchModel[y].CompetitionId,
 
                         EventName = eventsListFetched[i].InnerText,
                         EventKey = eventsKeyList[pocetakIncrementa],
@@ -775,11 +718,6 @@ namespace eBettingSystemV2.Services.Servisi
             var lista =  _eventService.InsertOneOrMoreAsync(FetchModel[y]._eventi).Result;
 
             }
-
-            
-
-            //238
-            //231
 
 
             return FetchModel;
