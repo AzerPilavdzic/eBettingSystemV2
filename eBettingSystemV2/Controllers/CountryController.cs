@@ -77,15 +77,25 @@ namespace eBettingSystemV2.Controllers
         [Route("GetCountryById/{id}")]
         public override async Task<ActionResult<CountryModel>> GetById(int id)
         {
-            var Model = await CountryNPGSQL.GetByIdAsync(id);
+            try
+            {
+                var Model = await CountryNPGSQL.GetByIdAsync(id);
 
-            if (Model == null)
-            {
-                return NotFound("Podatak ne postoji u bazi");
+                if (Model == null)
+                {
+                    return NotFound("Podatak ne postoji u bazi");
+                }
+                else
+                {
+                    return Ok(Model);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Ok(Model);
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+
+
             }
         }
 
