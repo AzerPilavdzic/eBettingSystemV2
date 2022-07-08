@@ -142,26 +142,26 @@ namespace eBettingSystemV2.Services.Servisi
         public int GetIdbyName(string name)
         {
 
-            var postoji = Context.Teams.Where(X => X.Teamname == name).FirstOrDefault();
+            var postoji = Context.Teams.Where(X => X.teamname == name).FirstOrDefault();
 
             if (postoji != null)
             {
 
-                return postoji.Teamid;
+                return postoji.teamid;
 
 
             }
             else
             {
 
-                var nova = new teams { Teamname = name, Teamid = 0 };
+                var nova = new teams { teamname = name, teamid = 0 };
 
 
                 Context.Teams.Add(nova);
 
                 Context.SaveChanges();
 
-                return nova.Teamid;
+                return nova.teamid;
           
             
             }
