@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace eBettingSystemV2.Services.DataBase
 {
-    public partial class Sport
+    public partial class sport
     {
-        public Sport()
+        public sport()
         {
             Competitions = new HashSet<Competition>();
             Teams = new HashSet<teams>();

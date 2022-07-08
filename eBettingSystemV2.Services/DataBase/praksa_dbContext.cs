@@ -23,7 +23,7 @@ namespace eBettingSystemV2.Services.DataBase
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Logcompetition> Logcompetitions { get; set; }
         public virtual DbSet<LogcompetitionTest> LogcompetitionTests { get; set; }
-        public virtual DbSet<Sport> Sports { get; set; }
+        public virtual DbSet<sport> Sports { get; set; }
         public virtual DbSet<teams> Teams { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -166,7 +166,7 @@ namespace eBettingSystemV2.Services.DataBase
                     .HasColumnName("id");
             });
 
-            modelBuilder.Entity<Sport>(entity =>
+            modelBuilder.Entity<sport>(entity =>
             {
                 entity.HasKey(e => e.SportsId)
                     .HasName("sportovi_pk");
@@ -183,6 +183,10 @@ namespace eBettingSystemV2.Services.DataBase
 
             modelBuilder.Entity<teams>(entity =>
             {
+
+                entity.HasKey(e => e.Teamid)
+                 .HasName("teamid");
+
                 entity.ToTable("teams", "BettingSystem");
 
                 entity.Property(e => e.Teamid).HasColumnName("teamid");

@@ -15,6 +15,6 @@ namespace eBettingSystemV2.Services.DataBase
         public int? Sportid { get; set; }
 
         public virtual Country Country { get; set; }
-        public virtual Sport Sport { get; set; }
+        public virtual sport Sport { get; set; }
     }
 }

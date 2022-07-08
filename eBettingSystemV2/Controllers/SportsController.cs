@@ -42,19 +42,54 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetAllSport")]
-        public override Task<ActionResult<IEnumerable<SportModel>>> Get([FromQuery] SportSearchObject search = null)
+        public override async Task<ActionResult<IEnumerable<SportModel>>> Get([FromQuery] SportSearchObject search = null)
         {
+            try
+            {
 
-            return base.Get(search);
+                //CHECK PAGE
+                //CHECK NEGATIVE
 
+
+                var List = await ISportsNPGSQL.GetNPGSQLGeneric(search);
+
+                if (List.Count() == 0)
+                    return NotFound("Podaci ne postoje u bazi");
+                else
+                    return Ok(List);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
 
         }
 
         [HttpGet]
         [Route("GetSportById/{id}")]
-        public override Task<ActionResult<SportModel>> GetById(int id)
+        public override async Task<ActionResult<SportModel>> GetById(int id)
         {
-            return base.GetById(id);
+            try
+            {
+                var Model = await ISportsNPGSQL.GetByIdAsync(id);
+
+                if (Model == null)
+                {
+                    return NotFound("Podatak ne postoji u bazi");
+                }
+                else
+                {
+                    return Ok(Model);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+
+
+            }
         }
 
         [HttpGet]

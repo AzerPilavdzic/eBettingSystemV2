@@ -30,7 +30,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         BCrudNPGSQLService
         <
         SportModel,
-        Sport,
+        sport,
         SportSearchObject,
         SportInsertRequest,
         SportUpsertRequest,
@@ -42,12 +42,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public SportsNPGSQLService(IConfiguration Service1, IMapper Service3)
         : base(Service1,Service3) {
 
-            PrimaryKey = $@"""SportId""";           
+            PrimaryKey = $@"""SportsId""";           
             var list = typeof(SportModel).GetProperties();
 
             foreach (var a in list)
             {
-                if (a.Name != "SportId")
+                if (a.Name != "SportsId")
                 {
                     var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
                     ListaAtributa.Add(text);                               
@@ -61,7 +61,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
 
             string Query = null;
-            string typeParameterType = typeof(Sport).Name;
+            string typeParameterType = typeof(sport).Name;
             Query += $@"select *  from ""BettingSystem"".""{typeParameterType}"" ";
             Query += $@"where {GetAtribute1()} = '{name}'; ";
 
@@ -173,7 +173,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         //Upsert Extenzije
-        public override bool checkIfNameSame(SportInsertRequest insert, Sport entry)
+        public override bool checkIfNameSame(SportInsertRequest insert, sport entry)
         {
             if (insert.name== entry?.Name)
             {
