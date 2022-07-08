@@ -136,6 +136,7 @@ namespace eBettingSystemV2.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
                 throw;
             }

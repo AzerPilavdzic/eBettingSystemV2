@@ -7,12 +7,12 @@ namespace eBettingSystemV2.Services.DataBase
 {
     public partial class teams
     {
-        public int Teamid { get; set; }
-        public string Teamname { get; set; }
-        public int? Foundedyear { get; set; }
-        public string City { get; set; }
-        public int Countryid { get; set; }
-        public int? Sportid { get; set; }
+        public int teamid { get; set; }
+        public string teamname { get; set; }
+        public int? foundedyear { get; set; }
+        public string city { get; set; }
+        public int countryid { get; set; }
+        public int? sportid { get; set; }
 
         public virtual Country Country { get; set; }
         public virtual sport Sport { get; set; }

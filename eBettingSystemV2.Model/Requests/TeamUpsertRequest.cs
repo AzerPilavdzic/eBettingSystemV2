@@ -5,13 +5,16 @@ using System.Text;
 
 namespace eBettingSystemV2.Model.SearchObjects
 {
+
+    //imena atributa moraju biti ista kao u bazi
+
     public class TeamUpsertRequest
     {
-        public string TeamName { get; set; }
-        public string City { get; set; }
+        public string teamname { get; set; }
+        public string city { get; set; }
 
-        public int Countryid { get; set; }
+        public int countryid { get; set; }
 
-        public int? Foundedyear { get; set; }
+        public int? foundedyear { get; set; }
     }
 }
