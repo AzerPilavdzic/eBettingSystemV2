@@ -9,8 +9,11 @@ using eBettingSystemV2.Services.Interface;
 using AutoMapper;
 using Npgsql;
 using Dapper;
+using eBettingSystemV2.Services.NPGSQL.Service;
+using eBettingSystemV2.Services.NPGSQL.Interface;
 
-namespace eBettingSystemV2.Services.CountryNPGSQL
+namespace eBettingSystemV2.Services.NPGSQL.Service
+
 {
     public class BCrudNPGSQLService<T, TDb, TSearch, TInsert, TUpdate, Tless,T1>
        :BaseNPGSQLService<T, TDb, TSearch, Tless,T1>,

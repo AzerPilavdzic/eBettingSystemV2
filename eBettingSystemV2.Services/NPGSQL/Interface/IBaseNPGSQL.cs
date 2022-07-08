@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eBettingSystemV2.Services.CountryNPGSQL
+namespace eBettingSystemV2.Services.NPGSQL.Interface
 {
     public interface IBaseNPGSQL<T, TSearch,Tless,T1> 
         where T : class 

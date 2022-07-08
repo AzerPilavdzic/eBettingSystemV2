@@ -11,8 +11,9 @@ using eBettingSystemV2.Services.Extensions;
 using eBettingSystemV2.Services.Interface;
 using AutoMapper;
 using Dapper;
+using eBettingSystemV2.Services.NPGSQL.Interface;
 
-namespace eBettingSystemV2.Services.CountryNPGSQL
+namespace eBettingSystemV2.Services.NPGSQL.Service
 {
     public class BaseNPGSQLService<T, TDb, TSearch, Tless,T1>:
         IBaseNPGSQL<T, TSearch, Tless,T1>

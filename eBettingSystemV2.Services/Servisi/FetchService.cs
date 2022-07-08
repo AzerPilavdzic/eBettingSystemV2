@@ -626,6 +626,7 @@ namespace eBettingSystemV2.Services.Servisi
 
             HtmlWeb web = new HtmlWeb();
             HtmlDocument document = web.Load("https://m.rezultati.com/"); //LoadFromWebAsync
+
             var CompetitionNaziv = FetchCompetitionsname("nogomet");
 
 

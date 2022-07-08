@@ -94,7 +94,7 @@ namespace eBettingSystemV2
             services.AddTransient<ILogCompetition, LogCompetitionService>();
             services.AddTransient<IFetchCacheInsert, FetchCacheInsertService>();
             services.AddTransient<ICountryNPGSQL, CountryNPGSQL>();
-            services.AddTransient<eBettingSystemV2.Services.CountryNPGSQL.ICountryNPGSQL, eBettingSystemV2.Services.CountryNPGSQL.CountryNPGSQLService>();
+            services.AddTransient<eBettingSystemV2.Services.NPGSQL.Interface.ICountryNPGSQL, eBettingSystemV2.Services.NPGSQL.Service.CountryNPGSQLService>();
             
 
             //services.AddTransient<IRezultatiService, RezultatiService>();
