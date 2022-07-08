@@ -180,6 +180,24 @@ namespace eBettingSystemV2.Controllers
 
         }
 
+        [HttpPost]
+        [Route("UpsertTeam")]
+        public override async Task<ActionResult<TeamModelLess>> InsertById(int Id, TeamUpsertRequest Insert)
+        {
+            try
+            {
+                var result = await ITeamNPGSQL.UpsertbyIdAsync(Insert, Id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+        }
+
 
         [HttpPut]
         [Route("UpdateTeam/{Id}")]
