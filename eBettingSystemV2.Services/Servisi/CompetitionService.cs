@@ -33,7 +33,7 @@ namespace eBettingSystemV2.Services.Servisi
         private ICountryService ICountryService { get; set; }
         private ISportService ISportService { get; set; }
         //private ICompetitionService ICompetitionService { get; set; }
-        private IFetch IFetchService { get; set;}
+        //private IFetch IFetchService { get; set;}
 
       
 
@@ -44,8 +44,8 @@ namespace eBettingSystemV2.Services.Servisi
 
         public CompetitionService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_,
             ICountryService service1,
-            ISportService service2,
-            IFetch service3
+            ISportService service2
+            //IFetch service3
             ) : base(context_, mapper_)
         {
 
@@ -53,7 +53,7 @@ namespace eBettingSystemV2.Services.Servisi
             Mapper = mapper_;
             ICountryService = service1;
             ISportService = service2;
-            IFetchService = service3;
+            //IFetchService = service3;
            
 
 

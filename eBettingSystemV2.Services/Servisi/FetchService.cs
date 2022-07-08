@@ -18,62 +18,45 @@ namespace eBettingSystemV2.Services.Servisi
 
         public System.Timers.Timer aTimer { get; set; } = new System.Timers.Timer();
         public static int brojac = 0;
-
         public static HtmlNodeCollection events;
-
-        public static List<Podaci> eventList = new List<Podaci>();
+        public static List<EventUpsertRequest> eventList = new List<EventUpsertRequest>();
         public static IEventService _eventService { get; set; }
+        public static ICompetitionService _competitionService { get; set; }
 
-        public static List<Podaci> eventsList = new List<Podaci>();
+        public static List<EventUpsertRequest> eventsList = new List<EventUpsertRequest>();
         public static HtmlNodeCollection _eventsNode;
 
         public static List<string> EventKeysList = new List<string>();
 
+        List<string> ListEventStatus = new List<string>() {
+            "Not started","Live","Cancelled", "Ended"
+            };
+
+        int YellowCardsHome = 0;
+        int RedCardsHome = 0;
+        int YellowCardsAway = 0;
+        int RedCardsAway = 0;
 
 
+        public DateTime _StartTime = new DateTime();
+        public string _Status = "";
+        public string _Result = "";
+        public string _Period = "";
 
-        public static HtmlWeb web = new HtmlWeb();
-        public static HtmlDocument document = web.Load("https://m.rezultati.com/");
+        public string HomeShortName;
+        public string AwayShortName;
+
+        public string _home;
+        public string _away;
 
 
-        public FetchService(IEventService eventService)
+        public FetchService(IEventService eventService, ICompetitionService competitionService)
         {
             _eventService = eventService;
+            _competitionService = competitionService;
         }
 
-        public List<Podaci> EventsTESTBEZASYNCA()
-        {
-            //MISLIM DA MOZEMO IZBRISATI OVU FUNKCIJU
-            //MISLIM DA MOZEMO IZBRISATI OVU FUNKCIJU
-            //MISLIM DA MOZEMO IZBRISATI OVU FUNKCIJU
-            //MISLIM DA MOZEMO IZBRISATI OVU FUNKCIJU
-
-
-
-            //eventList.Clear();
-
-            //List<Tuple<string, string>> tuples = new List<Tuple<string, string>>();
-
-            //Console.WriteLine("POZIV " + ++brojac + ". PUT ");
-            //HtmlWeb web = new HtmlWeb();
-
-            //HtmlDocument document = web.Load("https://m.rezultati.com/");
-
-            ////prije nego sto vrati listu, provjeriti da li postoje          
-            //var _PageDataList = new List<Podaci>();
-            ////_PageDataList.AddRange(FetchAllEvents().Distinct());
-
-            ////events.ToList().ForEach(i => eventList.Add(new Podaci() {
-            ////EventName = i.InnerText
-            ////}));
-
-
-            //Console.WriteLine("BEZ ASYNCA " + DateTime.Now.ToString());
-
-            //return _PageDataList;
-            return null;
-
-        }
+       //izbrisan EventTestBezAasynca
 
 
         public List<PodaciSaStranice> FetchSportAndData()
@@ -186,7 +169,6 @@ namespace eBettingSystemV2.Services.Servisi
                 foreach (var item in listaNatjecanja)
                 {
                     CompetitionHashSet.Add(item);
-                    //dodaj eventove od tog competitiona
                 }
 
                 var _CompetitionHashSetList = CompetitionHashSet.ToList();
@@ -202,19 +184,22 @@ namespace eBettingSystemV2.Services.Servisi
                     });
                 }
 
-                return _podaciSaStranice;
-                //    podaciSaStranices = _podaciSaStranice;
+                _competitionService.AddDataAsync(_podaciSaStranice);
+                Console.WriteLine(" DODAVANJE COMPETITIONA ");
+                Console.ReadKey();
 
-                //    if (ispis)
-                //    {
+                podaciSaStranices = _podaciSaStranice;
 
-                //        Console.WriteLine("\n:::::::::::::::::::::: " + sport.ToUpper() + " ::::::::::::::::::::::\n");
-                //        foreach (var item in _podaciSaStranice)
-                //        {
-                //            Console.WriteLine(item.Country + " : " + item.Competitionname);
-                //        }
-                //    }
-                //    return podaciSaStranices;
+                if (ispis)
+                {
+
+                    Console.WriteLine("\n:::::::::::::::::::::: " + sport.ToUpper() + " ::::::::::::::::::::::\n");
+                    foreach (var item in _podaciSaStranice)
+                    {
+                        Console.WriteLine(item.Country + " : " + item.Competitionname);
+                    }
+                }
+                return podaciSaStranices;
             }
             return null;
         }
@@ -247,7 +232,274 @@ namespace eBettingSystemV2.Services.Servisi
             }
 
             return EventsFetched;
+
+
+            ////eventsKeyListFetched.RemoveAll(item => item == " ");
+
+
+            //for (int i = 0; i < eventsKeyListFetched.Count(); i++)
+            //{
+            //    eventsList.Add(new Podaci()
+            //    {
+            //        EventName = EventsFetched[i],
+            //        LinkId = eventsKeyListFetched[i],
+            //        Result=  FetchEventResult(eventsKeyListFetched[i])
+
+            //    });
+            //    //Console.WriteLine(eventsList[i].EventName + " || " + eventsList[i].LinkId);
+            //    //FetchEventResult(eventsList[i].LinkId);
+            //}
+
+            //eventsKeyListFetched.Clear();
+            //return eventsList;
         }
+
+        public List<string> FetchEventKeys()
+        {
+            EventKeysList.Clear();
+            HtmlWeb web = new HtmlWeb();
+
+            HtmlDocument document = web.Load("https://m.rezultati.com/"); //LoadFromWebAsync
+
+
+
+            HtmlWeb hw = new HtmlWeb();
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            document = hw.Load("https://m.rezultati.com/");
+
+            //regex koji fetcha event keyeve
+            string RegexEventKeyMatch = @"(?<=/utakmica/)(.)*";
+            foreach (HtmlNode link in document.DocumentNode.SelectNodes("//*[@id='score-data']/a"))
+            {
+                string hrefValue = link.GetAttributeValue("href", string.Empty);
+                // Get the value of the HREF attribute
+
+                var _match = Regex.Match(hrefValue, RegexEventKeyMatch).ToString();
+                _match = _match.Remove(_match.Length - 1);
+                EventKeysList.Add(_match.ToString());
+            }
+
+
+            return EventKeysList;
+        }
+
+        public void FetchEventDetails(HtmlNodeCollection DetailsNodeCollection)
+        {
+
+            //vrijednosti se moraju resetovat ukoliko se funkcija poziva vise puta.
+            _StartTime = new DateTime();
+            _Status = "";
+            _Result = "";
+            _Period = "";
+
+
+            switch (DetailsNodeCollection.Count())
+            {
+                case 1:
+                    _StartTime = DateTime.Parse(DetailsNodeCollection[0].InnerText);
+                    _Status = "Not started";
+                    _Result = _StartTime.ToString("HH:mm");
+                    _Period = _Status;
+                    break;
+
+                case 2:
+                    if (DetailsNodeCollection[0].InnerText == "Odgođeno")
+                    {
+                        _StartTime = DateTime.Parse(DetailsNodeCollection[1].InnerText);
+                        _Status = "Odgodjeno";
+                        _Result = "Odgodjeno";
+                        _Period = "Odgodjeno";
+                        break;
+                    }
+                    else
+                    {
+                        _StartTime = DateTime.Parse(DetailsNodeCollection[1].InnerText);
+                        _Status = "Not started";
+                        _Result = "Not started";
+                        _Period = "Not started";
+                        break;
+                    }
+
+
+                case 3:
+                    if (DetailsNodeCollection[1].InnerText == "Kraj")
+                    {
+                        _StartTime = DateTime.Parse(DetailsNodeCollection[2].InnerText);
+                        _Status = "Kraj";
+                        _Result = DetailsNodeCollection[0].InnerText;
+                        //Ukoliko meč nije uživo period meča nek bude isti kao status meča
+                        _Period = _Status;
+                        break;
+                    }
+                    else
+                    {
+                        _StartTime = DateTime.Parse(DetailsNodeCollection[2].InnerText);
+                        _Status = "Live";
+                        _Result = DetailsNodeCollection[0].InnerText;
+                        break;
+                    }
+
+                case 4:
+                    _StartTime = DateTime.Parse(DetailsNodeCollection[3].InnerText);
+                    _Status = "Live";
+                    //_Status = DetailsNodeCollection[1].InnerText;
+                    _Result = DetailsNodeCollection[0].InnerText;
+                    _Period = _Status;
+                    break;
+
+                    //default: throw new Exception("Greska u fetchanju DetailsNodeCollectiona. FetchService Prvi Switch");
+
+            }
+
+
+            switch (_Status)
+            {
+                case "Live":
+                    _Period = DetailsNodeCollection[1].InnerText;
+                    break;
+
+                case "Odgodjeno":
+                    _Period = "Not started";
+                    _Result = _Period;
+                    break;
+
+                case "Not started":
+                    _Result = null;
+                    break;
+
+                    //default: throw new Exception("Greska u fetchanju Status. FetchService Drugi switch");
+            }
+
+        }
+        public void EventYellowRedCardsInfo(HtmlNodeCollection YellowCardsNodeCollection, HtmlNodeCollection RedCardsNodeCollection)
+        {
+            //reset vrijednosti jer se funkcija poziva vise puta.
+            YellowCardsHome = 0;
+            RedCardsHome = 0;
+            YellowCardsAway = 0;
+            RedCardsAway = 0;
+
+
+
+            //svi kartoni                                                      //*[@id="detail-tab-content"]/div/div/p 
+
+            //string regexMatchLastWord = "[[].*]";
+            //last word without []
+            string regexMatchLastWord = "(?<=(\\[))(.*)(?=])";
+
+            YellowCardsHome = YellowCardsNodeCollection == null ? 0 : YellowCardsNodeCollection.Where(x => Regex.Match(x.NextSibling.InnerText, regexMatchLastWord).Groups[2].ToString() == HomeShortName).ToList().Count();
+            YellowCardsAway = YellowCardsNodeCollection == null ? 0 : YellowCardsNodeCollection.Where(x => Regex.Match(x.NextSibling.InnerText, regexMatchLastWord).Groups[2].ToString() == AwayShortName).ToList().Count();
+
+            RedCardsHome = RedCardsNodeCollection == null ? 0 : RedCardsNodeCollection.Where(x => Regex.Match(x.NextSibling.InnerText, regexMatchLastWord).Groups[2].ToString() == HomeShortName).ToList().Count();
+            RedCardsAway = RedCardsNodeCollection == null ? 0 : RedCardsNodeCollection.Where(x => Regex.Match(x.NextSibling.InnerText, regexMatchLastWord).Groups[2].ToString() == AwayShortName).ToList().Count();
+
+        }
+
+        public void EventShortName(HtmlNode shortName) //BAR - REAL
+        {
+            
+            var shortEventName = shortName.InnerText;
+
+            string[] split = shortEventName.Split();
+
+            HomeShortName = split[0]; // [BAR]
+            AwayShortName = split[2];  //[REAL]
+        }
+
+        public void EventHomeAwayName(string eventName)
+        {
+
+            string[] homeAway = eventName.Split(" - ");
+            _home ="";
+            _away="";
+            //za insert u tabelu naziv home i away tima
+            _home = homeAway[0].ToString();
+            _away = homeAway[1].ToString();
+
+        }
+
+
+        public async Task FetchEventData()
+        {
+
+
+
+            //List<string> EventName = FetchAllEvents();
+            //List<string> EventKey = FetchEventKeys();
+
+            ////List<Tuple<string, string>> EventNameKey = new();
+            //var MergedEventNameKey = EventName.Zip(EventKey, (a, b) => Tuple.Create(a, b));
+
+
+            ////InsertOneOrMoreAsync(IEnumerable < EventUpsertRequest > List)
+            //List<EventUpsertRequest> eventUpsertRequests = new();
+
+
+
+            //foreach (var EventNameKey in MergedEventNameKey)
+            //{
+            //    //Result,Status,StartTime
+
+
+            //    HtmlWeb web = new HtmlWeb();
+            //    //too slow.
+            //    HtmlDocument document = web.Load("https://m.rezultati.com/utakmica/" + EventNameKey.Item2); //LoadFromWebAsync
+
+
+            //    //HTML NODES
+            //    var DetailsNodeCollection = document.DocumentNode.SelectNodes("//*[@id='main']/div[contains(@class, 'detail')]");
+            //    var YellowCardsNodeCollection = document.DocumentNode.SelectNodes("//*[@id='detail-tab-content']/div/div/p[contains(@class, 'i-field icon y-card')]");
+            //    var RedCardsNodeCollection = document.DocumentNode.SelectNodes("//*[@id='detail-tab-content']/div/div/p[contains(@class, 'i-field icon r-card')]");
+            //    var shortNameNode = document.DocumentNode.SelectSingleNode("/html/head/title");
+
+            //    string[] homeAway = EventNameKey.Item1.Split(" - ");
+
+            //    FetchEventDetails(DetailsNodeCollection);
+            //    EventShortName(shortNameNode);
+            //    EventYellowRedCardsInfo(YellowCardsNodeCollection, RedCardsNodeCollection);
+            //    EventHomeAwayName(EventNameKey.Item1);
+
+
+            //    //CompetitionInsertRequest competitionInsertRequest = new() {
+            //    //Countryid =12,
+            //    //Sportid =44,
+            //    //Naziv="comp"
+            //    //};
+
+
+
+            //    eventUpsertRequests.Add(new EventUpsertRequest()
+            //    {
+
+            //        CompetitionId=3,
+
+            //        //EventId=evet
+            //        EventName = EventNameKey.Item1,
+            //        HomeTeam = _home,
+            //        AwayTeam = _away,
+            //        EventKey = EventNameKey.Item2,
+
+
+            //        EventStartTime = _StartTime,
+            //        Result = _Result,
+            //        EventStatus = _Status,
+            //        EventPeriod = _Period,
+
+            //        RedCardsAwayTeam = RedCardsAway,
+            //        YellowCardsAwayTeam = YellowCardsAway,
+            //        RedCardsHomeTeam = RedCardsHome,
+            //        YellowCardsHomeTeam = YellowCardsHome,
+            //    });
+            //}
+
+
+            //await _eventService.InsertOneOrMoreAsync(eventUpsertRequests);
+
+        }
+
+        //return "return od metode FetchService";
+
+
 
         public IEnumerable<Tuple<string, string>> FetchEventsForUpdate()
         {
@@ -296,223 +548,244 @@ namespace eBettingSystemV2.Services.Servisi
 
         }
 
-        public List<string> FetchEventKeys()
+
+        //moje rijesenje 
+        //fetcha competitions po sportu 
+        public List<string> FetchCompetitionsname(string sport)
         {
+            if (sport.Contains("š"))
+            {
+                sport = sport.Replace("š", "s");
+
+            }
+            if (sport == "Am. nogomet")
+            {
+                sport = "americki-nogomet";
+            }
+
+            sport = sport.ToLower();
+            HtmlWeb web = new HtmlWeb();
+            HtmlDocument document = web.Load("https://m.rezultati.com/");
+
+            if (sport != "nogomet")
+            {
+                document = web.Load("https://m.rezultati.com/" + sport + "/");
+            }
+
+            List<string> listaNatjecanja = new List<string>();
+
+            var categories = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
+
+            var competitions = categories;
+
+            if (categories != null)
+            {
+                competitions.ToList().ForEach(i => listaNatjecanja.Add(i.InnerText));
+
+
+
+                for (int i = 0; i < listaNatjecanja.Count(); i++)
+                {
+                    var _matchCompetitions = Regex.Match(listaNatjecanja[i], @"(?<=: )(?:(?! -).)*"); //regex za natjecanja/competitione               
+                    listaNatjecanja[i] = _matchCompetitions.ToString();
+
+                }
+
+                HashSet<string> CompetitionHashSet = new HashSet<string>();
+
+                foreach (var item in listaNatjecanja)
+                {
+                    CompetitionHashSet.Add(item);
+                }
+
+                var _CompetitionHashSetList = CompetitionHashSet.ToList();
+
+                for (int i = 0; i < CompetitionHashSet.Count(); i++)
+                {
+                    listaNatjecanja.Add(_CompetitionHashSetList[i]);
+
+
+                }
+
+
+            }
+            //_competitionService.InsertOneOrMoreAsync();
+            return listaNatjecanja;
+
+
+
+        }
+
+        public List<FetchEventModel> FetchAllEvents2()
+        {
+            //OVA SE TRBA POZIVATI SAMO JEDNOM DNEVNO.
+            //insertuje competitione
+            //FetchDataBySport("nogomet");
+
+
+
+            HtmlWeb web = new HtmlWeb();
+            HtmlDocument document = web.Load("https://m.rezultati.com/"); //LoadFromWebAsync
+            var CompetitionNaziv = FetchCompetitionsname("nogomet");
+
+
+
+
+            //fetch eventove od prvog competitiona do drugog 
+            int pocetakIncrementa = 0;
+            int a = 0;
+            string competition = "Competition " + a;
+            var competitionNode = document.DocumentNode.SelectNodes("//*[@id='score-data']/h4");
+            int brojcompetition = competitionNode.Count();
+            List<FetchEventModel> FetchModel = new List<FetchEventModel>();
 
             EventKeysList.Clear();
-
-            //LoadFromWebAsync
-
-
-            //regex koji fetcha event keyeve
-            string RegexEventKeyMatch = @"(?<=/utakmica/)(.)*";
-            foreach (HtmlNode link in document.DocumentNode.SelectNodes("//*[@id='score-data']/a"))
-            {
-                string hrefValue = link.GetAttributeValue("href", string.Empty);
-                // Get the value of the HREF attribute
-
-                var _match = Regex.Match(hrefValue, RegexEventKeyMatch).ToString();
-                _match = _match.Remove(_match.Length - 1);
-                EventKeysList.Add(_match.ToString());
-            }
-
-
-            return EventKeysList;
-        }
-
-       
-
-
-        public async Task FetchEventData()
-        {
-
-
-            List<string> ListEventStatus = new List<string>() {
-            "Not started","Live","Odgodjeno", "Kraj"
-            };
-
-            var ListaZaUpdate = FetchEventsForUpdate();
-
-            List<string> EventName = FetchAllEvents();
-            List<string> EventKey = FetchEventKeys();
-
-            //List<Tuple<string, string>> EventNameKey = new();
-            var MergedEventNameKey = EventName.Zip(EventKey, (a, b) => Tuple.Create(a, b));
-
-
-            //InsertOneOrMoreAsync(IEnumerable < EventUpsertRequest > List)
-            List<EventUpsertRequest> eventUpsertRequests = new();
+            var eventsKeyList = FetchEventKeys();
 
 
 
+            //EventsTESTBEZASYNCA();
+            eventsList.Clear();
 
-            //foreach (var item in ListaZaUpdate)
-            foreach (var item in MergedEventNameKey)
+
+
+            _eventsNode = document.DocumentNode.SelectNodes("//*[@id='score-data']/text()");
+
+            var eventsListFetched = _eventsNode.ToList().Where(x => x.InnerHtml.ToString() != " ").ToList();
+            List<string> EventsFetched = new List<string>();
+
+
+            for (int y = 0; y < brojcompetition; y++)
             {
 
-                //svakom iteracijom ucitava sa stranice i utice na brzinu izvrsavanja.
-                //too slow.
-                HtmlDocument document = web.Load("https://m.rezultati.com/utakmica/" + item.Item2); //LoadFromWebAsync
+                var competitionID =  _competitionService.GetIdbyNazivAsync(CompetitionNaziv[y]);
+                // if (competitionID==null)
+                // {
+                ////     _competitionService.Insert(new() { 
+                //     Naziv= CompetitionNaziv[y],
+                //     Countryid=12,
+                //     Sportid=44
+                //     });
+                 //}
+
+                FetchModel.Add(
+                    new FetchEventModel
+                    {
+                       // CompetitionId = competitionID.Id,
+                        CompetitionName = CompetitionNaziv[y],
+                        _eventi = new List<EventUpsertRequest>()
+
+                    }) ;
+                a++;
+
+                int pocetni = 0;
+
+                int zavrsni = 1;
+
+                //preceding - sibling::h4 = 'Two' and following-sibling::h4 = 'Three'
+                //div[preceding - sibling::h4[1] = 'Two']
 
 
+                //_eventsNode = document.DocumentNode.SelectNodes("//*[@id='score-data']/text()");
+                _eventsNode = document.DocumentNode.SelectNodes($"//*[@id='score-data']//text()[preceding-sibling::h4[{y + 1}] and not(preceding-sibling::h4[position() > {y + 1}])]");
 
-                //ako je lajv, ima 3||4 diva
-                //div klasa details
-                //*[@id="main"]/div[3]
-                var DetailsNodeCollection = document.DocumentNode.SelectNodes("//*[@id='main']/div[contains(@class, 'detail')]");
-                //*[@id="main"]/div[contains(@class)]
+                eventsListFetched = _eventsNode.ToList().Where(x => x.InnerHtml.ToString() != " ").ToList();
 
-                var shortEventName = document.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
-
-                string[] split = shortEventName.Split();
-
-                string HomeShortName = split[0]; //[BAR]
-                string AwayShortName = split[2];  //[REAL]
-
-                int YellowCardsHome = 0;
-                int RedCardsHome = 0;
-                int YellowCardsAway = 0;
-                int RedCardsAway = 0;
-
-                //int inkrement = 0;
-                //inkrement++;
-                //var liststring = keyevi;
-                //new Podaci()
-                //{
-                //    EventName[i];
-                //listKeyeva[inkrement];
-                //}
-
-                //svi kartoni                                                      //*[@id="detail-tab-content"]/div/div/p 
-                var YellowCardsNodeCollection = document.DocumentNode.SelectNodes("//*[@id='detail-tab-content']/div/div/p[contains(@class, 'i-field icon y-card')]");
-                var RedCardsNodeCollection = document.DocumentNode.SelectNodes("//*[@id='detail-tab-content']/div/div/p[contains(@class, 'i-field icon r-card')]");
-
-                //string regexMatchLastWord = "[[].*]";
-                //last word without []
-                string regexMatchLastWord = "(?<=(\\[))(.*)(?=])";
-
-                YellowCardsHome = YellowCardsNodeCollection == null ? 0 : YellowCardsNodeCollection.Where(x => Regex.Match(x.NextSibling.InnerText, regexMatchLastWord).Groups[2].ToString() == HomeShortName).ToList().Count();
-                YellowCardsAway = YellowCardsNodeCollection == null ? 0 : YellowCardsNodeCollection.Where(x => Regex.Match(x.NextSibling.InnerText, regexMatchLastWord).Groups[2].ToString() == AwayShortName).ToList().Count();
-
-                RedCardsHome = RedCardsNodeCollection == null ? 0 : RedCardsNodeCollection.Where(x => Regex.Match(x.NextSibling.InnerText, regexMatchLastWord).Groups[2].ToString() == HomeShortName).ToList().Count();
-                RedCardsAway = RedCardsNodeCollection == null ? 0 : RedCardsNodeCollection.Where(x => Regex.Match(x.NextSibling.InnerText, regexMatchLastWord).Groups[2].ToString() == AwayShortName).ToList().Count();
-
-                DateTime _StartTime = new DateTime();
-                string _Status = "";
-                string _Result = "";
-                string _Period = "";
-
-                string[] homeAway = item.Item1.Split(" - ");
-
-                //za insert u tabelu naziv home i away tima
-                string _home = homeAway[0].ToString();
-                string _away = homeAway[1].ToString();
-
-
-
-                //ListEventStatus[0]=> Not started
-                //ListEventStatus[1]=> Live
-                //ListEventStatus[2]=> Odgodjeno
-                //ListEventStatus[3]=> Kraj
-                switch (DetailsNodeCollection.Count())
+                for (int i = 0; i < eventsListFetched.Count(); i++)
                 {
-                    case 1:
-                        _StartTime = DateTime.Parse(DetailsNodeCollection[0].InnerText);
-                        _Status = ListEventStatus[0];
-                        _Result = _StartTime.ToString("HH:mm");
-                        _Period = _Status;
-                        break;
 
-                    case 2:
-                        var state = document.DocumentNode.SelectSingleNode("//*[@id='main']/div[1]").InnerText;
-                        if (state=="Odgođeno")
+                    
+
+                    HtmlWeb _web = new HtmlWeb();
+                    //too slow.
+                    HtmlDocument _document = web.Load("https://m.rezultati.com/utakmica/" + eventsKeyList[pocetakIncrementa]); //LoadFromWebAsync
+
+
+                    //HTML NODES
+                    var DetailsNodeCollection = _document.DocumentNode.SelectNodes("//*[@id='main']/div[contains(@class, 'detail')]");
+                    var YellowCardsNodeCollection = _document.DocumentNode.SelectNodes("//*[@id='detail-tab-content']/div/div/p[contains(@class, 'i-field icon y-card')]");
+                    var RedCardsNodeCollection = _document.DocumentNode.SelectNodes("//*[@id='detail-tab-content']/div/div/p[contains(@class, 'i-field icon r-card')]");
+                    var shortNameNode = _document.DocumentNode.SelectSingleNode("/html/head/title");
+
+
+                    FetchEventDetails(DetailsNodeCollection);
+                    EventShortName(shortNameNode);
+                    EventYellowRedCardsInfo(YellowCardsNodeCollection, RedCardsNodeCollection);
+
+                       
+
+                    if (!eventsListFetched[i].InnerText.ToString().Contains("-"))
+                    {
+                        //string[] _homeAway = eventsListFetched[i].InnerText.Split(" - ");
+                        EventHomeAwayName(eventsListFetched[i].InnerText + eventsListFetched[i + 1].InnerText);
+
+                        
+                        //CompetitionNaziv[y]
+
+                        FetchModel[y]._eventi.Add(new EventUpsertRequest
                         {
-                        _StartTime = DateTime.Parse(DetailsNodeCollection[1].InnerText);
-                        _Status = ListEventStatus[2];
-                        _Result = ListEventStatus[2];
-                        break;
-                        }
+                            EventName = eventsListFetched[i].InnerText + eventsListFetched[i].InnerText,
+                            EventKey = eventsKeyList[pocetakIncrementa],
+                            CompetitionId = competitionID.Id,
+                            EventPeriod = _Period,
+                            EventStatus = _Status,
+                            Result = _Result,
+                            EventStartTime =_StartTime,
 
-                        else
-                        {
-                            _StartTime = DateTime.Parse(DetailsNodeCollection[1].InnerText);
-                            _Status = ListEventStatus[0];
-                            _Result = ListEventStatus[0];
-                            break;
-                        }
+                            YellowCardsHomeTeam=YellowCardsHome,
+                            YellowCardsAwayTeam=YellowCardsAway,
+                            RedCardsHomeTeam=RedCardsHome,
+                            RedCardsAwayTeam=RedCardsAway,
+                            
+                            HomeTeam=_home,
+                            AwayTeam=_away
+                            
+                        });
+                        i++;
+                        pocetakIncrementa++;
+                        continue;
+                    }
+                    //string[] homeAway = eventsListFetched[i].InnerText.Split(" - ");
+                    EventHomeAwayName(eventsListFetched[i].InnerText);
+                    FetchModel[y]._eventi.Add(new EventUpsertRequest
+                    {
+                        CompetitionId = competitionID.Id,
 
-                    case 3:
-                        if (DetailsNodeCollection[1].InnerText == ListEventStatus[3])
-                        {
-                            _StartTime = DateTime.Parse(DetailsNodeCollection[2].InnerText);
-                            _Status = ListEventStatus[3];
-                            _Result = DetailsNodeCollection[0].InnerText;
-                            //Ukoliko meč nije uživo period meča nek bude isti kao status meča
-                            _Period = _Status;
-                            break;
-                        }
-                        else
-                        {
-                            _StartTime = DateTime.Parse(DetailsNodeCollection[2].InnerText);
-                            _Status = ListEventStatus[1]; //live
-                            _Result = DetailsNodeCollection[0].InnerText;
-                            break;
-                        }
+                        EventName = eventsListFetched[i].InnerText,
+                        EventKey = eventsKeyList[pocetakIncrementa],
 
-                    case 4:
-                        _StartTime = DateTime.Parse(DetailsNodeCollection[3].InnerText);
-                        _Status = DetailsNodeCollection[1].InnerText;
-                        _Result = DetailsNodeCollection[0].InnerText;
-                        _Period = _Status;
-                        break;
+                        EventPeriod = _Period,
+                        EventStatus = _Status,
+                        Result = _Result,
+                        EventStartTime = _StartTime,
 
-                        //default: throw new Exception("Greska u fetchanju DetailsNodeCollectiona. FetchService Prvi Switch");
+                        YellowCardsHomeTeam = YellowCardsHome,
+                        YellowCardsAwayTeam = YellowCardsAway,
+                        RedCardsHomeTeam = RedCardsHome,
+                        RedCardsAwayTeam = RedCardsAway,
 
+                        HomeTeam = _home,
+                        AwayTeam = _away
+
+                    });
+                    pocetakIncrementa++;
                 }
-               
-                switch (_Status)
-                {
-                    case "Live":
-                        _Period = DetailsNodeCollection[1].InnerText;
-                        break;
+                Console.WriteLine("Dodajem listu evenata broj "+ y+ " od "+ brojcompetition);
+            var lista =  _eventService.InsertOneOrMoreAsync(FetchModel[y]._eventi).Result;
 
-                    case "Odgodjeno":
-                        _Period = ListEventStatus[0];
-                        _Result = _Period;
-                        break;
-
-                    case "Not started":
-                        _Result = null;
-                        break;
-
-                        //default: throw new Exception("Greska u fetchanju Status. FetchService Drugi switch");
-                }
-
-                eventUpsertRequests.Add(new EventUpsertRequest()
-                {
-                    EventName = item.Item1,
-                    HomeTeam = _home,
-                    AwayTeam = _away,
-                    EventKey = item.Item2,
-
-                    EventStartTime = _StartTime,    
-                    Result = _Result,
-                    EventStatus = _Status,
-                    EventPeriod = _Period,
-
-                    RedCardsAwayTeam = RedCardsAway,
-                    YellowCardsAwayTeam = YellowCardsAway,
-                    RedCardsHomeTeam = RedCardsHome,
-                    YellowCardsHomeTeam = YellowCardsHome,
-                });
             }
 
+            
 
-            await _eventService.InsertOneOrMoreAsync(eventUpsertRequests);
+            //238
+            //231
+
+
+            return FetchModel;
+
+
 
         }
-
-        //return "return od metode FetchService";
 
 
     }
