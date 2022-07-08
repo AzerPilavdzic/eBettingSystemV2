@@ -17,14 +17,15 @@ namespace eBettingSystemV2.Services.Interface
 
         abstract List<string> FetchAllEvents();
 
-        public List<Podaci> EventsTESTBEZASYNCA();
-
         public List<string> FetchEventKeys();
 
         public Task FetchEventData();
 
         public List<FetchEventModel> FetchAllEvents2();
 
+        public IEnumerable<Tuple<string, string>> FetchEventsForUpdate();
+
+        public List<string> FetchCompetitionsName(string sport);
 
     }
 }

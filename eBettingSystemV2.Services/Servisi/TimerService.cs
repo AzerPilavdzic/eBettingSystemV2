@@ -73,7 +73,7 @@ namespace eBettingSystemV2.Services.Servisi
         {
             Console.WriteLine(e.SignalTime);
             //_fetchService.InsertEvents();
-             _fetchData.FetchEventData();
+             _fetchData.FetchAllEvents2();
             //_fetchData.FetchEventKeys();
             //Console.Clear();
             aTimer.Start();
