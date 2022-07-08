@@ -24,7 +24,7 @@ namespace eBettingSystemV2.Services.DataBase
         public virtual DbSet<Logcompetition> Logcompetitions { get; set; }
         public virtual DbSet<LogcompetitionTest> LogcompetitionTests { get; set; }
         public virtual DbSet<Sport> Sports { get; set; }
-        public virtual DbSet<Team> Teams { get; set; }
+        public virtual DbSet<teams> Teams { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -181,7 +181,7 @@ namespace eBettingSystemV2.Services.DataBase
                     .HasColumnName("name");
             });
 
-            modelBuilder.Entity<Team>(entity =>
+            modelBuilder.Entity<teams>(entity =>
             {
                 entity.ToTable("teams", "BettingSystem");
 

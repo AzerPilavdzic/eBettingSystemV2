@@ -18,7 +18,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Interface
 
         Task<IEnumerable<T>> GetNPGSQLGeneric(TSearch search = null);
         Task<T> GetByIdAsync(int id);
-
+        bool CheckPage0(TSearch search = null);
+        bool CheckNegative(TSearch search = null);
 
 
 

@@ -154,7 +154,7 @@ namespace eBettingSystemV2.Services.Servisi
             else
             {
 
-                var nova = new Team { Teamname = name, Teamid = 0 };
+                var nova = new teams { Teamname = name, Teamid = 0 };
 
 
                 Context.Teams.Add(nova);
