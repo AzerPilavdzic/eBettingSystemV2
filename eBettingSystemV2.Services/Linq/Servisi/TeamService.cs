@@ -28,10 +28,10 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
         public override bool BeforeInsertBool(TeamUpsertRequest insert)
         {
-            var dalipostoji = Context.Countries.Find(insert.Countryid);
+            var dalipostoji = Context.Countries.Find(insert.countryid);
             if (dalipostoji == null)
             {
-                throw new Exception($"Country with the countryid {insert.Countryid} Does not exist in the Database");
+                throw new Exception($"Country with the countryid {insert.countryid} Does not exist in the Database");
 
             }
 
@@ -42,7 +42,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
 
 
-            var entity = Context.Teams.Where(x => x.Teamname.ToLower() == insert.TeamName.ToLower()).FirstOrDefault();
+            var entity = Context.Teams.Where(x => x.teamname.ToLower() == insert.teamname.ToLower()).FirstOrDefault();
             if (entity == null)
             {
                 return true;
@@ -52,7 +52,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
         public override Task<TeamModelLess> InsertAsync(TeamUpsertRequest insert)
         {
-            if (insert.Countryid <= 0)
+            if (insert.countryid <= 0)
             {
                 throw new Exception("Country ID ne moze biti nula.");
             }
@@ -64,7 +64,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
         // get by foreign key
         public override IQueryable<teams> ForeignKeyFilter(IQueryable<teams> query, int id)
         {
-            var Team = query.Where(X => X.Countryid == id);
+            var Team = query.Where(X => X.countryid == id);
 
             if (Team == null)
             {
@@ -111,10 +111,10 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
             var entry2 = new TeamUpsertRequest
             {
-                TeamName = checkatributestring(update.TeamName, entry.Teamname),
-                City = checkatributestring(update.City, entry.City),
-                Countryid = CheckatributeInt(update.Countryid, entry.Countryid),
-                Foundedyear = CheckatributeInt(update.Foundedyear.Value, entry.Foundedyear.Value),
+                teamname = checkatributestring(update.teamname, entry.teamname),
+                city = checkatributestring(update.teamname, entry.city),
+                countryid = CheckatributeInt(update.countryid, entry.countryid),
+                foundedyear = CheckatributeInt(update.foundedyear.Value, entry.foundedyear.Value),
 
             };
 
@@ -161,7 +161,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
             if (!string.IsNullOrWhiteSpace(search?.Naziv))
             {
-                filter = filterquery.Where(x => x.Teamname != null).Where(X => X.Teamname.ToLower().StartsWith(search.Naziv.ToLower()));
+                filter = filterquery.Where(x => x.teamname != null).Where(X => X.teamname.ToLower().StartsWith(search.Naziv.ToLower()));
             }
 
 
@@ -169,12 +169,12 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
             if (!string.IsNullOrWhiteSpace(search?.City))
             {
-                filter = filter.Where(x => x.City != null).Where(X => X.City.ToLower().StartsWith(search.City.ToLower()));
+                filter = filter.Where(x => x.city != null).Where(X => X.city.ToLower().StartsWith(search.City.ToLower()));
             }
 
             if (search.CountryId != 0)
             {
-                filter = filter.Where(X => X.Countryid == search.CountryId);
+                filter = filter.Where(X => X.countryid == search.CountryId);
 
             }
 

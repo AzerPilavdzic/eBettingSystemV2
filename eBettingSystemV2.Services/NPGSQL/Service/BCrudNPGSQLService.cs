@@ -335,7 +335,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             foreach (var a in list)
             {
-                if (a.PropertyType.Name != typeof(string).Name && a.PropertyType.Name != typeof(int).Name)
+                if (a.PropertyType.Name != typeof(string).Name &&
+                    a.PropertyType.Name != typeof(int).Name &&
+                    a.PropertyType.Name != typeof(int?).Name 
+                    )
                 {
 
                     continue;
@@ -382,7 +385,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             var ListaValues = new List<string>();
             foreach (var b in list)
             {
-                if (b.PropertyType.Name != typeof(string).Name && b.PropertyType.Name != typeof(int).Name)
+                if (b.PropertyType.Name != typeof(string).Name &&
+                    b.PropertyType.Name != typeof(int).Name &&
+                    b.PropertyType.Name != typeof(int?).Name)
                 {
 
                     continue;

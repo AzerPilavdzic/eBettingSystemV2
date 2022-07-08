@@ -183,31 +183,34 @@ namespace eBettingSystemV2.Services.DataBase
 
             modelBuilder.Entity<teams>(entity =>
             {
+                entity.HasKey(e => e.teamid)
+                    .HasName("teams_pk");
+
                 entity.ToTable("teams", "BettingSystem");
 
-                entity.Property(e => e.Teamid).HasColumnName("teamid");
+                entity.Property(e => e.teamid).HasColumnName("teamid");
 
-                entity.Property(e => e.City)
+                entity.Property(e => e.city)
                     .HasColumnType("character varying")
                     .HasColumnName("city");
 
-                entity.Property(e => e.Countryid).HasColumnName("countryid");
+                entity.Property(e => e.countryid).HasColumnName("countryid");
 
-                entity.Property(e => e.Foundedyear).HasColumnName("foundedyear");
+                entity.Property(e => e.foundedyear).HasColumnName("foundedyear");
 
-                entity.Property(e => e.Sportid).HasColumnName("sportid");
+                entity.Property(e => e.sportid).HasColumnName("sportid");
 
-                entity.Property(e => e.Teamname).HasColumnName("teamname");
+                entity.Property(e => e.teamname).HasColumnName("teamname");
 
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.Teams)
-                    .HasForeignKey(d => d.Countryid)
+                    .HasForeignKey(d => d.countryid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("teams_fk");
 
                 entity.HasOne(d => d.Sport)
                     .WithMany(p => p.Teams)
-                    .HasForeignKey(d => d.Sportid)
+                    .HasForeignKey(d => d.sportid)
                     .HasConstraintName("teams_sportid_sport_sportsid_fk");
             });
 

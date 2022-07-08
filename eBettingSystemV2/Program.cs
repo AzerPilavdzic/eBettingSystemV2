@@ -47,8 +47,7 @@ namespace eBettingSystemV2
             ITimer.SetTimer();
             fetchs.FetchAllEvents2();
 
-                    
-                                                                         
+                                                                                         
             host.Run();
 
 
