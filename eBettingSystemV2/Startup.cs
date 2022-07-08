@@ -100,6 +100,7 @@ namespace eBettingSystemV2
             //NPGSQL Servisi
             services.AddTransient<eBettingSystemV2.Services.NPGSQL.Interface.ICountryNPGSQL, eBettingSystemV2.Services.NPGSQL.Service.CountryNPGSQLService>();
             services.AddTransient<ITeamNPGSQL, TeamNPGSQLService>();
+            services.AddTransient<ISportsNPGSQL, SportsNPGSQLService>();
             
 
          

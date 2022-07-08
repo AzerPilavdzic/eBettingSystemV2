@@ -45,6 +45,7 @@ namespace eBettingSystemV2.Services.Servisi
 
         public async Task<EventModelLess> BeforeInsertBoolAsync(EventInsertRequest insert)
         {
+            //ne koristi se.
             var entity = await Context.Events.Where(x => x.EventName.ToLower() == insert.EventName.ToLower()).FirstOrDefaultAsync();
             if (entity == null)
             {
@@ -90,7 +91,7 @@ namespace eBettingSystemV2.Services.Servisi
         public override IEnumerable<Event> AddRange(IEnumerable<EventUpsertRequest> insertlist, DbSet<Event> set)
         {
             List<Event> Result = new List<Event>();
-            Event CheckEvent = null;
+            Event CheckEvent = new();
 
             foreach (var a in insertlist)
             {
@@ -115,7 +116,7 @@ namespace eBettingSystemV2.Services.Servisi
                 {
                     //update
                     CheckEvent = EventUpdate;
-
+                    CheckEvent.CompetitionId = a.CompetitionId;
                     CheckEvent.EventId = EventUpdate.EventId;
                     CheckEvent.EventName = a.EventName;
                     CheckEvent.EventStartTime = a.EventStartTime;
@@ -133,22 +134,15 @@ namespace eBettingSystemV2.Services.Servisi
                     CheckEvent.YellowCardsAwayTeam=a.YellowCardsAwayTeam;
                     CheckEvent.YellowCardsHomeTeam=a.YellowCardsHomeTeam;
 
-                    //CheckEvent = Mapper.Map<Event>(a);
-
-                    //SA ILI BEZ JEDNAKO?
-                    CheckEvent = Mapper.Map<Event>(CheckEvent);
-                    Context.SaveChanges();
+                    CheckEvent = Mapper.Map<Event>(a);
 
                     Result.Add(Mapper.Map<Event>(CheckEvent));
-
-
 
                 }
             }
 
 
             IEnumerable<Event> entity = Mapper.Map<IEnumerable<Event>>(Result);
-
             Context.SaveChanges();
 
             return entity;

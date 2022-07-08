@@ -10,7 +10,7 @@ namespace eBettingSystemV2.Model.SearchObjects
     public class EventInsertRequest
     {
         public string EventName { get; set; }
-        //public int ? CompetitionId { get; set; }
+        public int? CompetitionId { get; set; }
         public DateTime? EventStartTime { get; set; }
         public string EventStatus { get; set; }
 

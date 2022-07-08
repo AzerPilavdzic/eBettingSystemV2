@@ -26,28 +26,28 @@ using eBettingSystemV2.Services.NPGSQL.Interface;
 
 namespace eBettingSystemV2.Services.NPGSQL.Service
 {
-    public class CountryNPGSQLService :     
+    public class SportsNPGSQLService :     
         BCrudNPGSQLService
         <
-        CountryModel,
-        Country,
-        CountrySearchObject,
-        CountryInsertRequest,
-        CountryUpsertRequest,
-        CountryModelLess,
+        SportModel,
+        Sport,
+        SportSearchObject,
+        SportInsertRequest,
+        SportUpsertRequest,
+        SportModelLess,
         string
         >      
-        ,ICountryNPGSQL
+        ,ISportsNPGSQL
     {
-        public CountryNPGSQLService(IConfiguration Service1, IMapper Service3)
+        public SportsNPGSQLService(IConfiguration Service1, IMapper Service3)
         : base(Service1,Service3) {
 
-            PrimaryKey = $@"""CountryId""";           
-            var list = typeof(CountryModel).GetProperties();
+            PrimaryKey = $@"""SportId""";           
+            var list = typeof(SportModel).GetProperties();
 
             foreach (var a in list)
             {
-                if (a.Name != "CountryId")
+                if (a.Name != "SportId")
                 {
                     var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
                     ListaAtributa.Add(text);                               
@@ -57,23 +57,23 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         //Get Funkcije
-        public async Task<CountryModelLess> GetIdByNameAsync(string name)
+        public async Task<SportModelLess> GetIdByNameAsync(string name)
         {
 
             string Query = null;
-            string typeParameterType = typeof(Country).Name;
+            string typeParameterType = typeof(Sport).Name;
             Query += $@"select *  from ""BettingSystem"".""{typeParameterType}"" ";
             Query += $@"where {GetAtribute1()} = '{name}'; ";
 
             await using var conn = new NpgsqlConnection(connString);
             await conn.OpenAsync();
 
-            var quary = await conn.QueryAsync<CountryModelLess>(Query);
+            var quary = await conn.QueryAsync<SportModelLess>(Query);
             var entity = quary.FirstOrDefault();
 
             if(entity==null)
             {
-                return new CountryModelLess { CountryId = 0 };
+                return new SportModelLess { SportsId = 0 };
 
             }
 
@@ -86,33 +86,26 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         // Get Ekstenzije
-        public override string AddFilter(string query, CountrySearchObject search = null)
+        public override string AddFilter(string query, SportSearchObject search = null)
         {
                   
-            
-            
-
-            if (!string.IsNullOrWhiteSpace(search?.CountryName))
+            if (!string.IsNullOrWhiteSpace(search?.SportName))
             {
-                query += $@"where (lower(""CountryName"") LIKE lower('%{search.CountryName}%')) ";
+                query += $@"where (lower(""name"") LIKE lower('%{search.SportName}%')) ";
                           
             }
-            if (search.CountryId != null && string.IsNullOrWhiteSpace(search?.CountryName))
+            if (search.SportId != null && string.IsNullOrWhiteSpace(search?.SportName))
             {
-                query += $@"where {PrimaryKey} = {search.CountryId} ";
+                query += $@"where {PrimaryKey} = {search.SportId} ";
 
             }
 
-            if (search.CountryId != null && !string.IsNullOrWhiteSpace(search?.CountryName))
+            if (search.SportId != null && !string.IsNullOrWhiteSpace(search?.SportName))
             {
-                query += $@"or {PrimaryKey} = {search.CountryId} ";
+                query += $@"or {PrimaryKey} = {search.SportId} ";
 
             }
                    
-
-
-
-
 
             return query;
 
@@ -122,52 +115,47 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         //Insert extensions
 
         //query ekstenzije
-        public override string GetCoalesce(CountryUpsertRequest Update)
+        public override string GetCoalesce(SportUpsertRequest Update)
         {
             //ako je 0 to je null ,ako je string to je null
 
             return $@"
-               {PrimaryKey}=coalesce({Update.CountryId},""BettingSystem"".""Country"".{PrimaryKey}),
-               {GetAtribute1()}=coalesce('{Update.CountryName}',""BettingSystem"".""Country"".{GetAtribute1()})
+               {PrimaryKey}=coalesce({Update.SportsId},""BettingSystem"".""sport"".{PrimaryKey}),
+               {GetAtribute1()}=coalesce('{Update.name}',""BettingSystem"".""sport"".{GetAtribute1()})
                     ";       
            
 
         }      
         public override string GetAtribute1()
         {
-           
-            return $@"""CountryName""";
+            return $@"""name""";
         }            
-        public override string GetValue1(CountryInsertRequest insert)
+        public override string GetValue1(SportInsertRequest insert)
         {
-            return $@"'{insert.CountryName}'";
+            return $@"'{insert.name}'";
         }    
-        public override string GetValuesAll(CountryInsertRequest insert, int id)
+        public override string GetValuesAll(SportInsertRequest insert, int id)
         {
-            return $@"{id},'{insert.CountryName}'";
+            return $@"{id},'{insert.name}'";
         }
-        public override string GetValuesAll(CountryUpsertRequest insert)
+        public override string GetValuesAll(SportUpsertRequest insert)
         {
-            return $@"{insert.CountryId},'{insert.CountryName}'";
+            return $@"{insert.SportsId},'{insert.name}'";
         }
-        public override string GetValuesAllBesidesPrimary(CountryInsertRequest Insert)
+        public override string GetValuesAllBesidesPrimary(SportInsertRequest Insert)
         {
-            return $@"'{Insert.CountryName}'";
-        }
-        public override string ChoseAtribute()
-        {
-            return PrimaryKey;
+            return $@"'{Insert.name}'";
         }
 
 
         //insert esktenzije
-        public override bool BeforeInsertBool(CountryInsertRequest insert)
+        public override bool BeforeInsertBool(SportInsertRequest insert)
         {
             using var conn = new NpgsqlConnection(connString);
             conn.Open();
 
-            var List = conn.Query($@"Select * from ""BettingSystem"".""Country"" 
-             where (lower(""CountryName"") = lower('{insert.CountryName}'))");
+            var List = conn.Query($@"Select * from ""BettingSystem"".""Sport"" 
+             where (lower(""SportName"") = lower('{insert.name}'))");
             var entity = List.FirstOrDefault();
 
             if (entity != null)
@@ -185,9 +173,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         //Upsert Extenzije
-        public override bool checkIfNameSame(CountryInsertRequest insert, Country entry)
+        public override bool checkIfNameSame(SportInsertRequest insert, Sport entry)
         {
-            if (insert.CountryName == entry?.CountryName)
+            if (insert.name== entry?.Name)
             {
 
                 return true;
@@ -197,20 +185,20 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return false;
         }
 
-        public override List<CountryUpsertRequest> BeforeInsertFilterList(IEnumerable<CountryUpsertRequest> List)
+        public override List<SportUpsertRequest> BeforeInsertFilterList(IEnumerable<SportUpsertRequest> List)
         {
             using var conn = new NpgsqlConnection(connString);
             conn.OpenAsync();
             var Query = "";
-            List<CountryUpsertRequest> OutputList = new List<CountryUpsertRequest>();
+            List<SportUpsertRequest> OutputList = new List<SportUpsertRequest>();
 
             foreach (var item in List)
             {
                 //ako korisnik nije unjeo id               
-                Query = $@"Select * From ""BettingSystem"".""Country"" 
-                        Where {GetAtribute1()} ='{item.CountryName}'";
+                Query = $@"Select * From ""BettingSystem"".""Sport"" 
+                        Where {GetAtribute1()} ='{item.name}'";
 
-                var entity = conn.Query<CountryUpsertRequest>(Query).FirstOrDefault();
+                var entity = conn.Query<SportUpsertRequest>(Query).FirstOrDefault();
                 
                 if (entity != null)
                 {
@@ -231,47 +219,45 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         }
-        public override void BeforeInsertVoid(CountryInsertRequest insert)
+        public override void BeforeInsertVoid(SportInsertRequest insert)
         {
             using var conn = new NpgsqlConnection(connString);
             conn.Open();
 
-            var List = conn.Query($@"Select * from ""BettingSystem"".""Country"" 
-             where (lower(""CountryName"") = lower('{insert.CountryName}'))");
+            var List = conn.Query($@"Select * from ""BettingSystem"".""Sport"" 
+             where (lower(""SportName"") = lower('{insert.name}'))");
             var entity = List.FirstOrDefault();
 
             if (entity != null)
             {
-                throw new Exception("EXCEPTION: DRZAVA SA TIM IMENOM VEC POSTOJI.");
+                throw new Exception("EXCEPTION: SPORT SA TIM IMENOM VEC POSTOJI.");
             }
             conn.Close();
            
         }
-        public override void BeforeInsertVoid(CountryUpsertRequest Update)
+        public override void BeforeInsertVoid(SportUpsertRequest Update)
         {
             using var conn = new NpgsqlConnection(connString);
             conn.Open();
 
-            var List = conn.Query($@"Select * from ""BettingSystem"".""Country"" 
-             where (lower(""CountryName"") = lower('{Update.CountryName}'))");
+            var List = conn.Query($@"Select * from ""BettingSystem"".""Sport"" 
+             where (lower(""SportName"") = lower('{Update.name}'))");
             var entity = List.FirstOrDefault();
 
             if (entity != null)
             {
-                throw new Exception("EXCEPTION: DRZAVA SA TIM IMENOM VEC POSTOJI.");
+                throw new Exception("EXCEPTION: SPORT SA TIM IMENOM VEC POSTOJI.");
             }
             conn.Close();
         }
         public override void BeforeDelete(int id)
         {
 
-
-
             string Query = null;
             string Query2 = null;
             string TableName  = "teams";
             string TableName2 = "competition";
-            string foreignkey = "countryid";
+            string foreignkey = "SportId";
 
             Query  += $@"Select * from ""BettingSystem"".{TableName}";
             Query2 += $@"Select * from ""BettingSystem"".{TableName2}";
@@ -289,7 +275,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             if (entry != null)
             {
 
-                throw new Exception("Team got a relation with the Country you want to Delete");
+                throw new Exception("EXCEPTION SportsNPGSQLService line 281");
 
 
             }
@@ -297,7 +283,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             if (dalipostojicompetition != null)
             {
 
-                throw new Exception("the Country you want to delete got a relation with a entry from the table Competition");
+                throw new Exception("EXCEPTION SportsNPGSQLService line 289");
 
             }
         }
