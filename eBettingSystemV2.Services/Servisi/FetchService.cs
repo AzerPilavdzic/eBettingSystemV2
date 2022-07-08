@@ -404,7 +404,9 @@ namespace eBettingSystemV2.Services.Servisi
 
             HtmlWeb web = new HtmlWeb();
             HtmlDocument document = web.Load("https://m.rezultati.com/"); //LoadFromWebAsync
+
             var CompetitionNaziv = FetchCompetitionsname("nogomet");
+           
             
 
 
@@ -465,7 +467,7 @@ namespace eBettingSystemV2.Services.Servisi
                     if (!eventsListFetched[i].InnerText.ToString().Contains("-"))
                     {
                         
-                        FetchModel[y]._eventi.Add(new Podaci { EventName = eventsListFetched[i].InnerText + eventsListFetched[i + 1].InnerText });
+                        FetchModel[y]._eventi.Add(new Podaci { EventName = eventsListFetched[i].InnerText + eventsListFetched[i + 1].InnerText, });
                         i++;
                         continue;
                     }

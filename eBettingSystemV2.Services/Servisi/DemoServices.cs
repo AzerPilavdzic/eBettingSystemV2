@@ -4,6 +4,7 @@ using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.DataBase;
 using eBettingSystemV2.Services.Interface;
+using eBettingSystemV2.Services.Linq.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
