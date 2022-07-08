@@ -152,17 +152,32 @@ namespace eBettingSystemV2.Controllers
         [Route("InsertTeam")]
         public override async Task<ActionResult<TeamModel>> Insert(TeamUpsertRequest insert)
         {
-           
+
+            //try
+            //{
+            //    var result = await base.Insert(insert);
+            //    return result;
+            //}
+            //catch(Exception ex)
+            //{
+            //    _logger.LogInformation("CountryId can not be null");
+            //     return BadRequest(ex.Message);
+            //}
+
             try
             {
-                var result = await base.Insert(insert);
-                return result;
+                var result = await ITeamNPGSQL.InsertAsync(insert);
+                return Ok(result);
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogInformation("CountryId can not be null");
-                 return BadRequest(ex.Message);
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+                throw;
             }
+
+
         }
 
 

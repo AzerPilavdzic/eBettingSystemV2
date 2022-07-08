@@ -189,14 +189,14 @@ namespace eBettingSystemV2.Services
         // delete ekstenzije
         public override void BeforeDelete(int id)
         {
-            var daliposotji = Context.Teams.Where(X => X.Sportid == id).ToList();
+            var daliposotji = Context.Teams.Where(X => X.sportid == id).ToList();
             var daliposotjicompetition = Context.Competitions.Where(X => X.Sportid == id).ToList();
 
             if (daliposotji != null)
             {
                 foreach (var a in daliposotji)
                 {
-                    a.Sportid = null;
+                    a.sportid = null;
                 
                 }
                 Context.SaveChanges();
