@@ -118,20 +118,33 @@ namespace eBettingSystemV2.Controllers
         [Route("GetTeamByCountryId/{CountryId}")]
         public async Task<ActionResult<IEnumerable<TeamModel>>> GetTeamByCountryId(int CountryId)
         {
-
-            var result = await ITeamService.GetbyForeignKeyAsync(CountryId);
-
-            if (result.Count() == 0)
+            try
             {
+                var result = await ITeamNPGSQL.GetbyForeignKeyAsync(CountryId);
 
-                return BadRequest("Podaci ne postoje");
+                if (result.Count() == 0)
+                {
+
+                    return BadRequest("Podaci ne postoje");
+
+                }
+                else
+                {
+                    return Ok(result);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+
 
             }
-            else
-            {
-                return Ok(result);
-            
-            }
+
+
+
+
         }
 
 
