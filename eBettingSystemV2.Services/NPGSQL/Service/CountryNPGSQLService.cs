@@ -90,27 +90,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
                   
             
-            //foreach (var a in list)
-            //{
-            //    string name = a.Name;
-
-            //    var objectneki = a.GetCustomAttributes(true);
-
-            //    foreach (object attr in objectneki)
-            //    {
-            //        //AuthorAttribute authAttr = attr as AuthorAttribute;
-            //        string propName = a.Name;
-            //        string auth = attr.ToString();
-
-
-            //    }
             
-            //}
-
-
-
-            //search.Naziv = "Engleska";
-            //search.CountryId = 12;
 
             if (!string.IsNullOrWhiteSpace(search?.CountryName))
             {
@@ -297,7 +277,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             using var conn = new NpgsqlConnection(connString);
             conn.OpenAsync();
 
-            var entry = conn.QueryFirstOrDefault<Team>(Query);
+            var entry = conn.QueryFirstOrDefault<teams>(Query);
             var dalipostojicompetition = conn.QueryFirstOrDefault<Competition>(Query2);
 
             conn.Close();

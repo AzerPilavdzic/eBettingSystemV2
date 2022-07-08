@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace eBettingSystemV2.Services.DataBase
 {
-    public partial class Team
+    public partial class teams
     {
         public int Teamid { get; set; }
         public string Teamname { get; set; }

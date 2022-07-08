@@ -46,10 +46,10 @@ namespace eBettingSystemV2.Controllers
         [Route("GetAllCountries")]
         public override async Task<ActionResult<IEnumerable<CountryModel>>> Get([FromQuery] CountrySearchObject search = null)
         {
-            if (Service.CheckPage0(search))
+            if (CountryNPGSQL.CheckPage0(search))
                 return BadRequest("PageNumber ili PageSize ne smiju biti 0");
 
-            if (Service.CheckNegative(search))
+            if (CountryNPGSQL.CheckNegative(search))
                 return BadRequest("vrijednost ne moze biti negativna");
 
             //var broj = Service.Get(search).Result.Count();
@@ -66,6 +66,7 @@ namespace eBettingSystemV2.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
          
