@@ -19,8 +19,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
         public TeamNPGSQLService(IConfiguration Service1, IMapper Service3) : base(Service1, Service3)
         {
+            PrimaryKey = "teamid";
 
-          
         }
 
 

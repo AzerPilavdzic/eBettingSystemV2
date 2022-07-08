@@ -99,7 +99,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
             string Query = null;
             string typeParameterType = typeof(TDb).Name;
-            Query += $@"select *  from ""BettingSystem"".""{typeParameterType}"" ";
+
+            string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+
+            Query += $@"select *  from ""BettingSystem"".{TableName} ";
 
             Query += $@"where {PrimaryKey} = {id}; ";
 
