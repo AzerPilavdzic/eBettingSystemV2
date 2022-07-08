@@ -27,6 +27,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public IMapper Mapper { get; set; }// ne treba ovdje             
         public string connString { get; set;}
         public string PrimaryKey { get; set; } = "";
+        public string ForeignKey { get; set; } = "";
         public List<string> ListaAtributa { get; set; } = new List<string>();
         public BaseNPGSQLService(IConfiguration Service1 ,IMapper Service3 )
         {
@@ -124,6 +125,31 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             //return Mapper.Map<T>(entity);
 
         }
+        public async Task<IEnumerable<T>> GetbyForeignKeyAsync(int Id)
+        {
+            string Query = null;
+            string typeParameterType = typeof(TDb).Name;
+
+            string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+
+            Query += $@"select *  from ""BettingSystem"".{TableName} ";
+
+            Query += $@"where {ForeignKey} = {Id}; ";
+
+            await using var conn = new NpgsqlConnection(connString);
+            await conn.OpenAsync();
+
+            var quary = await conn.QueryAsync<T>(Query);
+
+            //var entity = quary.FirstOrDefault();
+
+            return quary;
+
+
+
+
+        }
+
         //Get Extenzije
         public virtual string AddFilter(string query,TSearch search = null)
         {
