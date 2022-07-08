@@ -45,10 +45,15 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
             try
             {
-
+               
                 string Query = null;
+
                 string typeParameterType = typeof(TDb).Name;
-                Query += $@"select *  from ""BettingSystem"".""{typeParameterType}"" ";
+
+                string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+
+
+                Query += $@"select *  from ""BettingSystem"".{TableName} ";
 
                 Query = AddFilter(Query, search);
 
@@ -122,10 +127,22 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return query;
         }
 
+        public virtual bool CheckPage0(TSearch search = null)
+        {
+            return search.Page == 0 || search.PageSize == 0;
+
+        }
+        public virtual bool CheckNegative(TSearch search = null)
+        {
+
+            return search.Page < 0 || search.PageSize < 0;
+
+        }
+
 
         //query ekstenzije
 
-        
+
 
 
 

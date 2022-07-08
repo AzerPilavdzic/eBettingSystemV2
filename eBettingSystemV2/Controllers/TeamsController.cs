@@ -3,6 +3,7 @@ using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
 using eBettingSystemV2.Services.DataBase;
 using eBettingSystemV2.Services.Linq.Interface;
+using eBettingSystemV2.Services.NPGSQL.Interface;
 //using eBettingSystemV2.Models;
 using eProdaja.Controllers;
 using Microsoft.AspNetCore.JsonPatch;
@@ -23,6 +24,8 @@ namespace eBettingSystemV2.Controllers
         public static List<Country> Test = new List<Country>();
         //private ITeamService ITeamService { get; set; }
         private ITeamService ITeamService { get; set; }
+        private ITeamNPGSQL ITeamNPGSQL { get; set; }
+
         private readonly ILogger<TeamsController> _logger;
 
 
@@ -32,10 +35,11 @@ namespace eBettingSystemV2.Controllers
         };
 
        
-        public TeamsController(ITeamService service, ILogger<TeamsController> logger) : base(service)
+        public TeamsController(ITeamService service,ITeamNPGSQL service2,ILogger<TeamsController> logger) : base(service)
         {
             ITeamService = service;
-            _logger = logger;
+            ITeamNPGSQL  = service2;
+           _logger = logger;
 
         }
 
@@ -54,10 +58,32 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetAllTeams")]
-        public override Task<ActionResult<IEnumerable<TeamModel>>> Get([FromQuery] TeamSearchObject search = null)
+        public override async Task<ActionResult<IEnumerable<TeamModel>>> Get([FromQuery] TeamSearchObject search = null)
         {
 
-            return base.Get(search);
+            if (ITeamNPGSQL.CheckPage0(search))
+                return BadRequest("PageNumber ili PageSize ne smiju biti 0");
+
+            if (ITeamNPGSQL.CheckNegative(search))
+                return BadRequest("vrijednost ne moze biti negativna");
+
+            //var broj = Service.Get(search).Result.Count();
+            try
+            {
+                var List = await ITeamNPGSQL.GetNPGSQLGeneric(search);
+
+                if (List.Count() == 0)
+                    //search.
+                    return NotFound("Podaci ne postoje u bazi");
+                else
+                    return Ok(List);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
+            //return base.Get(search);
         }
 
 

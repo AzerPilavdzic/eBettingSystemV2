@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace eBettingSystemV2.Services.Linq.Servisi
 {
     public class TeamService :
-        BaseCRUDService<TeamModel, Team, TeamSearchObject, TeamUpsertRequest, TeamUpsertRequest, TeamModelLess>,
+        BaseCRUDService<TeamModel, teams, TeamSearchObject, TeamUpsertRequest, TeamUpsertRequest, TeamModelLess>,
         ITeamService
     {
         public TeamService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
@@ -62,7 +62,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
 
         // get by foreign key
-        public override IQueryable<Team> ForeignKeyFilter(IQueryable<Team> query, int id)
+        public override IQueryable<teams> ForeignKeyFilter(IQueryable<teams> query, int id)
         {
             var Team = query.Where(X => X.Countryid == id);
 
@@ -106,7 +106,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
         }
 
-        public override TeamUpsertRequest Coalesce(TeamUpsertRequest update, Team entry)
+        public override TeamUpsertRequest Coalesce(TeamUpsertRequest update, teams entry)
         {
 
             var entry2 = new TeamUpsertRequest
@@ -153,11 +153,11 @@ namespace eBettingSystemV2.Services.Linq.Servisi
         }
 
 
-        public override IQueryable<Team> AddFilter(IQueryable<Team> query, TeamSearchObject search = null)
+        public override IQueryable<teams> AddFilter(IQueryable<teams> query, TeamSearchObject search = null)
         {
 
             var filterquery = base.AddFilter(query, search);
-            IQueryable<Team> filter = filterquery;
+            IQueryable<teams> filter = filterquery;
 
             if (!string.IsNullOrWhiteSpace(search?.Naziv))
             {
