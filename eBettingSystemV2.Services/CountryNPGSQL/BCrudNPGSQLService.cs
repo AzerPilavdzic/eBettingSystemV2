@@ -33,6 +33,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         {
             //provjere
 
+           
             BeforeInsertVoid(insert);
 
             //if (!BeforeInsertBool(insert))
@@ -43,19 +44,14 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
             string Query = null;
             string typeParameterType = typeof(TDb).Name;
-            Query += $@"insert into ""BettingSystem"".""{typeParameterType}""";
-           
-            var Atributes = GetAtribute1();
+            var Atributes = GetAllAtributesFromModel(insert.GetType());
+            var values = GetAllValuesFromModel(typeof(TInsert), insert);
+            var ReturnAtributes = GetAllAtributesFromModel(typeof(TDb));
 
-            Query +=$@"({Atributes})";
-
-            var values = GetValue1(insert);
-
-            Query += $@" values({values})";
-
-            var allatributes = GetAllAtributes();
-
-            Query += $@" returning {allatributes}";
+            Query += $@"insert into ""BettingSystem"".""{typeParameterType}""";                     
+            Query += $@"({Atributes})";          
+            Query += $@" values({values})";            
+            Query += $@" returning {ReturnAtributes}";
 
 
             await using var conn = new NpgsqlConnection(connString);
@@ -74,7 +70,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         public virtual async Task<IEnumerable<T>> UpsertOneOrMoreAsync(IEnumerable<TUpdate> List)
         {
             //for tomorrow;
-
+            var stringtext = GetAllValuesFromModel(typeof(TUpdate),List.FirstOrDefault());
 
             var list = BeforeInsertFilterList(List); //ako ime vec postoji u bazi izbaci iz liste
 
@@ -90,7 +86,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
                 AddQuery += $@"insert into ""BettingSystem"".""{typeParameterType}"""; //dodatak za ako korisnik ne unose id
 
 
-                var Atributes = GetAllAtributes();
+                var Atributes = GetAllAtributesFromModel(typeof(TUpdate));
                 Query += $@"({Atributes})";
 
                 Query += "Values";
@@ -110,7 +106,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
                 Query += $@"ON CONFLICT ({PrimaryKey}) DO ";
                 Query += $@"UPDATE SET {GetAtribute1()} = EXCLUDED.{GetAtribute1()}";
 
-                var allatributes = GetAllAtributes();
+                var allatributes = GetAllAtributesFromModel(typeof(TDb));
 
                 Query += $@" returning {allatributes}";
 
@@ -129,13 +125,12 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
 
         }
-
         public virtual async Task<IEnumerable<T>> InsertOneOrMoreAsync(IEnumerable<TInsert>List)
         {
             string Query = null;
             string typeParameterType = typeof(TDb).Name;
             var list = List.ToList();
-            var Atributes = GetAllAtributesBesidesPrimary(List.FirstOrDefault().GetType());
+            var Atributes = GetAllAtributesFromModel(typeof(TInsert));
 
 
             Query += $@"insert into ""BettingSystem"".""{typeParameterType}""";
@@ -155,7 +150,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
             }         
             Query += $@" On Conflict ({GetAtribute1()}) DO NOTHING";
-            Query += $@" Returning {GetAllAtributes()}";
+            Query += $@" Returning {GetAllAtributesFromModel(typeof(TDb))}";
 
             await using var conn = new NpgsqlConnection(connString);
             await conn.OpenAsync();
@@ -184,20 +179,20 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
             if (Id!=0)
             {
-                Query = $@"INSERT INTO ""BettingSystem"".""{typeParameterType}"" ({GetAllAtributes()})
+                Query = $@"INSERT INTO ""BettingSystem"".""{typeParameterType}"" ({GetAllAtributesFromModel(typeof(TDb))})
                                 VALUES({GetValuesAll(Insert, Id)}) 
                                 ON CONFLICT({PrimaryKey}) 
                                 DO 
                                 UPDATE SET {GetAtribute1()} = {GetValue1(Insert)}
-                                returning {GetAllAtributes()}";
+                                returning {GetAllAtributesFromModel(typeof(TDb))}";
 
             }
 
             if (Id==0)
             {
-                Query = $@"INSERT INTO ""BettingSystem"".""{typeParameterType}"" ({GetAtribute1()})
+                Query = $@"INSERT INTO ""BettingSystem"".""{typeParameterType}"" ({GetAllAtributesFromModel(typeof(TInsert))})
                                 VALUES({GetValue1(Insert)})                              
-                                returning {GetAllAtributes()}";
+                                returning {GetAllAtributesFromModel(typeof(TDb))}";
 
             }
         
@@ -208,6 +203,9 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
             var quary = await conn.QueryAsync<Tless>(Query);
 
             var entity = quary.FirstOrDefault();
+
+            conn.Close();
+
    
             return entity;
             }
@@ -234,7 +232,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
                            {GetCoalesce(update)}
                            WHERE 
                            {PrimaryKey}={id}
-                           returning {GetAllAtributes()}";
+                           returning {GetAllAtributesFromModel(typeof(TDb))}";
                     
                 await using var conn = new NpgsqlConnection(connString);
 
@@ -263,7 +261,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
 
             Query += $@"DELETE FROM ""BettingSystem"".""{typeParameterType}""";
             Query += $@"Where {PrimaryKey} = {id} ";
-            Query += $@"Returning {GetAllAtributes()}";
+            Query += $@"Returning {GetAllAtributesFromModel(typeof(TDb))}";
 
 
 
@@ -306,15 +304,7 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         {
             return "";
         }
-        public virtual int GetkeyValue(TUpdate Update)
-        {
-            return 0;
-        }
         public virtual string GetValue1(TInsert insert)
-        {
-            return "";
-        }
-        public virtual string GetValue1(TUpdate Update)
         {
             return "";
         }
@@ -333,27 +323,102 @@ namespace eBettingSystemV2.Services.CountryNPGSQL
         public virtual string GetAtribute1()
         {
             return "";
-        }
-        public virtual string GetAllAtributesBesidesPrimary(Type Tip)
+        }      
+        public string GetAllAtributesFromModel(Type Tip)
         {
-            return "";
-        }
-        public virtual string GetAllAtributes()
-        {
-            return "";
-        }
-        public virtual string GetAllAtributes(TInsert insert)
-        {
+            ListaAtributa.Clear();
 
-            return "";
-        
+            var list = Tip.GetProperties();
+
+            foreach (var a in list)
+            {
+                if (a.PropertyType.Name != typeof(string).Name && a.PropertyType.Name != typeof(int).Name)
+                {
+
+                    continue;
+                
+                }
+
+
+                var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
+                ListaAtributa.Add(text);
+
+            }
+
+            var returnstring = "";
+
+
+
+            for (int i = 0; i < ListaAtributa.Count(); i++)
+            {
+
+                returnstring += ListaAtributa[i];
+
+                if ((i + 1) != ListaAtributa.Count())
+                {
+                    returnstring += ",";
+
+
+                }
+
+            }
+
+            ListaAtributa.Clear();
+
+            return returnstring;
+
+
+        }
+        public string GetAllValuesFromModel(Type Tip, object objekt)
+        {
+            ListaAtributa.Clear();
+
+            var list = Tip.GetProperties();
+
+           
+            var ListaValues = new List<string>();
+            foreach (var b in list)
+            {
+                if (b.PropertyType.Name != typeof(string).Name && b.PropertyType.Name != typeof(int).Name)
+                {
+
+                    continue;
+
+                }
+                var nameOfProperty = b.Name;
+                var propertyInfo = objekt.GetType().GetProperty(nameOfProperty);
+                var value = propertyInfo.GetValue(objekt, null);
+                ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
+
+            }
+
+            var returnstring = "";
+
+            for (int i = 0; i < ListaValues.Count(); i++)
+            {
+
+                returnstring += ListaValues[i];
+
+                if ((i + 1) != ListaValues.Count())
+                {
+                    returnstring += ",";
+
+
+                }
+
+            }
+
+            ListaAtributa.Clear();
+
+            return returnstring;
+
+
+
         }
 
-        
 
 
         //before Extenzije
-
         public virtual List<TUpdate> BeforeInsertFilterList(IEnumerable<TUpdate> List)
         {
 

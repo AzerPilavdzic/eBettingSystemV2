@@ -41,11 +41,11 @@ namespace eBettingSystemV2
             var services = scope.ServiceProvider;               
             var ITimer = services.GetRequiredService<ITimer>();
             var CleanSql = services.GetRequiredService<eBettingSystemV2.Services.CountryNPGSQL.ICountryNPGSQL>();
+            var fetchs = services.GetRequiredService<IFetch>();
 
             var list=CleanSql.GetNPGSQLGeneric(new CountrySearchObject(){ }).Result;
-
             ITimer.SetTimer();
-               
+            fetchs.FetchAllEvents2();
 
                     
                                                                          
