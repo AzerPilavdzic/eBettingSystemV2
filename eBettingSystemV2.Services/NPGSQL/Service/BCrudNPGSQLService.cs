@@ -236,10 +236,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 string Query = null;
 
                 string typeParameterType = typeof(TDb).Name;
-             
-                Query = $@"UPDATE ""BettingSystem"".""{typeParameterType}""
+
+                string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+
+                Query = $@"UPDATE ""BettingSystem"".""{TableName}""
                            SET
-                           {GetCoalesce(update)}
+                           {GetCoalesce2(typeof(TUpdate),update,TableName)}
                            WHERE 
                            {PrimaryKey}={id}
                            returning {GetAllAtributesFromModel(typeof(TDb))}";
@@ -499,7 +501,77 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
         }
 
-        
+        public virtual string GetCoalesce2(Type Tip, object objekt,string TableName)
+        {
+            List<string> ListaAtributa = new List<string>();
+            List<string> ListaValues = new List<string>();
+
+            var list = Tip.GetProperties();
+
+            foreach (var b in list)
+            {
+                if (b.PropertyType.Name != typeof(string).Name &&
+                    b.PropertyType.Name != typeof(int).Name &&
+                    b.PropertyType.Name != typeof(int?).Name)
+                {
+
+                    continue;
+
+                }
+
+                var nameOfProperty = b.Name;
+
+                var nameOfProperty2 = nameOfProperty.Any(char.IsUpper) ? $@"""{nameOfProperty}""" : nameOfProperty;
+
+                if (nameOfProperty == PrimaryKey)
+                {
+                    continue;
+
+                }
+
+                ListaAtributa.Add(nameOfProperty2);
+
+                var propertyInfo = objekt.GetType().GetProperty(nameOfProperty);
+
+                var value = propertyInfo.GetValue(objekt, null);
+
+                if (value == null || value.ToString()=="0")
+                {
+
+                    ListaValues.Add("null");
+                }
+                else
+                {
+                    ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
+                }
+
+            }
+
+            string query = "";
+
+
+            //drugi dio 
+            for (int i = 0; i < ListaAtributa.Count; i++)
+            {
+
+                query += $@"{ListaAtributa[i]} = coalesce({ListaValues[i]},""BettingSystem"".{TableName}.{ListaAtributa[i]})";
+
+                if ((i + 1) != ListaAtributa.Count())
+                {
+
+                    query += ",";
+
+                }
+
+
+            }
+
+            return query;
+
+           
+        }
+
+
 
 
 

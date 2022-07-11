@@ -95,6 +95,7 @@ namespace eBettingSystemV2
             services.AddTransient<ITimer,TimerService>();
             services.AddTransient<ILogCompetition, LogCompetitionService>();
             services.AddTransient<IFetchCacheInsert, FetchCacheInsertService>();
+           
             
 
             //NPGSQL Servisi
