@@ -103,7 +103,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateEvent/{id}")]
-        public override Task<ActionResult<EventModel>> Update(int id, [FromBody] EventUpsertRequest update)
+        public override Task<ActionResult<EventModel>> Update(int id, [FromBody] EventInsertRequest update)
         {
             return base.Update(id, update);
         }

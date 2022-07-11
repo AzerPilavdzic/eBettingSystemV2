@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace eBettingSystemV2.Services.Linq.Servisi
 {
     public class TeamService :
-        BaseCRUDService<TeamModel, teams, TeamSearchObject, TeamUpsertRequest, TeamUpsertRequest, TeamModelLess>,
+        BaseCRUDService<TeamModel, teams, TeamSearchObject, TeamInsertRequest, TeamUpsertRequest, TeamModelLess>,
         ITeamService
     {
         public TeamService(eBettingSystemV2.Services.DataBase.praksa_dbContext context_, IMapper mapper_) : base(context_, mapper_)
@@ -26,7 +26,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
         }
 
-        public override bool BeforeInsertBool(TeamUpsertRequest insert)
+        public override bool BeforeInsertBool(TeamInsertRequest insert)
         {
             var dalipostoji = Context.Countries.Find(insert.countryid);
             if (dalipostoji == null)
@@ -50,12 +50,12 @@ namespace eBettingSystemV2.Services.Linq.Servisi
             throw new Exception("EXCEPTION: IME TIMA VEC POSTOJI.");
         }
 
-        public override Task<TeamModelLess> InsertAsync(TeamUpsertRequest insert)
+        public override Task<TeamModelLess> InsertAsync(TeamInsertRequest insert)
         {
-            if (insert.countryid <= 0)
-            {
-                throw new Exception("Country ID ne moze biti nula.");
-            }
+            //if (insert.countryid <= 0)
+            //{
+            //    throw new Exception("Country ID ne moze biti nula.");
+            //}
 
             return base.InsertAsync(insert);
         }
@@ -106,7 +106,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
         }
 
-        public override TeamUpsertRequest Coalesce(TeamUpsertRequest update, teams entry)
+        public override TeamUpsertRequest Coalesce(int Id,TeamInsertRequest update, teams entry)
         {
 
             var entry2 = new TeamUpsertRequest
@@ -186,5 +186,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
 
 
+
+        
     }
 }

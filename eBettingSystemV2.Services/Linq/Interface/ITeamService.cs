@@ -12,7 +12,7 @@ namespace eBettingSystemV2.Services.Linq.Interface
     public interface ITeamService :
         ICRUDService<TeamModel,
             TeamSearchObject,
-            TeamUpsertRequest,
+            TeamInsertRequest,
             TeamUpsertRequest,
             TeamModelLess>
     {

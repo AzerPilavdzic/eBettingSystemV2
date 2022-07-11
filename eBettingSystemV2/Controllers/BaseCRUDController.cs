@@ -18,9 +18,12 @@ namespace eProdaja.Controllers
         where TUpdate : class
         where Tless : class
     {
+        private ITeamService service;
 
         public BaseCRUDController(ICRUDService<T, TSearch, TInsert, TUpdate, Tless> service) : base(service)
         { }
+
+      
 
 
 
@@ -60,7 +63,7 @@ namespace eProdaja.Controllers
         //[Route("BASE2")]
         public virtual async Task<ActionResult<IEnumerable<T>>> UpsertOneOrMore(IEnumerable<TUpdate> insertlist)
         {
-            var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).InsertOneOrMoreAsync(insertlist);
+            var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).UpsertOneOrMoreAsync(insertlist);
 
 
 
@@ -107,7 +110,7 @@ namespace eProdaja.Controllers
 
 
         [HttpPut("{id}")]
-        public virtual async Task<ActionResult<T>> Update(int id, [FromBody] TUpdate update)
+        public virtual async Task<ActionResult<T>> Update(int id, [FromBody] TInsert update)
         {
             var result = await ((ICRUDService<T, TSearch, TInsert, TUpdate, Tless>)this.Service).UpdateAsync(id, update);
             return Ok(result);
@@ -115,6 +118,7 @@ namespace eProdaja.Controllers
 
         [HttpPost("{Id}")]
         //[Route("BASE1")]
+        //treba ovdje insert request
         public virtual async Task<ActionResult<Tless>> InsertById(int Id, TInsert Insert)
         {
 

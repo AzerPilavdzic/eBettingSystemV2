@@ -144,6 +144,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("UpsertCountries")]
+        //treba ovdje insert request
         public async override Task<ActionResult<CountryModelLess>> InsertById(int Id, CountryInsertRequest Insert)
         {
             try
@@ -159,7 +160,6 @@ namespace eBettingSystemV2.Controllers
             }
             
         }
-
 
         [HttpPost]
         [Route("UpsertOneOrMoreCountries")]
@@ -202,7 +202,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateCountry/{id}")]
-        public override async Task<ActionResult<CountryModel>> Update(int id, [FromBody] CountryUpsertRequest update)
+        public override async Task<ActionResult<CountryModel>> Update(int id, [FromBody] CountryInsertRequest update)
         {
             var result = await CountryNPGSQL.UpdateAsync(id, update);
             return Ok(result);

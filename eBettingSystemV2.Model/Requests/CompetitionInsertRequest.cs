@@ -9,7 +9,7 @@ namespace eBettingSystemV2.Model.SearchObjects
 {
     public class CompetitionInsertRequest
     {
-       public string Naziv { get; set; }
+        public string Naziv { get; set; }
         public int Sportid { get; set; }
         public int Countryid { get; set; }
     }

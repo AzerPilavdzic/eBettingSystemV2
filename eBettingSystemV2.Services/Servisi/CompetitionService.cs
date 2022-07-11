@@ -128,7 +128,7 @@ namespace eBettingSystemV2.Services.Servisi
 
             var sportoviq = Mapper.Map<IQueryable<CompetitionUpsertRequest>>(competitions);
 
-            await InsertOneOrMoreAsync(sportoviq);
+            await UpsertOneOrMoreAsync(sportoviq);
             
             //45 
             //naci ce competition sa id 45 
@@ -489,7 +489,7 @@ namespace eBettingSystemV2.Services.Servisi
                 var list = Mapper.Map<IEnumerable<CompetitionUpsertRequest>>(competitions);
 
                 //pokrecemo pohranu podataka
-                var result = await InsertOneOrMoreAsync(list);
+                var result = await UpsertOneOrMoreAsync(list);
 
 
                 //competitions = Mapper.Map<List<Competition>>(result);

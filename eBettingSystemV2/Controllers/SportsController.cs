@@ -145,7 +145,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateSport/{id}")]
-        public override Task<ActionResult<SportModel>> Update(int id, [FromBody] SportUpsertRequest update)
+        public override Task<ActionResult<SportModel>> Update(int id, [FromBody] SportInsertRequest update)
 
         {
             return base.Update(id, update);

@@ -18,5 +18,7 @@ namespace eBettingSystemV2.Model.SearchObjects
         public int countryid { get; set; }
 
         public int? foundedyear { get; set; }
+
+        public int? sportid { get; set; }
     }
 }

@@ -140,18 +140,23 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public virtual async Task<IEnumerable<T>> InsertOneOrMoreAsync(IEnumerable<TInsert>List)
         {
             string Query = null;
+
             string typeParameterType = typeof(TDb).Name;
+
+            string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+
+
             var list = List.ToList();
             var Atributes = GetAllAtributesFromModel(typeof(TInsert));
 
 
-            Query += $@"insert into ""BettingSystem"".""{typeParameterType}""";
+            Query += $@"insert into ""BettingSystem"".""{TableName}""";
             Query += $@"({Atributes})";
             Query += " Values";
             for (int i = 0; i < list.Count(); i++)
             {
                 Query += "(";
-                Query += GetValuesAllBesidesPrimary(list[i]);
+                Query += GetAllValuesFromModel(typeof(TInsert),list[i]);
                 Query += ")";
 
                 if ((i + 1) != list.Count())
@@ -161,7 +166,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 }
 
             }         
-            Query += $@" On Conflict ({GetAtribute1()}) DO NOTHING";
+            Query += $@" On Conflict ({Conflict}) DO NOTHING";
             Query += $@" Returning {GetAllAtributesFromModel(typeof(TDb))}";
 
             await using var conn = new NpgsqlConnection(connString);
@@ -228,13 +233,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             }
             catch (Exception ex)
             {
-                throw new Exception("Drzava sa tim imenom vec postoji");
+                throw new Exception(ex.ToString());
             }
 
         }
-
         //Update Metode
-        public virtual async Task<T> UpdateAsync(int id, TUpdate update)
+        public virtual async Task<T> UpdateAsync(int id, TInsert update)
         {
             try
             {
@@ -268,7 +272,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 throw new Exception("Drzava sa tim imenom vec postoji");
             }
         }
-
         //Delete metode
         public virtual async Task<int> DeleteAsync(int id)
         {
@@ -299,16 +302,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return id;
             
         }
-
-
-
         //Update Upsert extenzije
         public virtual TUpdate Coalesce(TUpdate update, TDb entry)
         {
             return update;
 
         }
-
         //Upsert extenzije
         public virtual bool checkIfNameSame(TInsert insert, TDb entry)
         {
@@ -316,8 +315,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return false;
 
         }
-
-
         //quary extenzije
         public virtual string GetCoalesce(TUpdate Update)
         {
@@ -492,8 +489,16 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 var value = propertyInfo.GetValue(objekt, null);
 
-                ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
+                if (value == null || value.ToString() == "0")
+                {
 
+                    ListaValues.Add("null");
+                }
+                else
+                {
+
+                    ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
+                }
             }
 
             string query = " Update Set ";
