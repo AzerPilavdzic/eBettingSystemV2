@@ -28,7 +28,7 @@ namespace eBettingSystemV2.Services.Servisi
 
         public static List<string> EventKeysList = new List<string>();
 
-        List<string> ListEventStatus = new List<string>() {
+       public readonly List<string> ListEventStatus = new List<string>() {
             "Not started","Live","Cancelled", "Ended"
             };
 

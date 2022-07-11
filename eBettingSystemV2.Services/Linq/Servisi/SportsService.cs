@@ -19,7 +19,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
        BaseCRUDService
        <
        SportModel,
-       Sport,
+       sport,
        SportSearchObject,
        SportInsertRequest,
        SportUpsertRequest,
@@ -54,7 +54,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
         {
 
             var _model = await Context.Sports
-                .Where(x => x.Name.ToLower() == name.ToLower())
+                .Where(x => x.name.ToLower() == name.ToLower())
                 .FirstOrDefaultAsync();
             
             if (_model == null)
@@ -73,18 +73,18 @@ namespace eBettingSystemV2.Services.Linq.Servisi
         }
 
         //Get esktenzije
-        public override IQueryable<Sport> AddFilter(IQueryable<Sport> query, SportSearchObject search = null)
+        public override IQueryable<sport> AddFilter(IQueryable<sport> query, SportSearchObject search = null)
         {
             var filterquery = base.AddFilter(query, search);
 
             if (!string.IsNullOrWhiteSpace(search?.SportName))
             {
-                filterquery = filterquery.Where(x => x.Name != null)
-                    .Where(X => X.Name.ToLower()
+                filterquery = filterquery.Where(x => x.name != null)
+                    .Where(X => X.name.ToLower()
                     .StartsWith(search.SportName.ToLower()));
             }
 
-            if (search.SportId != null)
+            if (search.SportId!= null)
             {
                 filterquery = filterquery.Where(X => X.SportsId == search.SportId);
 
@@ -98,11 +98,11 @@ namespace eBettingSystemV2.Services.Linq.Servisi
         }
 
         // Upsert insert ekstenzije
-        public override IEnumerable<Sport> AddRange(IEnumerable<SportUpsertRequest> insertlist, DbSet<Sport> set)
+        public override IEnumerable<sport> AddRange(IEnumerable<SportUpsertRequest> insertlist, DbSet<sport> set)
         {
 
-            List<Sport> Result = new List<Sport>();
-            Sport aa = null;
+            List<sport> Result = new List<sport>();
+            sport aa = null;
 
 
             foreach (var a in insertlist)
@@ -110,7 +110,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                 if (a.SportsId == 0)
                 {
 
-                    aa = Mapper.Map<Sport>(a);
+                    aa = Mapper.Map<sport>(a);
                     //dodaj u bazu
                     set.Add(aa);
                     //dodaj u result
@@ -126,9 +126,9 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                 if (entry != null)
                 {
 
-                    entry.Name = a.name;
+                    entry.name = a.name;
 
-                    Result.Add(Mapper.Map<Sport>(entry));
+                    Result.Add(Mapper.Map<sport>(entry));
 
                 }
                 else
@@ -140,13 +140,13 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                     
                     }
 
-                    aa = Mapper.Map<Sport>(a);
+                    aa = Mapper.Map<sport>(a);
                   
                     set.Add(aa);
                     Context.SaveChanges();
 
 
-                    Result.Add(Mapper.Map<Sport>(aa));
+                    Result.Add(Mapper.Map<sport>(aa));
 
                 }
 
@@ -157,7 +157,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
             }
 
 
-            IEnumerable<Sport> entity = Mapper.Map<IEnumerable<Sport>>(Result);
+            IEnumerable<sport> entity = Mapper.Map<IEnumerable<sport>>(Result);
             //set.AddRange(entity);
 
             return entity;
@@ -165,9 +165,9 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
 
         }      
-        public override bool checkIfNameSame(SportInsertRequest insert, Sport entry)
+        public override bool checkIfNameSame(SportInsertRequest insert, sport entry)
         {
-            if (insert.name == entry?.Name)
+            if (insert.name == entry?.name)
             {
 
                 return true;
@@ -179,7 +179,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
            
         public override bool BeforeInsertBool(SportInsertRequest insert)
         {
-            var entity = Context.Sports.Where(x => x.Name.ToLower() == insert.name.ToLower()).FirstOrDefault();
+            var entity = Context.Sports.Where(x => x.name.ToLower() == insert.name.ToLower()).FirstOrDefault();
             if (entity == null)
             {
                 return true;
