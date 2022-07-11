@@ -533,6 +533,7 @@ namespace eBettingSystemV2.Services.Servisi
                 //var sportoviq = Mapper.Map<List<CompetitionUpsertRequest>>(competitions);
 
             }
+            
             catch(Exception ex) 
             {
 
