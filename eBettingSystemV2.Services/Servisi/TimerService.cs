@@ -33,24 +33,7 @@ namespace eBettingSystemV2.Services.Servisi
         public int i = 0;
 
 
-
-        //public ICompetitionService ICompetitionService { get; set;}
-        public IFetchCacheInsert   IFetchCacheService { get; set; }
-
-        public TimerService(IFetchCacheInsert service)
-        {
-
-            IFetchCacheService = service;     
-        }
-
-
-
-        //TimerService()
-        //{
-        //    aTimer = new System.Timers.Timer();
-        //}
-       
-
+         
         public TimerService(IEventService eventService, IFetchCacheInsert fetchService, IFetch fetchData)
         {
             _eventService = eventService;
@@ -61,8 +44,8 @@ namespace eBettingSystemV2.Services.Servisi
         public void SetTimer()
         {
             aTimer = new System.Timers.Timer(10000);
-            aTimer.Elapsed += OnTimedEventDay;
-            aTimer = new System.Timers.Timer(10000);
+            //aTimer.Elapsed += OnTimedEventDay;
+            //aTimer = new System.Timers.Timer(10000);
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = false;
             //AKO HOCSE DA DODAJE, MORA ENABLE BIT TRUE.
@@ -92,7 +75,7 @@ namespace eBettingSystemV2.Services.Servisi
             if (DateTimeFromConfig.Date < DateTime.Now.Date)
             {
 
-                _fetchService.FetchStoreCacheCompetition();
+                _fetchService.FetchStoreCacheCompetition().Wait();
 
                 config.AppSettings.Settings["DateKey"].Value = DateTimeFromConfig.AddDays(1).ToString();
 

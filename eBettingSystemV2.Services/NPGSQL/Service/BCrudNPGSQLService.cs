@@ -47,11 +47,13 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             string Query = null;
             string typeParameterType = typeof(TDb).Name;
+
+            string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
             var Atributes = GetAllAtributesFromModel(insert.GetType());
             var values = GetAllValuesFromModel(typeof(TInsert), insert);
             var ReturnAtributes = GetAllAtributesFromModel(typeof(TDb));
 
-            Query += $@"insert into ""BettingSystem"".""{typeParameterType}""";                     
+            Query += $@"insert into ""BettingSystem"".""{TableName}""";                     
             Query += $@"({Atributes})";          
             Query += $@" values({values})";            
             Query += $@" returning {ReturnAtributes}";
@@ -170,6 +172,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         }
         public virtual async Task<Tless> UpsertbyIdAsync(TInsert Insert, int Id)
         {
+            //UPDATE SET { GetAtribute1()} = { GetValue1(Insert)}
+
+
             try
             {
 
@@ -180,20 +185,22 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             string typeParameterType = typeof(TDb).Name;
 
+            string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+
             if (Id!=0)
             {
-                Query = $@"INSERT INTO ""BettingSystem"".""{typeParameterType}"" ({GetAllAtributesFromModel(typeof(TDb))})
-                                VALUES({GetValuesAll(Insert, Id)}) 
+                Query = $@"INSERT INTO ""BettingSystem"".{TableName} ({PrimaryKey},{GetAllAtributesFromModel(typeof(TInsert))})
+                                VALUES({Id},{GetAllValuesFromModel(typeof(TInsert),Insert)}) 
                                 ON CONFLICT({PrimaryKey}) 
                                 DO 
-                                UPDATE SET {GetAtribute1()} = {GetValue1(Insert)}
+                                {UpdateSet(typeof(TInsert),Insert)}
                                 returning {GetAllAtributesFromModel(typeof(TDb))}";
 
             }
 
             if (Id==0)
             {
-                Query = $@"INSERT INTO ""BettingSystem"".""{typeParameterType}"" ({GetAllAtributesFromModel(typeof(TInsert))})
+                Query = $@"INSERT INTO ""BettingSystem"".""{TableName}"" ({GetAllAtributesFromModel(typeof(TInsert))})
                                 VALUES({GetValue1(Insert)})                              
                                 returning {GetAllAtributesFromModel(typeof(TDb))}";
 
@@ -229,10 +236,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 string Query = null;
 
                 string typeParameterType = typeof(TDb).Name;
-             
-                Query = $@"UPDATE ""BettingSystem"".""{typeParameterType}""
+
+                string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+
+                Query = $@"UPDATE ""BettingSystem"".""{TableName}""
                            SET
-                           {GetCoalesce(update)}
+                           {GetCoalesce2(typeof(TUpdate),update,TableName)}
                            WHERE 
                            {PrimaryKey}={id}
                            returning {GetAllAtributesFromModel(typeof(TDb))}";
@@ -326,7 +335,11 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public virtual string GetAtribute1()
         {
             return "";
-        }      
+        }
+        public virtual string ChoseAtribute()
+        {
+            return "";
+        }
         public string GetAllAtributesFromModel(Type Tip)
         {
             ListaAtributa.Clear();
@@ -423,6 +436,142 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         }
+
+        public string UpdateSet(Type Tip, object objekt)
+        {
+            List<string> ListaAtributa = new List<string>();
+            List<string> ListaValues = new List<string>();
+            var list = Tip.GetProperties();
+
+            foreach (var b in list)
+            {
+                if (b.PropertyType.Name != typeof(string).Name &&
+                    b.PropertyType.Name != typeof(int).Name &&
+                    b.PropertyType.Name != typeof(int?).Name)
+                {
+
+                    continue;
+
+                }
+
+                var nameOfProperty = b.Name;
+
+                var nameOfProperty2 = nameOfProperty.Any(char.IsUpper) ? $@"""{nameOfProperty}""" : nameOfProperty;
+
+                if (nameOfProperty == PrimaryKey)
+                {
+                    continue;
+                
+                }
+
+                ListaAtributa.Add(nameOfProperty2);
+
+                var propertyInfo = objekt.GetType().GetProperty(nameOfProperty);
+
+                var value = propertyInfo.GetValue(objekt, null);
+
+                ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
+
+            }
+
+            string query = " Update Set ";
+
+
+            //drugi dio 
+            for (int i = 0; i<ListaAtributa.Count;i++)
+            {
+
+                query += $@"{ListaAtributa[i]} = {ListaValues[i]}";
+
+                if ((i + 1) != ListaAtributa.Count())
+                {
+
+                    query += ",";
+                
+                }
+
+
+            }
+
+            return query;
+
+
+
+
+
+        }
+
+        public virtual string GetCoalesce2(Type Tip, object objekt,string TableName)
+        {
+            List<string> ListaAtributa = new List<string>();
+            List<string> ListaValues = new List<string>();
+
+            var list = Tip.GetProperties();
+
+            foreach (var b in list)
+            {
+                if (b.PropertyType.Name != typeof(string).Name &&
+                    b.PropertyType.Name != typeof(int).Name &&
+                    b.PropertyType.Name != typeof(int?).Name)
+                {
+
+                    continue;
+
+                }
+
+                var nameOfProperty = b.Name;
+
+                var nameOfProperty2 = nameOfProperty.Any(char.IsUpper) ? $@"""{nameOfProperty}""" : nameOfProperty;
+
+                if (nameOfProperty == PrimaryKey)
+                {
+                    continue;
+
+                }
+
+                ListaAtributa.Add(nameOfProperty2);
+
+                var propertyInfo = objekt.GetType().GetProperty(nameOfProperty);
+
+                var value = propertyInfo.GetValue(objekt, null);
+
+                if (value == null || value.ToString()=="0")
+                {
+
+                    ListaValues.Add("null");
+                }
+                else
+                {
+                    ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
+                }
+
+            }
+
+            string query = "";
+
+
+            //drugi dio 
+            for (int i = 0; i < ListaAtributa.Count; i++)
+            {
+
+                query += $@"{ListaAtributa[i]} = coalesce({ListaValues[i]},""BettingSystem"".{TableName}.{ListaAtributa[i]})";
+
+                if ((i + 1) != ListaAtributa.Count())
+                {
+
+                    query += ",";
+
+                }
+
+
+            }
+
+            return query;
+
+           
+        }
+
+
 
 
 

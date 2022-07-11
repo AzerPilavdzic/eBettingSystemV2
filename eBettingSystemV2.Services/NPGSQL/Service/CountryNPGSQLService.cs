@@ -154,6 +154,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
             return $@"'{Insert.CountryName}'";
         }
+        public override string ChoseAtribute()
+        {
+            return PrimaryKey;
+        }
 
 
         //insert esktenzije
