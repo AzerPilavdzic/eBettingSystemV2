@@ -28,6 +28,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public string connString { get; set;}
         public string PrimaryKey { get; set; } = "";
         public string ForeignKey { get; set; } = "";
+        public string Conflict   { get; set; }  = "";
         public List<string> ListaAtributa { get; set; } = new List<string>();
         public BaseNPGSQLService(IConfiguration Service1 ,IMapper Service3 )
         {

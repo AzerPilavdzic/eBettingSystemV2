@@ -74,6 +74,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         }
         public virtual async Task<IEnumerable<T>> UpsertOneOrMoreAsync(IEnumerable<TUpdate> List)
         {
+            //ako se ne proslijedi fk daje exception  
+
+
+
             //for tomorrow;
             var stringtext = GetAllValuesFromModel(typeof(TUpdate),List.FirstOrDefault());
 
@@ -82,13 +86,16 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             string Query  = null;
             string AddQuery = null;//dodatak za ako korisnik ne unose id
+
             string typeParameterType = typeof(TDb).Name;
+
+            string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
 
 
             if (list.Count() != 0)
             {
-                Query += $@"insert into ""BettingSystem"".""{typeParameterType}""";
-                AddQuery += $@"insert into ""BettingSystem"".""{typeParameterType}"""; //dodatak za ako korisnik ne unose id
+                Query += $@"insert into ""BettingSystem"".""{TableName}""";
+                AddQuery += $@"insert into ""BettingSystem"".""{TableName}"""; //dodatak za ako korisnik ne unose id
 
 
                 var Atributes = GetAllAtributesFromModel(typeof(TUpdate));
@@ -98,7 +105,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 for (int i = 0; i < list.Count(); i++)
                 {
                     Query += "(";
-                    Query += GetValuesAll(list[i]);
+                    Query += GetAllValuesFromModel(typeof(TUpdate),list[i]);
                     Query += ")";
 
                     if ((i + 1) != list.Count())
@@ -108,8 +115,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                     }
 
                 }
-                Query += $@"ON CONFLICT ({PrimaryKey}) DO ";
-                Query += $@"UPDATE SET {GetAtribute1()} = EXCLUDED.{GetAtribute1()}";
+                Query += $@"ON CONFLICT ({Conflict}) DO ";
+                Query += $@"UPDATE SET {GetCoalesce2conflict(typeof(TUpdate),TableName)}";
 
                 var allatributes = GetAllAtributesFromModel(typeof(TDb));
 
@@ -191,7 +198,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             {
                 Query = $@"INSERT INTO ""BettingSystem"".{TableName} ({PrimaryKey},{GetAllAtributesFromModel(typeof(TInsert))})
                                 VALUES({Id},{GetAllValuesFromModel(typeof(TInsert),Insert)}) 
-                                ON CONFLICT({PrimaryKey}) 
+                                ON CONFLICT({Conflict}) 
                                 DO 
                                 {UpdateSet(typeof(TInsert),Insert)}
                                 returning {GetAllAtributesFromModel(typeof(TDb))}";
@@ -408,8 +415,23 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 }
                 var nameOfProperty = b.Name;
                 var propertyInfo = objekt.GetType().GetProperty(nameOfProperty);
+
                 var value = propertyInfo.GetValue(objekt, null);
-                ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
+
+                if (value == null || value.ToString() == "0")
+                {
+
+                    ListaValues.Add("null");
+                }
+                else
+                {
+                    ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
+                }
+                   
+
+
+
+               
 
             }
 
@@ -571,7 +593,62 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
            
         }
 
+        public virtual string GetCoalesce2conflict(Type Tip, string TableName)
+        {
+            List<string> ListaAtributa = new List<string>();
+           
 
+            var list = Tip.GetProperties();
+
+            foreach (var b in list)
+            {
+                if (b.PropertyType.Name != typeof(string).Name &&
+                    b.PropertyType.Name != typeof(int).Name &&
+                    b.PropertyType.Name != typeof(int?).Name)
+                {
+
+                    continue;
+
+                }
+
+                var nameOfProperty = b.Name;
+
+                var nameOfProperty2 = nameOfProperty.Any(char.IsUpper) ? $@"""{nameOfProperty}""" : nameOfProperty;
+
+                if (nameOfProperty == PrimaryKey)
+                {
+                    continue;
+
+                }
+
+                ListaAtributa.Add(nameOfProperty2);
+
+               
+            }
+
+            string query = "";
+
+
+            //drugi dio 
+            for (int i = 0; i < ListaAtributa.Count; i++)
+            {
+
+                query += $@"{ListaAtributa[i]} = coalesce(Excluded.{ListaAtributa[i]},""BettingSystem"".{TableName}.{ListaAtributa[i]})";
+
+                if ((i + 1) != ListaAtributa.Count())
+                {
+
+                    query += ",";
+
+                }
+
+
+            }
+
+            return query;
+
+
+        }
 
 
 

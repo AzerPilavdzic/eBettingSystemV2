@@ -198,6 +198,27 @@ namespace eBettingSystemV2.Controllers
 
         }
 
+        [HttpPost]
+        [Route("UpsertOneOrMoreTeams")]
+        public override async Task<ActionResult<IEnumerable<TeamModel>>> UpsertOneOrMore(IEnumerable<TeamUpsertRequest> insertlist)
+        {
+            try
+            {
+                var result = await ITeamNPGSQL.UpsertOneOrMoreAsync(insertlist);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+
+
+
+
+        }
+
 
         [HttpPut]
         [Route("UpdateTeam/{Id}")]
