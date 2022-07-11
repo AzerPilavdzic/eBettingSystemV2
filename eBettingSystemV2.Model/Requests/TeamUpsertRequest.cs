@@ -10,6 +10,8 @@ namespace eBettingSystemV2.Model.SearchObjects
 
     public class TeamUpsertRequest
     {
+
+        public int teamid { get; set; }
         public string teamname { get; set; }
         public string city { get; set; }
 

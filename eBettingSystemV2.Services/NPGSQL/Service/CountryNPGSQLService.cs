@@ -42,17 +42,19 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public CountryNPGSQLService(IConfiguration Service1, IMapper Service3)
         : base(Service1,Service3) {
 
-            PrimaryKey = $@"""CountryId""";           
-            var list = typeof(CountryModel).GetProperties();
+            PrimaryKey = $@"""CountryId""";
+            Conflict = PrimaryKey;
 
-            foreach (var a in list)
-            {
-                if (a.Name != "CountryId")
-                {
-                    var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
-                    ListaAtributa.Add(text);                               
-                }         
-            }                         
+            //var list = typeof(CountryModel).GetProperties();
+
+            //foreach (var a in list)
+            //{
+            //    if (a.Name != "CountryId")
+            //    {
+            //        var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
+            //        ListaAtributa.Add(text);                               
+            //    }         
+            //}                         
         }
 
 
