@@ -92,7 +92,7 @@ namespace eBettingSystemV2.Services.Servisi
             if (DateTimeFromConfig.Date < DateTime.Now.Date)
             {
 
-                IFetchCacheService.FetchStoreCacheCompetition();
+                _fetchService.FetchStoreCacheCompetition();
 
                 config.AppSettings.Settings["DateKey"].Value = DateTimeFromConfig.AddDays(1).ToString();
 

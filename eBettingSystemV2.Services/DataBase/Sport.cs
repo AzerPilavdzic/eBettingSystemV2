@@ -14,7 +14,7 @@ namespace eBettingSystemV2.Services.DataBase
         }
 
         public int SportsId { get; set; }
-        public string Name { get; set; }
+        public string name { get; set; }
 
         public virtual ICollection<Competition> Competitions { get; set; }
         public virtual ICollection<teams> Teams { get; set; }

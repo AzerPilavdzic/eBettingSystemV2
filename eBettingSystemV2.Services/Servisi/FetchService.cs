@@ -28,7 +28,7 @@ namespace eBettingSystemV2.Services.Servisi
 
         public static List<string> EventKeysList = new List<string>();
 
-        List<string> ListEventStatus = new List<string>() {
+       public readonly List<string> ListEventStatus = new List<string>() {
             "Not started","Live","Cancelled", "Ended"
             };
 
@@ -186,7 +186,7 @@ namespace eBettingSystemV2.Services.Servisi
 
                 _competitionService.AddDataAsync(_podaciSaStranice);
                 Console.WriteLine(" DODAVANJE COMPETITIONA ");
-                Console.ReadKey();
+                //Console.ReadKey();
 
                 podaciSaStranices = _podaciSaStranice;
 

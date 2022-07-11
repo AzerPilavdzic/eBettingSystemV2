@@ -54,7 +54,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
         {
 
             var _model = await Context.Sports
-                .Where(x => x.Name.ToLower() == name.ToLower())
+                .Where(x => x.name.ToLower() == name.ToLower())
                 .FirstOrDefaultAsync();
             
             if (_model == null)
@@ -79,8 +79,8 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
             if (!string.IsNullOrWhiteSpace(search?.SportName))
             {
-                filterquery = filterquery.Where(x => x.Name != null)
-                    .Where(X => X.Name.ToLower()
+                filterquery = filterquery.Where(x => x.name != null)
+                    .Where(X => X.name.ToLower()
                     .StartsWith(search.SportName.ToLower()));
             }
 
@@ -126,7 +126,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                 if (entry != null)
                 {
 
-                    entry.Name = a.name;
+                    entry.name = a.name;
 
                     Result.Add(Mapper.Map<sport>(entry));
 
@@ -167,7 +167,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
         }      
         public override bool checkIfNameSame(SportInsertRequest insert, sport entry)
         {
-            if (insert.name == entry?.Name)
+            if (insert.name == entry?.name)
             {
 
                 return true;
@@ -179,7 +179,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
            
         public override bool BeforeInsertBool(SportInsertRequest insert)
         {
-            var entity = Context.Sports.Where(x => x.Name.ToLower() == insert.name.ToLower()).FirstOrDefault();
+            var entity = Context.Sports.Where(x => x.name.ToLower() == insert.name.ToLower()).FirstOrDefault();
             if (entity == null)
             {
                 return true;
