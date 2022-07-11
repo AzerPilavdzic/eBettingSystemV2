@@ -183,10 +183,10 @@ namespace eBettingSystemV2.Services.Servisi
                         Country = listaKategorija[i]
                     });
                 }
-
-                _competitionService.AddDataAsync(_podaciSaStranice);
+                //wait for complete
+                _competitionService.AddDataAsync(_podaciSaStranice).Wait();
                 Console.WriteLine(" DODAVANJE COMPETITIONA ");
-                Console.ReadKey();
+                //Console.ReadKey();
 
                 podaciSaStranices = _podaciSaStranice;
 

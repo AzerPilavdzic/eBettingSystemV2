@@ -201,9 +201,21 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateTeam/{Id}")]
-        public override Task<ActionResult<TeamModel>> Update(int Id, [FromBody] TeamUpsertRequest update)
+        public override async Task<ActionResult<TeamModel>> Update(int Id, [FromBody] TeamUpsertRequest update)
         {
-            return base.Update(Id, update); 
+            try
+            {
+                var result = await ITeamNPGSQL.UpdateAsync(Id, update);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+                throw;
+            }
+
+           
         }
 
 
