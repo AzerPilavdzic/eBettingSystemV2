@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,43 +20,31 @@ namespace eBettingSystemV2.Controllers
     [ApiController]
     [Route("[controller]")]
     //public class CountryController
-    public class CountryController : BaseCRUDController<CountryModel, CountrySearchObject, CountryInsertRequest, CountryUpsertRequest, CountryModelLess>
+    public class CountryController : BaseCRUDNPGSQLController<CountryModel, CountrySearchObject, CountryInsertRequest, CountryUpsertRequest, CountryModelLess>
     {
         public static List<Country> Test = new List<Country>();
-        private ICountryService ICountryService { get; set; }
-        private ICountryNPGSQL CountryNPGSQL { get; set;}
+        private ICountryNPGSQL ICountryService { get; set; }
+        //private ICountryService ICountryService { get; set; }
+
         private readonly ILogger<CountryController> _logger;
-
-
 
         private static readonly string[] TestPodaci = new[]
         {
             "BIH", "CRO", "SLO", "SRB"
         };
 
-       
-        public CountryController(ICountryService service, ICountryNPGSQL service2,ILogger<CountryController> logger) : base(service)
+
+        public CountryController(ICountryNPGSQL service, ILogger<CountryController> logger) : base(service)
         {
             ICountryService = service;
-            CountryNPGSQL = service2;
             _logger = logger;
         }
 
-        
-        [HttpGet]
-        [Route("GetAllCountries")]
         public override async Task<ActionResult<IEnumerable<CountryModel>>> Get([FromQuery] CountrySearchObject search = null)
         {
-            if (CountryNPGSQL.CheckPage0(search))
-                return BadRequest("PageNumber ili PageSize ne smiju biti 0");
-
-            if (CountryNPGSQL.CheckNegative(search))
-                return BadRequest("vrijednost ne moze biti negativna");
-
-            //var broj = Service.Get(search).Result.Count();
             try
             {
-                var List = await CountryNPGSQL.GetNPGSQLGeneric(search);
+                var List = await ICountryService.GetNPGSQLGeneric(search);
                 //var List = await ICountryService.Get(search);
 
                 if (List.Count() == 0)
@@ -69,17 +58,15 @@ namespace eBettingSystemV2.Controllers
                 _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
-         
         }
 
-       
         [HttpGet]
         [Route("GetCountryById/{id}")]
         public override async Task<ActionResult<CountryModel>> GetById(int id)
         {
             try
             {
-                var Model = await CountryNPGSQL.GetByIdAsync(id);
+                var Model = await ICountryService.GetByIdAsync(id);
 
                 if (Model == null)
                 {
@@ -99,13 +86,35 @@ namespace eBettingSystemV2.Controllers
             }
         }
 
+        //[HttpGet]
+        //[Route("GetCountryById/{id}")]
+        //public override async Task<ActionResult<CountryModel>> GetById(int id)
+        //{
+        //    try
+        //    {
+        //        var Model = await ICountryService.GetByIdAsync(id);
+
+        //        if (Model == null)
+        //            return NotFound("Podatak ne postoji u bazi");
+        //        else
+        //            return Ok(Model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogInformation(ex.Message);
+        //        return BadRequest(ex.Message);
+
+
+        //    }
+        //}
+
         [HttpGet]
         [Route("GetCountryIdByName/{CountryName}")]
         public async Task<ActionResult<CountryModelLess>> GetCountryIdByName(string CountryName)
         {
             try
             {
-                var result = await CountryNPGSQL.GetIdByNameAsync(CountryName);
+                var result = await ICountryService.GetIdByNameAsync(CountryName);
                 return result;
             }
             catch (Exception ex)
@@ -113,9 +122,7 @@ namespace eBettingSystemV2.Controllers
                 _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
-
         }
-
 
         [HttpPost]
         [Route("InsertCountry")]
@@ -123,16 +130,11 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await CountryNPGSQL.InsertAsync(insert);
-
+                var result = await ICountryService.InsertAsync(insert);
                 if (result == null)
-                {
                     return BadRequest("Ime vec postoji");
-                }
                 else
-                {
                     return Ok(result);
-                }
             }
             catch (Exception ex)
             {
@@ -142,14 +144,16 @@ namespace eBettingSystemV2.Controllers
             }
         }
 
+
         [HttpPost]
-        [Route("UpsertCountries")]
-        //treba ovdje insert request
-        public async override Task<ActionResult<CountryModelLess>> InsertById(int Id, CountryInsertRequest Insert)
+
+        [Route("UpsertCountry")]
+        public override async Task<ActionResult<CountryModelLess>> InsertById(int Id, CountryInsertRequest Insert)
+
         {
             try
             {
-                var result = await CountryNPGSQL.UpsertbyIdAsync(Insert, Id);
+                var result = await ICountryService.UpsertbyIdAsync(Insert, Id);
 
                 return Ok(result);
             }
@@ -158,8 +162,8 @@ namespace eBettingSystemV2.Controllers
                 _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
-            
         }
+
 
         [HttpPost]
         [Route("UpsertOneOrMoreCountries")]
@@ -167,7 +171,7 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await CountryNPGSQL.UpsertOneOrMoreAsync(insertlist);
+                var result = await ICountryService.UpsertOneOrMoreAsync(insertlist);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -175,11 +179,6 @@ namespace eBettingSystemV2.Controllers
                 _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
-
-
-
-
-            
         }
 
         [HttpPost]
@@ -188,7 +187,7 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await CountryNPGSQL.InsertOneOrMoreAsync(insertlist);
+                var result = await ICountryService.InsertOneOrMoreAsync(insertlist);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -201,22 +200,24 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpPut]
+        
         [Route("UpdateCountry/{id}")]
         public override async Task<ActionResult<CountryModel>> Update(int id, [FromBody] CountryInsertRequest update)
         {
             try
             {
-                var result = await CountryNPGSQL.UpdateAsync(id, update);
+                var result = await ICountryNPGSQL.UpdateAsync(id, update);
+
                 return Ok(result);
             }
             catch (Exception ex)
             {
-
                 _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
 
             
+
         }
 
         [HttpDelete]
@@ -227,7 +228,7 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await CountryNPGSQL.DeleteAsync(CountryId);
+                var result = await ICountryService.DeleteAsync(CountryId);
 
                 if (result >= 0)
                 {
@@ -247,7 +248,7 @@ namespace eBettingSystemV2.Controllers
 
 
 
-           
+
         }
     }
 }
