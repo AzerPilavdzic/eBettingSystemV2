@@ -34,8 +34,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         CountrySearchObject,
         CountryInsertRequest,
         CountryUpsertRequest,
-        CountryModelLess,
-        string
+        CountryModelLess
+        
         >      
         ,ICountryNPGSQL
     {

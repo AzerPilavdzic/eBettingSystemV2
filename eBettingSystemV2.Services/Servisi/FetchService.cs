@@ -1,6 +1,7 @@
 ﻿using eBettingSystemV2.Model.Models;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Services.Interface;
+using eBettingSystemV2.Services.Linq.Interface;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;

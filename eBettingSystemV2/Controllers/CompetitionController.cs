@@ -4,6 +4,7 @@ using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
 using eBettingSystemV2.Services.DataBase;
 using eBettingSystemV2.Services.Interface;
+using eBettingSystemV2.Services.Linq.Interface;
 //using eBettingSystemV2.Models;
 using eProdaja.Controllers;
 using Microsoft.AspNetCore.Cors;

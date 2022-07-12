@@ -16,7 +16,7 @@ using System.Timers;
 using eBettingSystemV2.Services.Linq.Servisi;
 using eBettingSystemV2.Services.Linq.Interface;
 
-namespace eBettingSystemV2.Services.Servisi
+namespace eBettingSystemV2.Services.Linq.Servisi
 {
     public class CompetitionService : BaseCRUDService
        <

@@ -1,6 +1,7 @@
 ﻿using eBettingSystemV2.Model.Models;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.Interface;
+using eBettingSystemV2.Services.Linq.Interface;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;

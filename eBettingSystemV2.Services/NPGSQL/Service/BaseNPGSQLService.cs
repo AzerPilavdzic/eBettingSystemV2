@@ -15,13 +15,13 @@ using eBettingSystemV2.Services.NPGSQL.Interface;
 
 namespace eBettingSystemV2.Services.NPGSQL.Service
 {
-    public class BaseNPGSQLService<T, TDb, TSearch, Tless,T1>:
-        IBaseNPGSQL<T, TSearch, Tless,T1>
+    public class BaseNPGSQLService<T, TDb, TSearch, Tless>:
+        IBaseNPGSQL<T, TSearch, Tless>
         where T : class
         where TDb : class
         where TSearch : BaseSearchObject//base search service
         where Tless : class
-        where T1: class
+        
     {
         public IConfiguration Configuration { get; }
         public IMapper Mapper { get; set; }// ne treba ovdje             

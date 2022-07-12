@@ -34,8 +34,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         SportSearchObject,
         SportInsertRequest,
         SportUpsertRequest,
-        SportModelLess,
-        string
+        SportModelLess
+        
         >      
         ,ISportsNPGSQL
     {

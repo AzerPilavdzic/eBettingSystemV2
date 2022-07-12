@@ -15,16 +15,16 @@ using eBettingSystemV2.Services.NPGSQL.Interface;
 namespace eBettingSystemV2.Services.NPGSQL.Service
 
 {
-    public class BCrudNPGSQLService<T, TDb, TSearch, TInsert, TUpdate, Tless,T1>
-       :BaseNPGSQLService<T, TDb, TSearch, Tless,T1>,
-       ICrudNPGSQL<T, TSearch, TInsert, TUpdate, Tless,T1>
+    public class BCrudNPGSQLService<T, TDb, TSearch, TInsert, TUpdate, Tless>
+       :BaseNPGSQLService<T, TDb, TSearch, Tless>,
+       ICrudNPGSQL<T, TSearch, TInsert, TUpdate, Tless>
        where T : class
        where TDb : class
        where TSearch : BaseSearchObject
        where TInsert : class
        where TUpdate : class
        where Tless : class
-       where T1 : class
+       
     {
         
 

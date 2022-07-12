@@ -14,8 +14,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Interface
              SportSearchObject,
              SportInsertRequest,
              SportUpsertRequest,
-             SportModelLess,
-             string>
+             SportModelLess
+             >
     {
        public Task<SportModelLess> GetIdByNameAsync(string name);
 
