@@ -146,8 +146,10 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpPost]
+
         [Route("UpsertCountry")]
         public override async Task<ActionResult<CountryModelLess>> InsertById(int Id, CountryInsertRequest Insert)
+
         {
             try
             {
@@ -162,21 +164,6 @@ namespace eBettingSystemV2.Controllers
             }
         }
 
-        //public async override Task<ActionResult<CountryModelLess>> InsertById(int Id, CountryInsertRequest Insert)
-        //{
-        //    try
-        //    {
-        //        var result = await CountryNPGSQL.UpsertbyIdAsync(Insert, Id);
-
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogInformation(ex.Message);
-        //        return BadRequest(ex.Message);
-        //    }
-
-        //}
 
         [HttpPost]
         [Route("UpsertOneOrMoreCountries")]
@@ -213,12 +200,14 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpPut]
-        [Route("UpdateCountry/")]
-        public override async Task<ActionResult<CountryModel>> Update(int id, [FromBody] CountryUpsertRequest update)
+        
+        [Route("UpdateCountry/{id}")]
+        public override async Task<ActionResult<CountryModel>> Update(int id, [FromBody] CountryInsertRequest update)
         {
             try
             {
-                var result = await ICountryService.UpdateAsync(id, update);
+                var result = await ICountryNPGSQL.UpdateAsync(id, update);
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -226,6 +215,9 @@ namespace eBettingSystemV2.Controllers
                 _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
+
+            
+
         }
 
         [HttpDelete]

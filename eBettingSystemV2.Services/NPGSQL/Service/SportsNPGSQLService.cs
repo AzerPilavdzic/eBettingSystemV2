@@ -35,6 +35,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         SportInsertRequest,
         SportUpsertRequest,
         SportModelLess
+
         >      
         ,ISportsNPGSQL
     {
@@ -267,7 +268,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             conn.Open();
 
             var entry = conn.QueryFirstOrDefault<teams>(Query);
-            var dalipostojicompetition = conn.QueryFirstOrDefault<Competition>(Query2);
+            var dalipostojicompetition = conn.QueryFirstOrDefault<competition>(Query2);
 
             conn.Close();
 

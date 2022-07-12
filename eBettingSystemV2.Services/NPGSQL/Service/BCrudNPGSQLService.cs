@@ -16,7 +16,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 {
     public class BCrudNPGSQLService<T, TDb, TSearch, TInsert, TUpdate, Tless>
-       : BaseNPGSQLService<T, TDb, TSearch, Tless>,
+       :BaseNPGSQLService<T, TDb, TSearch, Tless>,
        ICrudNPGSQL<T, TSearch, TInsert, TUpdate, Tless>
        where T : class
        where TDb : class
@@ -24,6 +24,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
        where TInsert : class
        where TUpdate : class
        where Tless : class
+
     {
 
 
@@ -34,6 +35,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public virtual async Task<Tless> InsertAsync(TInsert insert)
         {
             //provjere
+            try
+            {
 
 
             BeforeInsertVoid(insert);
@@ -52,9 +55,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             var values = GetAllValuesFromModel(typeof(TInsert), insert);
             var ReturnAtributes = GetAllAtributesFromModel(typeof(TDb));
 
-            Query += $@"insert into ""BettingSystem"".{TableName}";
-            Query += $@"({Atributes})";
-            Query += $@" values({values})";
+
+
+            Query += $@"insert into ""BettingSystem"".{TableName}";                     
+            Query += $@"({Atributes})";          
+            Query += $@" values({values})";            
+
             Query += $@" returning {ReturnAtributes}";
 
 
@@ -70,7 +76,13 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             BeforeInsert(insert, entity);
 
             return Mapper.Map<Tless>(entity);
+            }
 
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
 
         }
         public virtual async Task<IEnumerable<T>> UpsertOneOrMoreAsync(IEnumerable<TUpdate> List)
@@ -84,6 +96,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             var list = BeforeInsertFilterList(List); //ako ime vec postoji u bazi izbaci iz liste
 
+           
+
 
             string Query = null;
             string AddQuery = null;//dodatak za ako korisnik ne unose id
@@ -96,8 +110,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             if (list.Count() != 0)
             {
                 Query += $@"insert into ""BettingSystem"".{TableName}";
-                AddQuery += $@"insert into ""BettingSystem"".{TableName}"; //dodatak za ako korisnik ne unose id
-
 
                 var Atributes = GetAllAtributesFromModel(typeof(TUpdate));
                 Query += $@"({Atributes})";
@@ -106,7 +118,11 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 for (int i = 0; i < list.Count(); i++)
                 {
                     Query += "(";
-                    Query += GetAllValuesFromModel(typeof(TUpdate), list[i]);
+
+                    
+
+                    Query += GetAllValuesFromModel(typeof(TUpdate),list[i]);
+
                     Query += ")";
 
                     if ((i + 1) != list.Count())
@@ -116,8 +132,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                     }
 
                 }
-                Query += $@"ON CONFLICT ({PrimaryKey}) DO ";
-                Query += $@"UPDATE SET {GetCoalesce2conflict(typeof(TUpdate), TableName)}";
+
+             
+
+                Query += $@"ON CONFLICT ({ConflictUpsert}) DO ";
+                Query += $@"UPDATE SET {GetCoalesce2conflict(typeof(TUpdate),TableName)}";
+
 
                 var allatributes = GetAllAtributesFromModel(typeof(TDb));
 
@@ -144,12 +164,16 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             string typeParameterType = typeof(TDb).Name;
 
+
             string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+
+            
 
 
             var list = List.ToList();
             var Atributes = GetAllAtributesFromModel(typeof(TInsert));
 
+            
 
             Query += $@"insert into ""BettingSystem"".""{TableName}""";
             Query += $@"({Atributes})";
@@ -157,7 +181,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             for (int i = 0; i < list.Count(); i++)
             {
                 Query += "(";
-                Query += GetAllValuesFromModel(typeof(TInsert), list[i]);
+
+
+                Query += GetAllValuesFromModel(typeof(TInsert),list[i]);
+
                 Query += ")";
 
                 if ((i + 1) != list.Count())
@@ -166,8 +193,11 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 }
 
-            }
-            Query += $@" On Conflict ({Conflict}) DO NOTHING";
+
+                    
+            }         
+            Query += $@" On Conflict ({Conflictinsert}) DO NOTHING";
+
             Query += $@" Returning {GetAllAtributesFromModel(typeof(TDb))}";
 
             await using var conn = new NpgsqlConnection(connString);
@@ -177,6 +207,14 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             //IEnumerable<Tless> OutPut = OutputList;
 
             conn.Close();
+
+            if (entity.Count() == 0)
+            {
+
+                throw new Exception(exception);
+            
+            }
+
 
             return entity;
 
@@ -198,23 +236,25 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 string typeParameterType = typeof(TDb).Name;
 
-                string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+             
 
-                if (Id != 0)
-                {
-                    Query = $@"INSERT INTO ""BettingSystem"".{TableName} ({PrimaryKey},{GetAllAtributesFromModel(typeof(TInsert))})
-                                VALUES({Id},{GetAllValuesFromModel(typeof(TInsert), Insert)}) 
-                                ON CONFLICT({PrimaryKey}) 
+            if (Id!=0)
+            {
+                Query = $@"INSERT INTO ""BettingSystem"".{TableName} ({PrimaryKey},{GetAllAtributesFromModel(typeof(TInsert))})
+                                VALUES({Id},{GetAllValuesFromModel(typeof(TInsert),Insert)}) 
+                                ON CONFLICT({ConflictUpsert}) 
                                 DO 
-                                {UpdateSet(typeof(TInsert), Insert)}
+                                UPDATE SET {GetCoalesce2conflict(typeof(TUpdate),TableName)}
                                 returning {GetAllAtributesFromModel(typeof(TDb))}";
 
                 }
 
-                if (Id == 0 )
-                {
-                    Query = $@"INSERT INTO ""BettingSystem"".""{TableName}"" ({GetAllAtributesFromModel(typeof(TInsert))})
-                                VALUES({GetValue1(Insert)})                              
+
+
+            if (Id==0)
+            {
+                Query = $@"INSERT INTO ""BettingSystem"".{TableName} ({GetAllAtributesFromModel(typeof(TInsert))})
+                                VALUES({GetAllValuesFromModel(typeof(TInsert), Insert)})                              
                                 returning {GetAllAtributesFromModel(typeof(TDb))}";
 
                 }
@@ -239,7 +279,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
         }
         //Update Metode
-        public virtual async Task<T> UpdateAsync(int id, TUpdate update)
+        public virtual async Task<T> UpdateAsync(int id, TInsert update)
         {
             try
             {
@@ -252,8 +292,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
 
                 Query = $@"UPDATE ""BettingSystem"".{TableName}
-                           SET
-                           {GetCoalesce2(typeof(TUpdate), update, TableName)}
+                           SET                         
+                           {GetCoalesce2(typeof(TInsert),update,TableName)}
                            WHERE 
                            {PrimaryKey}={id}
                            returning {GetAllAtributesFromModel(typeof(TDb))}";
@@ -272,7 +312,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             }
             catch (Exception ex)
             {
-                throw new Exception("Drzava sa tim imenom vec postoji");
+                //throw new Exception("Drzava sa tim imenom vec postoji");
+                throw new Exception(ex.Message);
             }
         }
         //Delete metode
@@ -427,10 +468,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 {
                     ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
                 }
-
-
-
-
 
 
             }
@@ -615,6 +652,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                     b.PropertyType.Name != typeof(int?).Name)
                 {
 
+
+
                     continue;
 
                 }
@@ -631,6 +670,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 ListaAtributa.Add(nameOfProperty2);
 
+               
 
             }
 

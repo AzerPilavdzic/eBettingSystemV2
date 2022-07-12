@@ -15,19 +15,28 @@ using eBettingSystemV2.Services.NPGSQL.Interface;
 
 namespace eBettingSystemV2.Services.NPGSQL.Service
 {
-    public class BaseNPGSQLService<T, TDb, TSearch, Tless> :
+
+    public class BaseNPGSQLService<T, TDb, TSearch, Tless>:
+
         IBaseNPGSQL<T, TSearch, Tless>
         where T : class
         where TDb : class
         where TSearch : BaseSearchObject//base search service
         where Tless : class
+
+   
+
+        
     {
         public IConfiguration Configuration { get; }
         public IMapper Mapper { get; set; }// ne treba ovdje             
-        public string connString { get; set; }
-        public string PrimaryKey { get; set; } = "";
-        public string ForeignKey { get; set; } = "";
-        public string Conflict { get; set; } = "";
+        public string connString { get; set;}
+        public string PrimaryKey { get; set; }  = "";
+        public string ForeignKey { get; set; }  = "";
+        public string Conflictinsert  { get; set;}  = "";
+        public string ConflictUpsert { get; set; } = "";
+        public string exception { get; set; } = "";
+
         public List<string> ListaAtributa { get; set; } = new List<string>();
         public BaseNPGSQLService(IConfiguration Service1, IMapper Service3)
         {

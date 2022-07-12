@@ -40,7 +40,7 @@ namespace eBettingSystemV2.Services.Servisi
         public async Task<List<CompetitionModel>> AddDataAsync(List<PodaciSaStranice> Podaci)
         {
             //lista koja ce biti poslana u InsertOneOrMoreAsync
-            List<Competition> competitions = new List<Competition>();
+            List<competition> competitions = new List<competition>();
 
             foreach (var b in Podaci)
             {
@@ -69,7 +69,7 @@ namespace eBettingSystemV2.Services.Servisi
                     });
                 }
 
-                var x = new Competition
+                var x = new competition
                 {
 
                     //kad dobijemo sve id pohranjujemo u competition
@@ -91,7 +91,7 @@ namespace eBettingSystemV2.Services.Servisi
             var list = Mapper.Map<IEnumerable<CompetitionUpsertRequest>>(competitions);
 
             //pokrecemo pohranu podataka
-            var result= await ICompetitionService.InsertOneOrMoreAsync(list);
+            var result= await ICompetitionService.UpsertOneOrMoreAsync(list);
 
 
             //competitions = Mapper.Map<List<Competition>>(result);

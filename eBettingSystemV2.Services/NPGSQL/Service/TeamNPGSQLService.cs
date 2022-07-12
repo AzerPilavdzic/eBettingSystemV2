@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 namespace eBettingSystemV2.Services.NPGSQL.Service
 {
     public class TeamNPGSQLService:
-        BCrudNPGSQLService<TeamModel, teams, TeamSearchObject, TeamUpsertRequest, TeamUpsertRequest, TeamModelLess>
+
+        BCrudNPGSQLService<TeamModel, teams, TeamSearchObject, TeamInsertRequest, TeamUpsertRequest, TeamModelLess>
         ,ITeamNPGSQL
     {
 
@@ -21,7 +22,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
             PrimaryKey = "teamid";
             ForeignKey = "countryid";
-
+            Conflictinsert = PrimaryKey;
+            ConflictUpsert = PrimaryKey;
         }
 
 

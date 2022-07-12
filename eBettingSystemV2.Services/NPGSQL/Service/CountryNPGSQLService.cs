@@ -41,17 +41,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public CountryNPGSQLService(IConfiguration Service1, IMapper Service3)
         : base(Service1,Service3) {
 
-            PrimaryKey = $@"""CountryId""";           
-            var list = typeof(CountryModel).GetProperties();
+            PrimaryKey = $@"""CountryId""";
+            Conflictinsert = $@"""CountryName""";
+            ConflictUpsert = $@"""CountryId""";
+            exception = "imena koja su navedena vec postoje u bazi";
 
-            foreach (var a in list)
-            {
-                if (a.Name != "CountryId")
-                {
-                    var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
-                    ListaAtributa.Add(text);                               
-                }         
-            }                         
+                           
         }
 
 
@@ -82,15 +77,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         }
 
 
-
-
         // Get Ekstenzije
         public override string AddFilter(string query, CountrySearchObject search = null)
         {
                   
             
             
-
             if (!string.IsNullOrWhiteSpace(search?.CountryName))
             {
                 query += $@"where (lower(""CountryName"") LIKE lower('%{search.CountryName}%')) ";
@@ -207,7 +199,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             {
                 //ako korisnik nije unjeo id               
                 Query = $@"Select * From ""BettingSystem"".""Country"" 
-                        Where {GetAtribute1()} ='{item.CountryName}'";
+                        Where lower({GetAtribute1()}) =lower('{item.CountryName}')";
 
                 var entity = conn.Query<CountryUpsertRequest>(Query).FirstOrDefault();
                 
@@ -220,7 +212,25 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             }
                 conn.Close();
 
-           
+            foreach (var a in OutputList)
+            {
+                if (a.CountryId == 0)
+                {
+                    CountryInsertRequest b=null;
+
+                    var insert = Mapper.Map<CountryInsertRequest>(a);
+
+                    InsertAsync(insert).Wait();
+                    a.CountryId = GetIdByNameAsync(a.CountryName).Result.CountryId;
+
+                   
+                }
+            
+            
+            }
+
+            conn.CloseAsync();
+
 
             return OutputList;
 
@@ -282,7 +292,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             conn.Open();
 
             var entry = conn.QueryFirstOrDefault<teams>(Query);
-            var dalipostojicompetition = conn.QueryFirstOrDefault<Competition>(Query2);
+            var dalipostojicompetition = conn.QueryFirstOrDefault<competition>(Query2);
 
             conn.Close();
 

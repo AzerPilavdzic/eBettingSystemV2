@@ -18,14 +18,14 @@ namespace eBettingSystemV2.Services.Linq.Interface
     {
         Tless Insert(TInsert insert);
 
-        T Update(int id, TUpdate update);
-        Task<T> UpdateAsync(int id,TUpdate update);
+        T Update(int id, TInsert update);
+        Task<T> UpdateAsync(int id,TInsert update);
 
       
         T Delete(int id);
         Task<int> DeleteAsync(int id);
         Task<Tless> InsertAsync(TInsert insert);
-        Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TUpdate> List);
+        Task<IEnumerable<Tless>> UpsertOneOrMoreAsync(IEnumerable<TUpdate> List);
         Task<Tless> InsertById(TInsert Insert, int Id);
         Task<T> GetByObjectName(string name);
 

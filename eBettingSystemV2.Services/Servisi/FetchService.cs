@@ -1,6 +1,7 @@
 ﻿using eBettingSystemV2.Model.Models;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Services.Interface;
+using eBettingSystemV2.Services.Linq.Interface;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -715,7 +716,7 @@ namespace eBettingSystemV2.Services.Servisi
                     pocetakIncrementa++;
                 }
                 Console.WriteLine("Dodajem listu evenata broj "+ y+ " od "+ brojcompetition);
-            var lista =  _eventService.InsertOneOrMoreAsync(FetchModel[y]._eventi).Result;
+            var lista =  _eventService.UpsertOneOrMoreAsync(FetchModel[y]._eventi).Result;
 
             }
 
