@@ -18,7 +18,7 @@ namespace eBettingSystemV2.Services.DataBase
         {
         }
 
-        public virtual DbSet<Competition> Competitions { get; set; }
+        public virtual DbSet<competition> Competitions { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Logcompetition> Logcompetitions { get; set; }
@@ -37,7 +37,7 @@ namespace eBettingSystemV2.Services.DataBase
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Competition>(entity =>
+            modelBuilder.Entity<competition>(entity =>
             {
                 entity.ToTable("competition", "BettingSystem");
 

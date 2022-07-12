@@ -268,7 +268,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             conn.OpenAsync();
 
             var entry = conn.QueryFirstOrDefault<teams>(Query);
-            var dalipostojicompetition = conn.QueryFirstOrDefault<Competition>(Query2);
+            var dalipostojicompetition = conn.QueryFirstOrDefault<competition>(Query2);
 
             conn.Close();
 

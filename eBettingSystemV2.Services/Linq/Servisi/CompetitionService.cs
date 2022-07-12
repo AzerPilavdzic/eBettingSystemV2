@@ -21,7 +21,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
     public class CompetitionService : BaseCRUDService
        <
        CompetitionModel,
-       Competition,
+       competition,
        CompetitionSearchObject,
        CompetitionInsertRequest,
        CompetitionUpsertRequest,
@@ -80,11 +80,11 @@ namespace eBettingSystemV2.Services.Linq.Servisi
             }
             );
 
-            List<Competition> competitions = new List<Competition>();
+            List<competition> competitions = new List<competition>();
             
                 foreach (var b in Podaci)
                 {
-                    var x = new Competition
+                    var x = new competition
                     {
 
 
@@ -176,37 +176,10 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
 
         //get esktenzije
-        public override IQueryable<Competition> AddFilter(IQueryable<Competition> query, CompetitionSearchObject search = null)
+        public override IQueryable<competition> AddFilter(IQueryable<competition> query, CompetitionSearchObject search = null)
         {
-            //uzmi html od competitiona(unutar njega je drzava i naziv competitiona);
-            //dodao je sve drzave prije toga
-            //lokalna varijabla koja cuva drzavaID, mijenja se svakom narednom iteracijom
-            //sportID property
-            var _categories = categories.ToList();
-            List<string> listCompetition = new List<string>();
-
-
-            categories.ToList().ForEach(i => listCompetition.Add(i.InnerText));
-
-            for (int i = 0; i < listCompetition.Count(); i++)
-            {
-
-                int drzavaID = 69;
-                var _competitionName = Regex.Match(listCompetition[i], @"(?<=: )(?:(?! -).)*");
-                listCompetition[i] = _competitionName.ToString();
-
-
-                Context.Competitions.Add(new Competition()
-                {
-                    //Sportid = _sportID,
-                    Countryid = drzavaID,
-                    Naziv = listCompetition[i],
-                });
-
-
-                Console.WriteLine("Drzava ID " + drzavaID + " natjecanje: " + listCompetition[i]);
-
-            }
+            
+            
 
             //Context.SaveChanges();
             var filterquery = base.AddFilter(query, search);
@@ -328,12 +301,12 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
 
         }
-        public override IEnumerable<Competition> AddRange(IEnumerable<CompetitionUpsertRequest> insertlist, DbSet<Competition> set)
+        public override IEnumerable<competition> AddRange(IEnumerable<CompetitionUpsertRequest> insertlist, DbSet<competition> set)
         {
             
             
-            List<Competition> Result = new List<Competition>();
-            Competition aa = null;
+            List<competition> Result = new List<competition>();
+            competition aa = null;
 
             //provjerava exceptione
             foreach (var a in insertlist)                                               
@@ -367,7 +340,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                 if (a.id == 0)
                 {
 
-                    aa = Mapper.Map<Competition>(a);
+                    aa = Mapper.Map<competition>(a);
                     //dodaj u bazu
                     set.Add(aa);
                     //dodaj u result
@@ -388,7 +361,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                     entry.Countryid = a.countryid;
                     entry.Sportid = a.sportid;
 
-                    Result.Add(Mapper.Map<Competition>(entry));
+                    Result.Add(Mapper.Map<competition>(entry));
 
                 }
                 else
@@ -400,13 +373,13 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
                     }
 
-                    aa = Mapper.Map<Competition>(a);
+                    aa = Mapper.Map<competition>(a);
 
                     set.Add(aa);
                     Context.SaveChanges();
 
 
-                    Result.Add(Mapper.Map<Competition>(aa));
+                    Result.Add(Mapper.Map<competition>(aa));
 
                 }
 
@@ -417,7 +390,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
             }
 
 
-            IEnumerable<Competition> entity = Mapper.Map<IEnumerable<Competition>>(Result);
+            IEnumerable<competition> entity = Mapper.Map<IEnumerable<competition>>(Result);
             //set.AddRange(entity);
 
             return entity;
@@ -436,7 +409,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
 
                 //lista koja ce biti poslana u InsertOneOrMoreAsync
-                List<Competition> competitions = new List<Competition>();
+                List<competition> competitions = new List<competition>();
 
                 foreach (var b in Podaci)
                 {
@@ -467,7 +440,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                         });
                     }
 
-                    var x = new Competition
+                    var x = new competition
                     {
 
                         //kad dobijemo sve id pohranjujemo u competition
