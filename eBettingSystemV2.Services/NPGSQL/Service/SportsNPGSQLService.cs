@@ -34,8 +34,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         SportSearchObject,
         SportInsertRequest,
         SportUpsertRequest,
-        SportModelLess,
-        string
+        SportModelLess
         >      
         ,ISportsNPGSQL
     {
@@ -265,7 +264,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             Query2 += $@" Where {foreignkey} = {id}";
            
             using var conn = new NpgsqlConnection(connString);
-            conn.OpenAsync();
+            conn.Open();
 
             var entry = conn.QueryFirstOrDefault<teams>(Query);
             var dalipostojicompetition = conn.QueryFirstOrDefault<Competition>(Query2);

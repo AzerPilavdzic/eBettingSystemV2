@@ -8,18 +8,15 @@ using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Services.NPGSQL.Interface
 {
-    public interface ITeamNPGSQL :ICrudNPGSQL<TeamModel,
-            TeamSearchObject,
-            TeamUpsertRequest,
-            TeamUpsertRequest,
-            TeamModelLess>
+    public interface ICompetitionNPGSQL
+        :
+         ICrudNPGSQL<CompetitionModel,
+             CompetitionSearchObject,
+             CompetitionInsertRequest,
+             CompetitionUpsertRequest,
+             CompetitionModelLess>
     {
-
-
-
-
-
-
+        //....
 
 
     }

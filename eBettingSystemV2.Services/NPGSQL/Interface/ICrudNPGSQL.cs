@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace eBettingSystemV2.Services.NPGSQL.Interface
 {
-    public interface ICrudNPGSQL<T, TSearch, TInsert, TUpdate,Tless,T1> : 
-        IBaseNPGSQL<T, TSearch,Tless,T1> 
+    public interface ICrudNPGSQL<T, TSearch, TInsert, TUpdate,Tless> : 
+        IBaseNPGSQL<T, TSearch,Tless> 
         where T : class 
         where TSearch : class 
         where TInsert : class 
         where TUpdate : class
         where Tless : class
-        where T1:class //atribute from generic class
+      
     {
         Task<Tless> InsertAsync(TInsert insert);
         Task<Tless> UpsertbyIdAsync(TInsert Insert, int Id);
