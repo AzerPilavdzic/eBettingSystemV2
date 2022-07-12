@@ -44,7 +44,7 @@ namespace eBettingSystemV2.Services.Servisi
         public void SetTimer()
         {
             aTimer = new System.Timers.Timer(10000);
-            //aTimer.Elapsed += OnTimedEventDay;
+            aTimer.Elapsed += OnTimedEventDay;
             //aTimer = new System.Timers.Timer(10000);
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = false;
@@ -93,7 +93,7 @@ namespace eBettingSystemV2.Services.Servisi
             
             i++;
 
-            aTimer.Start();
+            //aTimer.Start();
 
 
         }

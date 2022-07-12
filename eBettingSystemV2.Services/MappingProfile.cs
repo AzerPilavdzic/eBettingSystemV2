@@ -68,6 +68,9 @@ namespace eBettingSystemV2.Services
             CreateMap<Country, CountryInsertRequest>();
             CreateMap<CountryInsertRequest, Country>();
 
+            CreateMap<CountryInsertRequest, CountryUpsertRequest>();
+            CreateMap<CountryUpsertRequest, CountryInsertRequest>();
+
             CreateMap<Sport, SportUpsertRequest>();
             CreateMap<SportUpsertRequest, Sport>();
 
@@ -100,6 +103,7 @@ namespace eBettingSystemV2.Services
             CreateMap<Sport, SportSearchObject>();
             CreateMap<Competition, CompetitionSearchObject>();
             CreateMap<Event, EventSearchObject>();
+
 
 
 

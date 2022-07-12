@@ -21,8 +21,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
             PrimaryKey = "teamid";
             ForeignKey = "countryid";
-            Conflict = PrimaryKey;
-
+            Conflictinsert = PrimaryKey;
+            ConflictUpsert = PrimaryKey;
         }
 
 

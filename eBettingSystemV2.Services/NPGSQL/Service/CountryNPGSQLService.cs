@@ -43,18 +43,11 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         : base(Service1,Service3) {
 
             PrimaryKey = $@"""CountryId""";
-            Conflict = PrimaryKey;
+            Conflictinsert = $@"""CountryName""";
+            ConflictUpsert = $@"""CountryId""";
+            exception = "imena koja su navedena vec postoje u bazi";
 
-            //var list = typeof(CountryModel).GetProperties();
-
-            //foreach (var a in list)
-            //{
-            //    if (a.Name != "CountryId")
-            //    {
-            //        var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
-            //        ListaAtributa.Add(text);                               
-            //    }         
-            //}                         
+                           
         }
 
 
@@ -83,8 +76,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return entity;
         
         }
-
-
 
 
         // Get Ekstenzije
@@ -210,7 +201,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             {
                 //ako korisnik nije unjeo id               
                 Query = $@"Select * From ""BettingSystem"".""Country"" 
-                        Where {GetAtribute1()} ='{item.CountryName}'";
+                        Where lower({GetAtribute1()}) =lower('{item.CountryName}')";
 
                 var entity = conn.Query<CountryUpsertRequest>(Query).FirstOrDefault();
                 
@@ -223,7 +214,25 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 OutputList.Add(item);
             }
 
-           
+            foreach (var a in OutputList)
+            {
+                if (a.CountryId == 0)
+                {
+                    CountryInsertRequest b=null;
+
+                    var insert = Mapper.Map<CountryInsertRequest>(a);
+
+                    InsertAsync(insert).Wait();
+                    a.CountryId = GetIdByNameAsync(a.CountryName).Result.CountryId;
+
+                   
+                }
+            
+            
+            }
+
+            conn.CloseAsync();
+
 
             return OutputList;
 
