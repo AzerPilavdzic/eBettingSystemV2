@@ -35,7 +35,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public virtual async Task<Tless> InsertAsync(TInsert insert)
         {
             //provjere
+            try
+            {
 
+           
            
             BeforeInsertVoid(insert);
 
@@ -53,7 +56,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             var values = GetAllValuesFromModel(typeof(TInsert), insert);
             var ReturnAtributes = GetAllAtributesFromModel(typeof(TDb));
 
-            Query += $@"insert into ""BettingSystem"".""{TableName}""";                     
+            Query += $@"insert into ""BettingSystem"".{TableName}";                     
             Query += $@"({Atributes})";          
             Query += $@" values({values})";            
             Query += $@" returning {ReturnAtributes}";
@@ -69,7 +72,13 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             BeforeInsert(insert, entity);
          
             return Mapper.Map<Tless>(entity);
+            }
 
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
 
         }
         public virtual async Task<IEnumerable<T>> UpsertOneOrMoreAsync(IEnumerable<TUpdate> List)
@@ -83,6 +92,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             var list = BeforeInsertFilterList(List); //ako ime vec postoji u bazi izbaci iz liste
 
+           
+
 
             string Query  = null;
             string AddQuery = null;//dodatak za ako korisnik ne unose id
@@ -94,8 +105,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             if (list.Count() != 0)
             {
-                Query += $@"insert into ""BettingSystem"".""{TableName}""";
-                AddQuery += $@"insert into ""BettingSystem"".""{TableName}"""; //dodatak za ako korisnik ne unose id
+                Query += $@"insert into ""BettingSystem"".{TableName}";
+                /*AddQuery += $@"insert into ""BettingSystem"".""{TableName}"""; *///dodatak za ako korisnik ne unose id
 
 
                 var Atributes = GetAllAtributesFromModel(typeof(TUpdate));
@@ -115,7 +126,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                     }
 
                 }
-                Query += $@"ON CONFLICT ({Conflict}) DO ";
+                Query += $@"ON CONFLICT ({ConflictUpsert}) DO ";
                 Query += $@"UPDATE SET {GetCoalesce2conflict(typeof(TUpdate),TableName)}";
 
                 var allatributes = GetAllAtributesFromModel(typeof(TDb));
@@ -140,18 +151,23 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public virtual async Task<IEnumerable<T>> InsertOneOrMoreAsync(IEnumerable<TInsert>List)
         {
             string Query = null;
+
             string typeParameterType = typeof(TDb).Name;
+            string TableName = typeParameterType.Any(char.IsUpper) ? $@"{typeParameterType}" : typeParameterType;
+
+
             var list = List.ToList();
             var Atributes = GetAllAtributesFromModel(typeof(TInsert));
 
+            
 
-            Query += $@"insert into ""BettingSystem"".""{typeParameterType}""";
+            Query += $@"insert into ""BettingSystem"".""{TableName}""";
             Query += $@"({Atributes})";
             Query += " Values";
             for (int i = 0; i < list.Count(); i++)
             {
                 Query += "(";
-                Query += GetValuesAllBesidesPrimary(list[i]);
+                Query += GetAllValuesFromModel(typeof(TInsert),list[i]);
                 Query += ")";
 
                 if ((i + 1) != list.Count())
@@ -161,7 +177,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 }
 
             }         
-            Query += $@" On Conflict ({GetAtribute1()}) DO NOTHING";
+            Query += $@" On Conflict ({Conflictinsert}) DO NOTHING";
             Query += $@" Returning {GetAllAtributesFromModel(typeof(TDb))}";
 
             await using var conn = new NpgsqlConnection(connString);
@@ -171,6 +187,14 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             //IEnumerable<Tless> OutPut = OutputList;
 
             conn.Close();
+
+            if (entity.Count() == 0)
+            {
+
+                throw new Exception(exception);
+            
+            }
+
 
             return entity;
 
@@ -198,17 +222,17 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             {
                 Query = $@"INSERT INTO ""BettingSystem"".{TableName} ({PrimaryKey},{GetAllAtributesFromModel(typeof(TInsert))})
                                 VALUES({Id},{GetAllValuesFromModel(typeof(TInsert),Insert)}) 
-                                ON CONFLICT({Conflict}) 
+                                ON CONFLICT({ConflictUpsert}) 
                                 DO 
-                                {UpdateSet(typeof(TInsert),Insert)}
+                                UPDATE SET {GetCoalesce2conflict(typeof(TUpdate),TableName)}
                                 returning {GetAllAtributesFromModel(typeof(TDb))}";
 
             }
 
             if (Id==0)
             {
-                Query = $@"INSERT INTO ""BettingSystem"".""{TableName}"" ({GetAllAtributesFromModel(typeof(TInsert))})
-                                VALUES({GetValue1(Insert)})                              
+                Query = $@"INSERT INTO ""BettingSystem"".{TableName} ({GetAllAtributesFromModel(typeof(TInsert))})
+                                VALUES({GetAllValuesFromModel(typeof(TInsert), Insert)})                              
                                 returning {GetAllAtributesFromModel(typeof(TDb))}";
 
             }
@@ -228,13 +252,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             }
             catch (Exception ex)
             {
-                throw new Exception("Drzava sa tim imenom vec postoji");
+                throw new Exception(ex.ToString());
             }
 
         }
-
         //Update Metode
-        public virtual async Task<T> UpdateAsync(int id, TUpdate update)
+        public virtual async Task<T> UpdateAsync(int id, TInsert update)
         {
             try
             {
@@ -246,9 +269,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
 
-                Query = $@"UPDATE ""BettingSystem"".""{TableName}""
+                Query = $@"UPDATE ""BettingSystem"".{TableName}
                            SET
-                           {GetCoalesce2(typeof(TUpdate),update,TableName)}
+                           {GetCoalesce2(typeof(TInsert),update,TableName)}
                            WHERE 
                            {PrimaryKey}={id}
                            returning {GetAllAtributesFromModel(typeof(TDb))}";
@@ -265,10 +288,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             }
             catch (Exception ex)
             {
-                throw new Exception("Drzava sa tim imenom vec postoji");
+                //throw new Exception("Drzava sa tim imenom vec postoji");
+                throw new Exception(ex.Message);
             }
         }
-
         //Delete metode
         public virtual async Task<int> DeleteAsync(int id)
         {
@@ -299,16 +322,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return id;
             
         }
-
-
-
         //Update Upsert extenzije
         public virtual TUpdate Coalesce(TUpdate update, TDb entry)
         {
             return update;
 
         }
-
         //Upsert extenzije
         public virtual bool checkIfNameSame(TInsert insert, TDb entry)
         {
@@ -316,8 +335,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return false;
 
         }
-
-
         //quary extenzije
         public virtual string GetCoalesce(TUpdate Update)
         {
@@ -492,8 +509,16 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 var value = propertyInfo.GetValue(objekt, null);
 
-                ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
+                if (value == null || value.ToString() == "0")
+                {
 
+                    ListaValues.Add("null");
+                }
+                else
+                {
+
+                    ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
+                }
             }
 
             string query = " Update Set ";

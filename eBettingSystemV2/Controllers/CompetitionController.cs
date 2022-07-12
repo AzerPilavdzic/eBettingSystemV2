@@ -138,7 +138,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateCompetitionById")]
-        public override Task<ActionResult<CompetitionModel>> Update(int id, [FromBody] CompetitionUpsertRequest update)
+        public override Task<ActionResult<CompetitionModel>> Update(int id, [FromBody] CompetitionInsertRequest update)
         {
             return base.Update(id, update);
         }

@@ -10,7 +10,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Interface
 {
     public interface ITeamNPGSQL :ICrudNPGSQL<TeamModel,
             TeamSearchObject,
-            TeamUpsertRequest,
+            TeamInsertRequest,
             TeamUpsertRequest,
             TeamModelLess,string>
     {

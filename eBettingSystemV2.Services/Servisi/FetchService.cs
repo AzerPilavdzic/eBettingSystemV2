@@ -715,7 +715,7 @@ namespace eBettingSystemV2.Services.Servisi
                     pocetakIncrementa++;
                 }
                 Console.WriteLine("Dodajem listu evenata broj "+ y+ " od "+ brojcompetition);
-            var lista =  _eventService.InsertOneOrMoreAsync(FetchModel[y]._eventi).Result;
+            var lista =  _eventService.UpsertOneOrMoreAsync(FetchModel[y]._eventi).Result;
 
             }
 

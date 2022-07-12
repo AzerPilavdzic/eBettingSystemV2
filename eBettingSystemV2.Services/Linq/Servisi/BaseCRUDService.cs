@@ -59,18 +59,19 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
            
         }
-        public virtual T Update(int id, TUpdate update)
+        public virtual T Update(int id, TInsert update)
         {
             var set = Context.Set<TDb>();
 
             var entity = set.Find(id);
 
-            update = Coalesce(update, entity);
+           
+            var update2 = Coalesce(id,update,entity);
 
 
             if (entity != null)
             {
-                Mapper.Map(update, entity);
+                Mapper.Map(update2, entity);
             }
             else
             {
@@ -195,7 +196,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
 
 
-        public virtual async Task<IEnumerable<Tless>> InsertOneOrMoreAsync(IEnumerable<TUpdate> List)
+        public virtual async Task<IEnumerable<Tless>> UpsertOneOrMoreAsync(IEnumerable<TUpdate> List)
         {
             
             var set = Context.Set<TDb>();
@@ -252,18 +253,18 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
         //Update sekcija
 
-        public virtual async Task<T> UpdateAsync(int id, TUpdate update)
+        public virtual async Task<T> UpdateAsync(int id, TInsert update)
         {
             var set = await Context.Set<TDb>().FindAsync(id);
 
             //var entity = set.FindAsync(id);
 
-            update = Coalesce(update, set);
+            var update2 = Coalesce(id,update, set);
 
 
             if (set != null)
             {
-                Mapper.Map(update, set);
+                Mapper.Map(update2, set);
             }
             else
             {
@@ -276,9 +277,9 @@ namespace eBettingSystemV2.Services.Linq.Servisi
         }
 
         //Update eskstenzije
-        public virtual TUpdate Coalesce(TUpdate update, TDb entry)
+        public virtual TUpdate Coalesce(int Id ,TInsert update, TDb entry)
         {
-            return update;
+            return update as TUpdate;
 
         }
 
@@ -331,5 +332,6 @@ namespace eBettingSystemV2.Services.Linq.Servisi
             return Mapper.Map<T>(entity);
         }
 
+        
     }
 }

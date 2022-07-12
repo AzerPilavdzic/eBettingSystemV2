@@ -91,7 +91,7 @@ namespace eBettingSystemV2.Services.Servisi
             var list = Mapper.Map<IEnumerable<CompetitionUpsertRequest>>(competitions);
 
             //pokrecemo pohranu podataka
-            var result= await ICompetitionService.InsertOneOrMoreAsync(list);
+            var result= await ICompetitionService.UpsertOneOrMoreAsync(list);
 
 
             //competitions = Mapper.Map<List<Competition>>(result);

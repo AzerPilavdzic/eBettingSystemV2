@@ -200,8 +200,8 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateSport/{id}")]
-        public override async Task<ActionResult<SportModel>> Update(int id, [FromBody] SportUpsertRequest update)
 
+        public override Task<ActionResult<SportModel>> Update(int id, [FromBody] SportInsertRequest update)
         {
             var result = await SportsNPGSQL.UpdateAsync(id, update);
             return Ok(result);

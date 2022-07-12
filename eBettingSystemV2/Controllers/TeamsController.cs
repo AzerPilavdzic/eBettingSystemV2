@@ -19,7 +19,7 @@ namespace eBettingSystemV2.Controllers
     [ApiController]
     [Route("[controller]")]
     //public class CountryController
-    public class TeamsController : BaseCRUDController<TeamModel, TeamSearchObject, TeamUpsertRequest, TeamUpsertRequest,TeamModelLess>
+    public class TeamsController : BaseCRUDController<TeamModel, TeamSearchObject, TeamInsertRequest, TeamUpsertRequest,TeamModelLess>
     {
         public static List<Country> Test = new List<Country>();
         //private ITeamService ITeamService { get; set; }
@@ -150,7 +150,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("InsertTeam")]
-        public override async Task<ActionResult<TeamModel>> Insert(TeamUpsertRequest insert)
+        public override async Task<ActionResult<TeamModel>> Insert(TeamInsertRequest insert)
         {
 
             //try
@@ -182,7 +182,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("UpsertTeam")]
-        public override async Task<ActionResult<TeamModelLess>> InsertById(int Id, TeamUpsertRequest Insert)
+        public override async Task<ActionResult<TeamModelLess>> InsertById(int Id, TeamInsertRequest Insert)
         {
             try
             {
@@ -219,10 +219,26 @@ namespace eBettingSystemV2.Controllers
 
         }
 
+        [HttpPost]
+        [Route("InsertOneOrMoreTeams")]
+        public override async Task<ActionResult<IEnumerable<TeamModel>>> InsertOneOrMore(IEnumerable<TeamInsertRequest> insertlist)
+        {
+            try
+            {
+                var result = await ITeamNPGSQL.InsertOneOrMoreAsync(insertlist);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [HttpPut]
         [Route("UpdateTeam/{Id}")]
-        public override async Task<ActionResult<TeamModel>> Update(int Id, [FromBody] TeamUpsertRequest update)
+        public override async Task<ActionResult<TeamModel>> Update(int Id, [FromBody] TeamInsertRequest update)
         {
             try
             {
