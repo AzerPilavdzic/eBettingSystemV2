@@ -25,7 +25,7 @@ namespace eBettingSystemV2.Controllers
 
         private ISportService ISportService { get; set; }
 
-        public ISportsNPGSQL ISportsNPGSQL { get; set; }
+        public ISportsNPGSQL SportsNPGSQL { get; set; }
 
 
         private readonly ILogger<SportController> _logger;
@@ -34,7 +34,7 @@ namespace eBettingSystemV2.Controllers
         public SportController(ISportService service, ISportsNPGSQL service2, ILogger<SportController> logger) : base(service)
         {
             ISportService = service;
-            ISportsNPGSQL = service2;
+            SportsNPGSQL = service2;
             _logger = logger;
 
         }
@@ -42,19 +42,54 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetAllSport")]
-        public override Task<ActionResult<IEnumerable<SportModel>>> Get([FromQuery] SportSearchObject search = null)
+        public override async Task<ActionResult<IEnumerable<SportModel>>> Get([FromQuery] SportSearchObject search = null)
         {
+            try
+            {
 
-            return base.Get(search);
+                //CHECK PAGE
+                //CHECK NEGATIVE
 
+
+                var List = await SportsNPGSQL.GetNPGSQLGeneric(search);
+
+                if (List.Count() == 0)
+                    return NotFound("Podaci ne postoje u bazi");
+                else
+                    return Ok(List);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
 
         }
 
         [HttpGet]
         [Route("GetSportById/{id}")]
-        public override Task<ActionResult<SportModel>> GetById(int id)
+        public override async Task<ActionResult<SportModel>> GetById(int id)
         {
-            return base.GetById(id);
+            try
+            {
+                var Model = await SportsNPGSQL.GetByIdAsync(id);
+
+                if (Model == null)
+                {
+                    return NotFound("Podatak ne postoji u bazi");
+                }
+                else
+                {
+                    return Ok(Model);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+
+
+            }
         }
 
         [HttpGet]
@@ -63,7 +98,7 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await ISportService.GetSportIdbyNameAsync(name);
+                var result = await SportsNPGSQL.GetIdByNameAsync(name);
                 return result;
             }
             catch (Exception ex)
@@ -85,26 +120,46 @@ namespace eBettingSystemV2.Controllers
 
             try
             {
-                var result = await base.Insert(insert);
-                return result;
+                var result = await SportsNPGSQL.InsertAsync(insert);
+
+                if (result == null)
+                {
+                    return BadRequest("Ime vec postoji");
+                }
+                else
+                {
+                    return Ok(result);
+                }
             }
             catch (Exception ex)
             {
+                _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
+                throw;
             }
 
         }
 
         [HttpPost]
         [Route("UpsertOneOrMoreSports")]
-        public override Task<ActionResult<IEnumerable<SportModel>>> UpsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
+        public override async Task<ActionResult<IEnumerable<SportModel>>> UpsertOneOrMore(IEnumerable<SportUpsertRequest> insertlist)
         {
-            return base.UpsertOneOrMore(insertlist);
+            try
+            {
+                var result = await SportsNPGSQL.UpsertOneOrMoreAsync(insertlist);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
+
         }
 
 
         [HttpPost]
-        [Route("UpsertSports")]
+        [Route("UpsertSport")]
         public override Task<ActionResult<SportModelLess>> InsertById(int Id, SportInsertRequest Insert)
         {
             return base.InsertById(Id, Insert);
@@ -117,11 +172,11 @@ namespace eBettingSystemV2.Controllers
 
             try
             {
-                var result = await ISportService.DeleteAsync(SportsId);
+                var result = await SportsNPGSQL.DeleteAsync(SportsId);
 
                 if (result != SportsId)
                 {
-                    return BadRequest($"Drzava ne postoji ");
+                    return BadRequest($"Sport ne postoji ");
                 }
                 else
                 {
@@ -145,10 +200,11 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateSport/{id}")]
-        public override Task<ActionResult<SportModel>> Update(int id, [FromBody] SportInsertRequest update)
 
+        public override Task<ActionResult<SportModel>> Update(int id, [FromBody] SportInsertRequest update)
         {
-            return base.Update(id, update);
+            var result = await SportsNPGSQL.UpdateAsync(id, update);
+            return Ok(result);
         }
 
 

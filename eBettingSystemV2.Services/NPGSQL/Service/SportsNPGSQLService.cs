@@ -30,7 +30,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         BCrudNPGSQLService
         <
         SportModel,
-        Sport,
+        sport,
         SportSearchObject,
         SportInsertRequest,
         SportUpsertRequest,
@@ -42,12 +42,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public SportsNPGSQLService(IConfiguration Service1, IMapper Service3)
         : base(Service1,Service3) {
 
-            PrimaryKey = $@"""SportId""";           
+            PrimaryKey = $@"""SportsId""";           
             var list = typeof(SportModel).GetProperties();
 
             foreach (var a in list)
             {
-                if (a.Name != "SportId")
+                if (a.Name != "SportsId")
                 {
                     var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
                     ListaAtributa.Add(text);                               
@@ -61,7 +61,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
 
             string Query = null;
-            string typeParameterType = typeof(Sport).Name;
+            string typeParameterType = typeof(sport).Name;
             Query += $@"select *  from ""BettingSystem"".""{typeParameterType}"" ";
             Query += $@"where {GetAtribute1()} = '{name}'; ";
 
@@ -122,18 +122,18 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return $@"
                {PrimaryKey}=coalesce({Update.SportsId},""BettingSystem"".""sport"".{PrimaryKey}),
                {GetAtribute1()}=coalesce('{Update.name}',""BettingSystem"".""sport"".{GetAtribute1()})
-                    ";       
-           
+                    ";
 
-        }      
+
+        }
         public override string GetAtribute1()
         {
             return $@"""name""";
-        }            
+        }
         public override string GetValue1(SportInsertRequest insert)
         {
             return $@"'{insert.name}'";
-        }    
+        }
         public override string GetValuesAll(SportInsertRequest insert, int id)
         {
             return $@"{id},'{insert.name}'";
@@ -154,8 +154,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             using var conn = new NpgsqlConnection(connString);
             conn.Open();
 
-            var List = conn.Query($@"Select * from ""BettingSystem"".""Sport"" 
-             where (lower(""SportName"") = lower('{insert.name}'))");
+            var List = conn.Query($@"Select * from ""BettingSystem"".""sport"" 
+             where (lower(""name"") = lower('{insert.name}'))");
             var entity = List.FirstOrDefault();
 
             if (entity != null)
@@ -173,9 +173,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         //Upsert Extenzije
-        public override bool checkIfNameSame(SportInsertRequest insert, Sport entry)
+        public override bool checkIfNameSame(SportInsertRequest insert, sport entry)
         {
-            if (insert.name== entry?.Name)
+            if (insert.name== entry?.name)
             {
 
                 return true;
@@ -195,7 +195,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             foreach (var item in List)
             {
                 //ako korisnik nije unjeo id               
-                Query = $@"Select * From ""BettingSystem"".""Sport"" 
+                Query = $@"Select * From ""BettingSystem"".""sport"" 
                         Where {GetAtribute1()} ='{item.name}'";
 
                 var entity = conn.Query<SportUpsertRequest>(Query).FirstOrDefault();
@@ -224,8 +224,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             using var conn = new NpgsqlConnection(connString);
             conn.Open();
 
-            var List = conn.Query($@"Select * from ""BettingSystem"".""Sport"" 
-             where (lower(""SportName"") = lower('{insert.name}'))");
+            var List = conn.Query($@"Select * from ""BettingSystem"".""sport"" 
+             where (lower(""name"") = lower('{insert.name}'))");
             var entity = List.FirstOrDefault();
 
             if (entity != null)
@@ -240,8 +240,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             using var conn = new NpgsqlConnection(connString);
             conn.Open();
 
-            var List = conn.Query($@"Select * from ""BettingSystem"".""Sport"" 
-             where (lower(""SportName"") = lower('{Update.name}'))");
+            var List = conn.Query($@"Select * from ""BettingSystem"".""sport"" 
+             where (lower(""name"") = lower('{Update.name}'))");
             var entity = List.FirstOrDefault();
 
             if (entity != null)
