@@ -1,10 +1,16 @@
 
 ﻿using AutoMapper;
+using Dapper;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.DataBase;
 using eBettingSystemV2.Services.NPGSQL.Interface;
 using Microsoft.Extensions.Configuration;
+
+
+using Npgsql;
+
+
 
 using System;
 using System.Collections.Generic;
@@ -26,6 +32,61 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             Conflictinsert = PrimaryKey;
             ConflictUpsert = PrimaryKey;
         }
+
+
+        //Get funkcije
+        public CompetitionModelLess GetIdbyNazivAsync(string name)
+        {
+            try
+            {
+
+                string Query = null;
+                string typeParameterType = typeof(competition).Name;
+
+                string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+
+                Query += $@"select *  from ""BettingSystem"".{TableName} ";
+
+                Query += $@"where naziv = {name}; ";
+
+                using var conn = new NpgsqlConnection(connString);
+                conn.OpenAsync();
+
+                var quary = conn.Query<CompetitionModelLess>(Query).FirstOrDefault();
+                
+
+                if (Query == null)
+                {
+
+                    return new CompetitionModelLess { Id = 0 };
+                
+                }
+
+                
+
+                //var entity = quary.FirstOrDefault();
+
+                return quary;
+
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+
+
+
+
+
+
+
+        }
+
+
+
+
+
 
 
         //Get Ekstenzije

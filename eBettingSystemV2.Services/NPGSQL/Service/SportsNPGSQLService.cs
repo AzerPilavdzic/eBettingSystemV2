@@ -119,17 +119,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         //Insert extensions
 
         //query ekstenzije
-        public override string GetCoalesce(SportUpsertRequest Update)
-        {
-            //ako je 0 to je null ,ako je string to je null
-
-            return $@"
-               {PrimaryKey}=coalesce({Update.SportsId},""BettingSystem"".""sport"".{PrimaryKey}),
-               {GetAtribute1()}=coalesce('{Update.name}',""BettingSystem"".""sport"".{GetAtribute1()})
-                    ";
-
-
-        }
+       
         public override string GetAtribute1()
         {
             return $@"""name""";
