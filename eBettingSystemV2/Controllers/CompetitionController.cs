@@ -83,9 +83,27 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetCompetitionById/{id}")]
-        public override Task<ActionResult<CompetitionModel>> GetById(int id)
+        public override async Task<ActionResult<CompetitionModel>> GetById(int id)
         {
-            return base.GetById(id);
+            //return base.GetById(id);
+
+            try
+            {
+                var result = await ICompetitionNPGSQL.GetByIdAsync(id);
+
+                return Ok(result);
+
+                //return base.Get(search);
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+
+            }
+
         }
 
         [HttpGet]
@@ -95,10 +113,11 @@ namespace eBettingSystemV2.Controllers
             try
             {
                 var result = ICompetitionService.GetIdbyNazivAsync(Naziv);
-                return result;
+                return Ok(result);
             }
             catch (Exception ex)
             {
+                _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
 

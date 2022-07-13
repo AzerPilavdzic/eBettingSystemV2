@@ -638,6 +638,8 @@ namespace eBettingSystemV2.Services.Servisi
 
                 eventsListFetched = _eventsNode.ToList().Where(x => x.InnerHtml.ToString() != " ").ToList();
 
+                Console.WriteLine("Dodajem listu evenata broj " + y + " od " + brojcompetition);
+
                 for (int i = 0; i < eventsListFetched.Count(); i++)
                 {
                     HtmlWeb _web = new HtmlWeb();
@@ -714,8 +716,21 @@ namespace eBettingSystemV2.Services.Servisi
 
                     });
                     pocetakIncrementa++;
+
+                    double ukupno = eventsListFetched.Count();
+
+
+                    
+                    double num = (i + 1) / ukupno * 100;
+                    int intnum = Convert.ToInt32(num);
+
+
+                    Console.SetCursorPosition(0, Console.CursorTop - 1);
+                    ClearCurrentConsoleLine();
+
+                    Console.WriteLine("Dodajem listu evenata broj "+ CompetitionNaziv[y].PadRight(30) + " " + (y+1) + " od " + brojcompetition + " "+intnum+ "% " +(i+1) +"/" +ukupno);
                 }
-                Console.WriteLine("Dodajem listu evenata broj "+ y+ " od "+ brojcompetition);
+                
             var lista =  _eventService.UpsertOneOrMoreAsync(FetchModel[y]._eventi).Result;
 
             }
@@ -726,6 +741,17 @@ namespace eBettingSystemV2.Services.Servisi
 
 
         }
+
+        public void ClearCurrentConsoleLine()
+        {
+            int currentLineCursor = Console.CursorTop;
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, currentLineCursor);
+        }
+
+
+
 
 
     }
