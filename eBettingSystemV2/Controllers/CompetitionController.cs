@@ -4,6 +4,8 @@ using eBettingSystemV2.Models;
 using eBettingSystemV2.Services;
 using eBettingSystemV2.Services.DataBase;
 using eBettingSystemV2.Services.Interface;
+using eBettingSystemV2.Services.Linq.Interface;
+using eBettingSystemV2.Services.NPGSQL.Interface;
 //using eBettingSystemV2.Models;
 using eProdaja.Controllers;
 using Microsoft.AspNetCore.Cors;
@@ -24,6 +26,8 @@ namespace eBettingSystemV2.Controllers
     {
         //public static List<Country> Test = new List<Country>();
         private ICompetitionService ICompetitionService { get; set; }
+        private ICompetitionNPGSQL ICompetitionNPGSQL { get; set; }
+
         private readonly ILogger<CompetitionController> _logger;
 
 
@@ -36,9 +40,14 @@ namespace eBettingSystemV2.Controllers
         private IMemoryCache _cache { get; set; }
 
 
-        public CompetitionController(ICompetitionService service, ILogger<CompetitionController> logger, IMemoryCache memoryCache) : base(service)
+        public CompetitionController(ICompetitionService service,
+            ILogger<CompetitionController> logger,
+            IMemoryCache memoryCache,
+            ICompetitionNPGSQL service2
+            ) : base(service)
         {
             ICompetitionService = service;
+            ICompetitionNPGSQL = service2;
             _logger = logger;
             _cache = memoryCache;
         }
@@ -47,11 +56,29 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetAllCompetitions")]
-        public override Task<ActionResult<IEnumerable<CompetitionModel>>> Get([FromQuery] CompetitionSearchObject search = null)
+        public override async Task<ActionResult<IEnumerable<CompetitionModel>>> Get([FromQuery] CompetitionSearchObject search = null)
         {
-            //var cacheKey = "competitionList";
+            try
+            {
+                var result = await ICompetitionNPGSQL.GetNPGSQLGeneric(search);
 
-            return base.Get(search);
+                return Ok(result);
+               
+                //return base.Get(search);
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+               
+            }
+
+
+
+
+            
         }
 
         [HttpGet]

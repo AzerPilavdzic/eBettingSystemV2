@@ -14,8 +14,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Interface
              CountrySearchObject,
              CountryInsertRequest,
              CountryUpsertRequest,
-             CountryModelLess,
-             string>
+             CountryModelLess
+             >
     {
         Task<CountryModelLess> GetIdByNameAsync(string name);
 

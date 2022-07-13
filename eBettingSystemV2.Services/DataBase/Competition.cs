@@ -5,9 +5,11 @@ using System.Collections.Generic;
 
 namespace eBettingSystemV2.Services.DataBase
 {
-    public partial class Competition
+
+    //naziv mora biti kao u bazi
+    public partial class competition
     {
-        public Competition()
+        public competition()
         {
             Events = new HashSet<Event>();
         }

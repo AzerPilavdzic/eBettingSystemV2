@@ -9,14 +9,14 @@ namespace eBettingSystemV2.Services.DataBase
     {
         public sport()
         {
-            Competitions = new HashSet<Competition>();
+            Competitions = new HashSet<competition>();
             Teams = new HashSet<teams>();
         }
 
         public int SportsId { get; set; }
         public string name { get; set; }
 
-        public virtual ICollection<Competition> Competitions { get; set; }
+        public virtual ICollection<competition> Competitions { get; set; }
         public virtual ICollection<teams> Teams { get; set; }
     }
 }
