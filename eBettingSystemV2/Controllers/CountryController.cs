@@ -206,7 +206,7 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await ICountryNPGSQL.UpdateAsync(id, update);
+                var result = await ICountryService.UpdateAsync(id, update);
 
                 return Ok(result);
             }

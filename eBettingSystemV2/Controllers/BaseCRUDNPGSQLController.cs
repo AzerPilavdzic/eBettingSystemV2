@@ -107,7 +107,7 @@ namespace eProdaja.Controllers
 
 
         [HttpPut("{id}")]
-        public virtual async Task<ActionResult<T>> Update(int id, [FromBody] TUpdate update)
+        public virtual async Task<ActionResult<T>> Update(int id, [FromBody] TInsert update)
         {
             var result = await ((ICrudNPGSQL<T, TSearch, TInsert, TUpdate, Tless>)this.Service).UpdateAsync(id, update);
             return Ok(result);

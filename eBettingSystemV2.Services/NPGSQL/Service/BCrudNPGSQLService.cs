@@ -235,10 +235,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 string Query = null;
 
                 string typeParameterType = typeof(TDb).Name;
+                string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
 
-             
 
-            if (Id!=0)
+                if (Id!=0)
             {
                 Query = $@"INSERT INTO ""BettingSystem"".{TableName} ({PrimaryKey},{GetAllAtributesFromModel(typeof(TInsert))})
                                 VALUES({Id},{GetAllValuesFromModel(typeof(TInsert),Insert)}) 
