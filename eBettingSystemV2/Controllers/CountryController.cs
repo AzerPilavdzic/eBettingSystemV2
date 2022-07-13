@@ -200,13 +200,12 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpPut]
-        
         [Route("UpdateCountry/{id}")]
         public override async Task<ActionResult<CountryModel>> Update(int id, [FromBody] CountryInsertRequest update)
         {
             try
             {
-                var result = await ICountryNPGSQL.UpdateAsync(id, update);
+                var result = await ICountryService.UpdateAsync(id,update);
 
                 return Ok(result);
             }

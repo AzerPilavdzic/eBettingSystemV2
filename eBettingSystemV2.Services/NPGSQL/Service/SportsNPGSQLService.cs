@@ -42,7 +42,11 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public SportsNPGSQLService(IConfiguration Service1, IMapper Service3)
         : base(Service1,Service3) {
 
-            PrimaryKey = $@"""SportsId""";           
+
+            PrimaryKey = $@"""SportsId""";
+            Conflictinsert = PrimaryKey;
+            ConflictUpsert = PrimaryKey;
+            
             var list = typeof(SportModel).GetProperties();
 
             foreach (var a in list)

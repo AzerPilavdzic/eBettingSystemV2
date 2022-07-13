@@ -136,9 +136,9 @@ namespace eBettingSystemV2.Controllers
         public async override Task<ActionResult<SportModelLess>> InsertById(int Id, SportInsertRequest Insert)
         {
             try
-            {  
-               
-                var result = await base.InsertById(Id, Insert);
+            {
+
+                var result = await ISportService.UpsertbyIdAsync(Insert,Id);
 
                 return Ok(result);
             }
@@ -152,7 +152,7 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateSport/{id}")]
-        public override async Task<ActionResult<SportModel>> Update(int id, [FromBody] SportUpsertRequest update)
+        public override async Task<ActionResult<SportModel>> Update(int id, [FromBody] SportInsertRequest update)
         {
 
             try
@@ -207,24 +207,5 @@ namespace eBettingSystemV2.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-
-
-
-        [HttpPut]
-        [Route("UpdateSport/{id}")]
-
-        public override async Task<ActionResult<SportModel>> Update(int id, [FromBody] SportInsertRequest update)
-        {
-            var result = await SportsNPGSQL.UpdateAsync(id, update);
-            return Ok(result);
-        }
-
-
-
-
-
-
-
     }
 }

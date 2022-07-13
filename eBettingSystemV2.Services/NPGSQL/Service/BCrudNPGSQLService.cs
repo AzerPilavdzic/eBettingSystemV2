@@ -154,7 +154,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 return entity;
             }
 
-            throw new Exception("Lista nije validna");
+            throw new Exception("Upsert nije izvrsen");
 
 
         }
@@ -236,9 +236,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 string typeParameterType = typeof(TDb).Name;
 
-             
 
-            if (Id!=0)
+                string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+                if (Id!=0)
             {
                 Query = $@"INSERT INTO ""BettingSystem"".{TableName} ({PrimaryKey},{GetAllAtributesFromModel(typeof(TInsert))})
                                 VALUES({Id},{GetAllValuesFromModel(typeof(TInsert),Insert)}) 
