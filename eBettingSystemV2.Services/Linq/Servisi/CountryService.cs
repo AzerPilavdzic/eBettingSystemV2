@@ -214,7 +214,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
         public override void BeforeDelete(int id)
         {
             var entry = Context.Teams.Where(X=>X.countryid==id).FirstOrDefault();
-            var dalipostojicompetition = Context.Competitions.Where(X=>X.Countryid==id).FirstOrDefault();
+            var dalipostojicompetition = Context.Competitions.Where(X=>X.countryid==id).FirstOrDefault();
 
             if (entry != null)
             {

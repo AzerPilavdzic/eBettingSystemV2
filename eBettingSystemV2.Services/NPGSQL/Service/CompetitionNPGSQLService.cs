@@ -45,7 +45,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 Query += $@"select *  from ""BettingSystem"".{TableName} ";
 
-                Query += $@"where naziv = {name}; ";
+                Query += $@"where naziv = '{name}'; ";
 
                 using var conn = new NpgsqlConnection(connString);
                 conn.OpenAsync();
@@ -168,6 +168,142 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         }
 
 
+        //insert Esktenzije 
+        public override void BeforeInsertVoid(CompetitionInsertRequest insert,int Id=0)
+        {
+
+
+
+            string QuerySport = null;
+            string QueryCountries = null;
+
+
+            QuerySport += $@"select *  from ""BettingSystem"".sport ";
+            QuerySport += $@"where ""SportsId"" = {insert.sportid}; ";
+
+            QueryCountries += $@"select *  from ""BettingSystem"".""Country"" ";
+            QueryCountries += $@"where ""CountryId"" = {insert.countryid}; ";
+
+            using var conn = new NpgsqlConnection(connString);
+            conn.OpenAsync();
+
+            var sportpostoji = conn.Query<sport>(QuerySport).FirstOrDefault();          
+            var countrypostoji = conn.Query<Country>(QueryCountries).FirstOrDefault();
+
+
+            //ako id posotoji a ne postoje fk
+            //id postojati za to 
+            //
+
+            // uslov postojanja insert.id , entry u bazi  da bi proslijedio foreign key null
+            // uslov postojanja insert.id , entry u bazi i foriegn key koji postoji
+
+            //slucaj u kojem samo naziv             //baca error
+            //slucaj u kojem id ,naziv              //prođe edit samo naziv
+            //slucaj u kojem id,naziv i foreign key //provjerava foreign keyove       
+            //slucaj u kojem foreign key samo       //provjereava 
+
+            if (Id == 0 && insert.countryid == 0 && insert.sportid == 0)
+            {
+
+                throw new Exception($"foreign keyovi nisu navedeni ");
+
+
+            }
+            if (Id != 0 && (insert.sportid != 0 || insert.countryid != 0))
+            {
+
+                if (sportpostoji == null && insert.sportid != 0)
+                {
+
+                    throw new Exception($"Nije moguce napraviti vezu sa tabelom sport jer Sport sa sportsID {insert.sportid} ne postoji ");
+
+
+                }
+
+                if (countrypostoji == null && insert.countryid != 0)
+                {
+
+                    throw new Exception($"Nije moguce napraviti vezu sa tabelom Country jer Country sa CountryID {insert.countryid} ne postoji ");
+
+
+                }
+
+            }
+            if (insert.sportid != 0 && insert.countryid !=0)
+            {
+
+                if (sportpostoji == null)
+                {
+
+                    throw new Exception($"Nije moguce napraviti vezu sa tabelom sport jer Sport sa sportsID {insert.sportid} ne postoji ");
+
+
+                }
+
+                if (countrypostoji == null)
+                {
+
+                    throw new Exception($"Nije moguce napraviti vezu sa tabelom Country jer Country sa CountryID {insert.countryid} ne postoji ");
+
+
+                }
+
+
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+
+        //upsert ekstenzije 
+        public override CompetitionInsertRequest foreignkeyfix(int Id, CompetitionInsertRequest insert)
+        {
+
+            if (Id == 0)
+            {
+
+                return insert;
+            
+            }
+
+            string QueryCompetition = null;
+
+
+
+            QueryCompetition += $@"select *  from ""BettingSystem"".competition ";
+            QueryCompetition += $@"where id = {Id}; ";   
+
+            using var conn = new NpgsqlConnection(connString);
+            conn.OpenAsync();
+
+            
+            var competition = conn.Query<competition>(QueryCompetition).FirstOrDefault();
+
+            insert.countryid = insert.countryid==0?competition.countryid:insert.countryid;
+            insert.sportid =  insert.sportid == 0 ? competition.sportid.Value : insert.sportid;
+
+            return insert;
+
+
+
+        }
 
 
 

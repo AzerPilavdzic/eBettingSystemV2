@@ -73,10 +73,10 @@ namespace eBettingSystemV2.Services.Servisi
                 {
 
                     //kad dobijemo sve id pohranjujemo u competition
-                    Naziv = b.Competitionname,           //competencija1
+                    naziv = b.Competitionname,           //competencija1
                     //Id = Competition.Id,  //45
-                    Sportid = Sport.SportsId,        //kosarka 5  ako ne postoji doda i onda vrati id
-                    Countryid = Country.CountryId,     //country ukraine 5
+                    sportid = Sport.SportsId,        //kosarka 5  ako ne postoji doda i onda vrati id
+                    countryid = Country.CountryId,     //country ukraine 5
 
 
                 };
@@ -97,16 +97,16 @@ namespace eBettingSystemV2.Services.Servisi
             //competitions = Mapper.Map<List<Competition>>(result);
 
             //ako kompetition sadrzi 0 onda mjenjamo id sa id iz result
-            if (competitions.Where(X => X.Id == 0).FirstOrDefault() != null)
+            if (competitions.Where(X => X.id == 0).FirstOrDefault() != null)
             {
 
                 foreach (var a in competitions)
                 {
                     foreach (var b in result)
                     {
-                        if (a.Id == 0)
+                        if (a.id == 0)
                         {
-                            a.Id = b.Id;
+                            a.id = b.Id;
 
                         }
 
