@@ -40,7 +40,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
            
            
-            BeforeInsertVoid(insert);
+            BeforeInsertVoid(insert,0);
 
             //if (!BeforeInsertBool(insert))
             //{
@@ -208,9 +208,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             try
             {
-
-           
-            BeforeInsertVoid(Insert); 
+            BeforeInsertVoid(Insert,Id);
+            Insert = foreignkeyfix(Id, Insert);
 
             string Query = null;
 
@@ -261,7 +260,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
             try
             {
-                BeforeInsertVoid(update);
+                BeforeInsertVoid(update,id);
+                //update =foreignkeyfix(id, update);
 
                 string Query = null;
 
@@ -678,12 +678,22 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         //before Extenzije
+
+
+        public virtual TInsert foreignkeyfix(int Id,TInsert insert)
+        {
+            //za foriegn key coalesce
+
+
+            return insert;
+        
+        }
         public virtual List<TUpdate> BeforeInsertFilterList(IEnumerable<TUpdate> List)
         {
 
             return List.ToList();
         }
-        public virtual void BeforeInsertVoid(TInsert insert)
+        public virtual void BeforeInsertVoid(TInsert insert,int Id)
         {
 
         }

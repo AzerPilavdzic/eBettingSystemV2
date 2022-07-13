@@ -219,7 +219,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         }
-        public override void BeforeInsertVoid(SportInsertRequest insert)
+        public override void BeforeInsertVoid(SportInsertRequest insert,int Id=0)
         {
             using var conn = new NpgsqlConnection(connString);
             conn.Open();
