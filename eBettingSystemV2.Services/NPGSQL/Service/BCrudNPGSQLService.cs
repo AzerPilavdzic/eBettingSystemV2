@@ -234,7 +234,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 string Query = null;
 
+
                 string typeParameterType = typeof(TDb).Name;
+
 
 
                 string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
@@ -566,10 +568,13 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
         }
 
-        public virtual string GetCoalesce2(Type Tip, object objekt,string TableName)
+
+      
 
 
         
+
+        public virtual string GetCoalesce2(Type Tip, object objekt,string TableName)
         {
             List<string> ListaAtributa = new List<string>();
             List<string> ListaValues = new List<string>();
@@ -637,7 +642,11 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return query;
 
 
+
+
         }
+
+
         public virtual string GetCoalesce2conflict(Type Tip, string TableName)
         {
             List<string> ListaAtributa = new List<string>();
