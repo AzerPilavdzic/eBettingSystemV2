@@ -1,5 +1,6 @@
 ﻿using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
+using eBettingSystemV2.Services.DataBase;
 using eBettingSystemV2.Services.NPGSQL.Interface;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Interface
              CountrySearchObject,
              CountryInsertRequest,
              CountryUpsertRequest,
-             CountryModelLess
-             >
+             CountryModelLess>            
     {
         Task<CountryModelLess> GetIdByNameAsync(string name);
 
