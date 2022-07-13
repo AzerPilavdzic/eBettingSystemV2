@@ -169,11 +169,13 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await base.UpsertOneOrMore(insertlist);
-                return result;
+                //var result = await base.UpsertOneOrMore(insertlist);
+                var result = await ICompetitionNPGSQL.UpsertOneOrMoreAsync(insertlist);
+                return Ok(result);
             }
             catch (Exception ex)
             {
+                _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
 

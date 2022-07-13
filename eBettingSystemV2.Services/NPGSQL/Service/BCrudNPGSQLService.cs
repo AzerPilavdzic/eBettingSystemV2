@@ -87,8 +87,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
 
-            //for tomorrow;
-            var stringtext = GetAllValuesFromModel(typeof(TUpdate),List.FirstOrDefault());
+           
 
             var list = BeforeInsertFilterList(List); //ako ime vec postoji u bazi izbaci iz liste
 
@@ -96,7 +95,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
             string Query  = null;
-            string AddQuery = null;//dodatak za ako korisnik ne unose id
+            
 
             string typeParameterType = typeof(TDb).Name;
 
