@@ -12,6 +12,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Interface
         where T : class 
         where TSearch : class
         where Tless : class       
+
     {
         //Task<IEnumerable<GenericRasponseClass<T1>>> GetNPGSQLGeneric(TSearch search = null);
 

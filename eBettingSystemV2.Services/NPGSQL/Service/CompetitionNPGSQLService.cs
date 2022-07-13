@@ -1,3 +1,4 @@
+
 ﻿using AutoMapper;
 using Dapper;
 using eBettingSystemV2.Model.SearchObjects;
@@ -5,7 +6,10 @@ using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.DataBase;
 using eBettingSystemV2.Services.NPGSQL.Interface;
 using Microsoft.Extensions.Configuration;
+
 using Npgsql;
+
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -179,3 +183,4 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
     }
 }
+

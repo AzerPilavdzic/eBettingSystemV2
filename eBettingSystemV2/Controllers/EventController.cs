@@ -11,18 +11,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using eBettingSystemV2.Services.Interface;
+using eBettingSystemV2.Services.NPGSQL.Interface;
 
 namespace eBettingSystemV2.Controllers
 {
 
     [ApiController]
     [Route("[controller]")]
-    public class EventController : BaseCRUDController<EventModel, EventSearchObject, EventInsertRequest, EventUpsertRequest, EventModelLess>
+    public class EventController : BaseCRUDNPGSQLController<EventModel, EventSearchObject, EventInsertRequest, EventUpsertRequest, EventModelLess>
     {
-        private IEventService IEventService { get; set; }
+        //private IEventService IEventService { get; set; }
+        private IEventsNPGSQL IEventService { get; set; }
+        
         private readonly ILogger<EventController> _logger;
 
-        public EventController(IEventService service, ILogger<EventController> logger) : base(service)
+        public EventController(IEventsNPGSQL service, ILogger<EventController> logger) : base(service)
         {
             IEventService = service;
             _logger = logger;
@@ -33,7 +36,6 @@ namespace eBettingSystemV2.Controllers
         [Route("GetAllEvents")]
         public override Task<ActionResult<IEnumerable<EventModel>>> Get([FromQuery] EventSearchObject search = null)
         {
-
             return base.Get(search);
         }
 
