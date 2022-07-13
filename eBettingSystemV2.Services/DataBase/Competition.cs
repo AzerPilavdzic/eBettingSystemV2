@@ -14,10 +14,10 @@ namespace eBettingSystemV2.Services.DataBase
             Events = new HashSet<Event>();
         }
 
-        public int Id { get; set; }
-        public string Naziv { get; set; }
-        public int Countryid { get; set; }
-        public int? Sportid { get; set; }
+        public int id { get; set; }
+        public string naziv { get; set; }
+        public int countryid { get; set; }
+        public int? sportid { get; set; }
 
         public virtual Country Country { get; set; }
         public virtual sport Sport { get; set; }

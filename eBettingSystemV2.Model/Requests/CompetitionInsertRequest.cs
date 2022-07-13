@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 namespace eBettingSystemV2.Model.SearchObjects
 
 {
+
+    //imena moraju biti ista kao kolone u bazi
     public class CompetitionInsertRequest
     {
-        public string Naziv { get; set; }
-        public int Sportid { get; set; }
-        public int Countryid { get; set; }
+        public string naziv { get; set; }
+        public int sportid { get; set; }
+        public int countryid { get; set; }
     }
 }

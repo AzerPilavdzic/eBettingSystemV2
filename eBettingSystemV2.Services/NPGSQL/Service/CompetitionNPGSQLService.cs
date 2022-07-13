@@ -41,7 +41,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 Query += $@"select *  from ""BettingSystem"".{TableName} ";
 
-                Query += $@"where naziv = {name}; ";
+                Query += $@"where naziv = '{name}'; ";
 
                 using var conn = new NpgsqlConnection(connString);
                 conn.OpenAsync();
@@ -160,6 +160,55 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             return query;
                
+
+        }
+
+
+        //insert Esktenzije 
+        public override void BeforeInsertVoid(CompetitionInsertRequest insert)
+        {
+            string QuerySport = null;
+            string QueryCountries = null;
+
+
+            QuerySport += $@"select *  from ""BettingSystem"".sport ";
+            QuerySport += $@"where ""SportsId"" = {insert.sportid}; ";
+
+            QueryCountries += $@"select *  from ""BettingSystem"".""Country"" ";
+            QueryCountries += $@"where ""CountryId"" = {insert.countryid}; ";
+
+            using var conn = new NpgsqlConnection(connString);
+            conn.OpenAsync();
+
+            var sportpostoji = conn.Query<sport>(QuerySport).FirstOrDefault();          
+            var countrypostoji = conn.Query<Country>(QueryCountries).FirstOrDefault();
+
+
+            if (sportpostoji == null)
+            {
+
+                throw new Exception($"Nije moguce napraviti vezu sa tabelom sport jer Sport sa sportsID {insert.sportid} ne postoji ");
+
+
+            }
+
+            if (countrypostoji == null)
+            {
+
+                throw new Exception($"Nije moguce napraviti vezu sa tabelom Country jer Country sa CountryID {insert.countryid} ne postoji ");
+
+
+            }
+
+
+
+
+
+
+
+
+
+
 
         }
 

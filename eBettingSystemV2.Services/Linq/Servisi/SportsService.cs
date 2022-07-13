@@ -192,7 +192,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
         public override void BeforeDelete(int id)
         {
             var daliposotji = Context.Teams.Where(X => X.sportid == id).ToList();
-            var daliposotjicompetition = Context.Competitions.Where(X => X.Sportid == id).ToList();
+            var daliposotjicompetition = Context.Competitions.Where(X => X.sportid == id).ToList();
 
             if (daliposotji != null)
             {
@@ -209,7 +209,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                 foreach (var a in daliposotjicompetition)
                 {
 
-                    throw new Exception($"Nije moguce obrisati sport sa id {id} jer Competition {a.Naziv} ima referencu na ovaj sport {a.Sportid}");
+                    throw new Exception($"Nije moguce obrisati sport sa id {id} jer Competition {a.naziv} ima referencu na ovaj sport {a.sportid}");
 
 
 
