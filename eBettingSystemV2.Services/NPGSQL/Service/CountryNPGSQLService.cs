@@ -35,7 +35,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         CountryInsertRequest,
         CountryUpsertRequest,
         CountryModelLess
-        
         >      
         ,ICountryNPGSQL
     {
@@ -209,9 +208,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                     continue;
                 
                 }
-
                 OutputList.Add(item);
             }
+                conn.Close();
 
             foreach (var a in OutputList)
             {
@@ -289,7 +288,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             Query2 += $@" Where {foreignkey} = {id}";
            
             using var conn = new NpgsqlConnection(connString);
-            conn.OpenAsync();
+            //conn.OpenAsync();
+            conn.Open();
 
             var entry = conn.QueryFirstOrDefault<teams>(Query);
             var dalipostojicompetition = conn.QueryFirstOrDefault<competition>(Query2);

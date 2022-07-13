@@ -15,12 +15,17 @@ using eBettingSystemV2.Services.NPGSQL.Interface;
 
 namespace eBettingSystemV2.Services.NPGSQL.Service
 {
+
     public class BaseNPGSQLService<T, TDb, TSearch, Tless>:
+
         IBaseNPGSQL<T, TSearch, Tless>
         where T : class
         where TDb : class
         where TSearch : BaseSearchObject//base search service
         where Tless : class
+
+   
+
         
     {
         public IConfiguration Configuration { get; }
@@ -31,10 +36,11 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         public string Conflictinsert  { get; set;}  = "";
         public string ConflictUpsert { get; set; } = "";
         public string exception { get; set; } = "";
+
         public List<string> ListaAtributa { get; set; } = new List<string>();
-        public BaseNPGSQLService(IConfiguration Service1 ,IMapper Service3 )
+        public BaseNPGSQLService(IConfiguration Service1, IMapper Service3)
         {
-            Configuration = Service1;          
+            Configuration = Service1;
             Mapper = Service3;
 
             connString = Configuration.GetSection("ConnectionString").GetSection("DefaultConnection").Value;
@@ -49,7 +55,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
             try
             {
-               
+
                 string Query = null;
 
                 string typeParameterType = typeof(TDb).Name;
@@ -84,22 +90,22 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 //return Mapper.Map<IEnumerable<T>>(list);
 
-                
-                
+
+
             }
             catch (Exception e)
             {
 
                 return null;
-            
+
             }
 
 
 
-            
+
 
         }
-        public async virtual Task<T>GetByIdAsync(int id)
+        public async virtual Task<T> GetByIdAsync(int id)
         {
             string Query = null;
             string typeParameterType = typeof(TDb).Name;
@@ -154,7 +160,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         }
 
         //Get Extenzije
-        public virtual string AddFilter(string query,TSearch search = null)
+        public virtual string AddFilter(string query, TSearch search = null)
         {
             return query;
         }
