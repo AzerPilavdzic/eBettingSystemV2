@@ -114,17 +114,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         //Insert extensions
 
         //query ekstenzije
-        public override string GetCoalesce(CountryUpsertRequest Update)
-        {
-            //ako je 0 to je null ,ako je string to je null
-
-            return $@"
-               {PrimaryKey}=coalesce({Update.CountryId},""BettingSystem"".""Country"".{PrimaryKey}),
-               {GetAtribute1()}=coalesce('{Update.CountryName}',""BettingSystem"".""Country"".{GetAtribute1()})
-                    ";       
-           
-
-        }      
+       
         public override string GetAtribute1()
         {
            

@@ -335,11 +335,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return false;
 
         }
-        //quary extenzije
-        public virtual string GetCoalesce(TUpdate Update)
-        {
-            return "";
-        }
+
+
+
+        //quary extenzije       
         public virtual string GetValue1(TInsert insert)
         {
             return "";
@@ -475,7 +474,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         }
-
         public string UpdateSet(Type Tip, object objekt)
         {
             List<string> ListaAtributa = new List<string>();
@@ -547,7 +545,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         }
-
         public virtual string GetCoalesce2(Type Tip, object objekt,string TableName)
         {
             List<string> ListaAtributa = new List<string>();
@@ -617,7 +614,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
            
         }
-
         public virtual string GetCoalesce2conflict(Type Tip, string TableName)
         {
             List<string> ListaAtributa = new List<string>();
