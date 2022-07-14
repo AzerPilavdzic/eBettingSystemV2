@@ -207,6 +207,8 @@ namespace eBettingSystemV2.Controllers
         [Route("InsertCompetitionUsingNamesOnly")]
         public async Task<ActionResult<List<CompetitionModel>>> InsertCompetitionUsingNamesOnly(List<PodaciSaStranice> lista)
         {
+            //koristi se linq ovdje
+
             var result = await ICompetitionService.AddDataAsync(lista);
             return result;
 
@@ -217,9 +219,21 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateCompetitionById")]
-        public override Task<ActionResult<CompetitionModel>> Update(int id, [FromBody] CompetitionInsertRequest update)
+        public override async Task<ActionResult<CompetitionModel>> Update(int id, [FromBody] CompetitionInsertRequest update)
         {
-            return base.Update(id, update);
+            try
+            {
+                var result = await ICompetitionNPGSQL.UpdateAsync(id,update);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+
+            //return base.Update(id, update);
         }
 
         [HttpDelete]
