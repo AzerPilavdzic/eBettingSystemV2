@@ -272,6 +272,25 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
         }
 
+        public override void checkforexceptions(IEnumerable<CompetitionInsertRequest> lista)
+        {
+            foreach (var a in lista)
+            {
+
+                if (a.countryid == 0)
+                {
+
+                    throw new Exception("Country id od competition ne moze biti null ( "+a.naziv +")" );
+                
+                }
+            
+
+
+            
+            
+            }
+        }
+
         //upsert ekstenzije 
 
         public override List<CompetitionUpsertRequest> BeforeInsertFilterList(IEnumerable<CompetitionUpsertRequest> List)

@@ -162,6 +162,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         }
         public virtual async Task<IEnumerable<T>> InsertOneOrMoreAsync(IEnumerable<TInsert> List)
         {
+
+            checkforexceptions(List);
+
+
             string Query = null;
 
             string typeParameterType = typeof(TDb).Name;
@@ -748,6 +752,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
 
 
+        }
+        public virtual void checkforexceptions(IEnumerable<TInsert> lista)
+        { 
+        
+        
+        
         }
 
 
