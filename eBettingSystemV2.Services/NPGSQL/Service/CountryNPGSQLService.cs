@@ -120,18 +120,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
            
             return $@"""CountryName""";
         }            
-        public override string GetValue1(CountryInsertRequest insert)
-        {
-            return $@"'{insert.CountryName}'";
-        }    
-        public override string GetValuesAll(CountryInsertRequest insert, int id)
-        {
-            return $@"{id},'{insert.CountryName}'";
-        }
-        public override string GetValuesAll(CountryUpsertRequest insert)
-        {
-            return $@"{insert.CountryId},'{insert.CountryName}'";
-        }
+      
+       
+        
         public override string GetValuesAllBesidesPrimary(CountryInsertRequest Insert)
         {
             return $@"'{Insert.CountryName}'";

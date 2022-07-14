@@ -338,19 +338,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
 
-        //quary extenzije       
-        public virtual string GetValue1(TInsert insert)
-        {
-            return "";
-        }
-        public virtual string GetValuesAll(TInsert insert, int id)
-        {
-            return $@"";
-        }
-        public virtual string GetValuesAll(TUpdate insert)
-        {
-            return $@"";
-        }
+        //quary extenzije            
+        
+        
         public virtual string GetValuesAllBesidesPrimary(TInsert Insert)
         {
             return "";
