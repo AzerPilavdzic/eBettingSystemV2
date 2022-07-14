@@ -103,6 +103,7 @@ namespace eBettingSystemV2
             services.AddTransient<ITeamNPGSQL, TeamNPGSQLService>();
             services.AddTransient<ISportsNPGSQL, SportsNPGSQLService>();
             services.AddTransient<ICompetitionNPGSQL, CompetitionNPGSQLService>();
+            services.AddTransient<IEventsNPGSQL, EventsNPGSQLService>();
             
 
          

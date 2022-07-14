@@ -24,12 +24,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
        where TInsert : class
        where TUpdate : class
        where Tless : class
-       
-    {
-        
 
-        public BCrudNPGSQLService(IConfiguration Service1 , IMapper Service3)
-        : base(Service1,Service3) { }
+    {
+
+
+        public BCrudNPGSQLService(IConfiguration Service1, IMapper Service3)
+        : base(Service1, Service3) { }
 
         //Insert Upsert
         public virtual async Task<Tless> InsertAsync(TInsert insert)
@@ -38,8 +38,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             try
             {
 
-           
-           
+
             BeforeInsertVoid(insert);
 
             //if (!BeforeInsertBool(insert))
@@ -56,10 +55,15 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             var values = GetAllValuesFromModel(typeof(TInsert), insert);
             var ReturnAtributes = GetAllAtributesFromModel(typeof(TDb));
 
+
+
             Query += $@"insert into ""BettingSystem"".{TableName}";                     
             Query += $@"({Atributes})";          
             Query += $@" values({values})";            
+
             Query += $@" returning {ReturnAtributes}";
+
+
 
 
             await using var conn = new NpgsqlConnection(connString);
@@ -68,9 +72,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             var entity = await conn.QuerySingleAsync<TDb>(
             Query);
 
-           
+
             BeforeInsert(insert, entity);
-         
+
             return Mapper.Map<Tless>(entity);
             }
 
@@ -88,14 +92,14 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
             //for tomorrow;
-            var stringtext = GetAllValuesFromModel(typeof(TUpdate),List.FirstOrDefault());
+            var stringtext = GetAllValuesFromModel(typeof(TUpdate), List.FirstOrDefault());
 
             var list = BeforeInsertFilterList(List); //ako ime vec postoji u bazi izbaci iz liste
 
            
 
 
-            string Query  = null;
+            string Query = null;
             string AddQuery = null;//dodatak za ako korisnik ne unose id
 
             string typeParameterType = typeof(TDb).Name;
@@ -106,8 +110,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             if (list.Count() != 0)
             {
                 Query += $@"insert into ""BettingSystem"".{TableName}";
-                /*AddQuery += $@"insert into ""BettingSystem"".""{TableName}"""; *///dodatak za ako korisnik ne unose id
-
 
                 var Atributes = GetAllAtributesFromModel(typeof(TUpdate));
                 Query += $@"({Atributes})";
@@ -116,7 +118,11 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 for (int i = 0; i < list.Count(); i++)
                 {
                     Query += "(";
+
+                    
+
                     Query += GetAllValuesFromModel(typeof(TUpdate),list[i]);
+
                     Query += ")";
 
                     if ((i + 1) != list.Count())
@@ -126,8 +132,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                     }
 
                 }
+
+             
+
                 Query += $@"ON CONFLICT ({ConflictUpsert}) DO ";
                 Query += $@"UPDATE SET {GetCoalesce2conflict(typeof(TUpdate),TableName)}";
+
 
                 var allatributes = GetAllAtributesFromModel(typeof(TDb));
 
@@ -144,16 +154,20 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 return entity;
             }
 
-            throw new Exception("Lista nije validna");
+            throw new Exception("Upsert nije izvrsen");
 
 
         }
-        public virtual async Task<IEnumerable<T>> InsertOneOrMoreAsync(IEnumerable<TInsert>List)
+        public virtual async Task<IEnumerable<T>> InsertOneOrMoreAsync(IEnumerable<TInsert> List)
         {
             string Query = null;
 
             string typeParameterType = typeof(TDb).Name;
-            string TableName = typeParameterType.Any(char.IsUpper) ? $@"{typeParameterType}" : typeParameterType;
+
+
+            string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+
+            
 
 
             var list = List.ToList();
@@ -167,7 +181,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             for (int i = 0; i < list.Count(); i++)
             {
                 Query += "(";
+
+
                 Query += GetAllValuesFromModel(typeof(TInsert),list[i]);
+
                 Query += ")";
 
                 if ((i + 1) != list.Count())
@@ -176,8 +193,11 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 }
 
+
+                    
             }         
             Query += $@" On Conflict ({Conflictinsert}) DO NOTHING";
+
             Query += $@" Returning {GetAllAtributesFromModel(typeof(TDb))}";
 
             await using var conn = new NpgsqlConnection(connString);
@@ -209,16 +229,18 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             try
             {
 
-           
-            BeforeInsertVoid(Insert); 
 
-            string Query = null;
+                BeforeInsertVoid(Insert);
 
-            string typeParameterType = typeof(TDb).Name;
+                string Query = null;
 
-            string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
 
-            if (Id!=0)
+                string typeParameterType = typeof(TDb).Name;
+
+
+
+                string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
+                if (Id!=0)
             {
                 Query = $@"INSERT INTO ""BettingSystem"".{TableName} ({PrimaryKey},{GetAllAtributesFromModel(typeof(TInsert))})
                                 VALUES({Id},{GetAllValuesFromModel(typeof(TInsert),Insert)}) 
@@ -227,7 +249,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                                 UPDATE SET {GetCoalesce2conflict(typeof(TUpdate),TableName)}
                                 returning {GetAllAtributesFromModel(typeof(TDb))}";
 
-            }
+                }
+
+
 
             if (Id==0)
             {
@@ -235,20 +259,20 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                                 VALUES({GetAllValuesFromModel(typeof(TInsert), Insert)})                              
                                 returning {GetAllAtributesFromModel(typeof(TDb))}";
 
-            }
-        
-            await using var conn = new NpgsqlConnection(connString);
+                }
 
-            await conn.OpenAsync();
+                await using var conn = new NpgsqlConnection(connString);
 
-            var quary = await conn.QueryAsync<Tless>(Query);
+                await conn.OpenAsync();
 
-            var entity = quary.FirstOrDefault();
+                var quary = await conn.QueryAsync<Tless>(Query);
 
-            conn.Close();
+                var entity = quary.FirstOrDefault();
 
-   
-            return entity;
+                conn.Close();
+
+
+                return entity;
             }
             catch (Exception ex)
             {
@@ -270,17 +294,19 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
 
                 Query = $@"UPDATE ""BettingSystem"".{TableName}
-                           SET
+                           SET                         
                            {GetCoalesce2(typeof(TInsert),update,TableName)}
                            WHERE 
                            {PrimaryKey}={id}
                            returning {GetAllAtributesFromModel(typeof(TDb))}";
-                    
+
                 await using var conn = new NpgsqlConnection(connString);
 
                 await conn.OpenAsync();
 
                 var quary = await conn.QueryAsync<T>(Query);
+
+               await conn.CloseAsync();
 
                 var entity = quary.FirstOrDefault();
 
@@ -297,6 +323,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
 
             BeforeDelete(id);
+            await using var conn = new NpgsqlConnection(connString);
+            await conn.OpenAsync();
 
             string Query = null;
             string typeParameterType = typeof(TDb).Name;
@@ -307,20 +335,18 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
 
-            await using var conn = new NpgsqlConnection(connString);
-            await conn.OpenAsync();
 
             var entity = await conn.QueryFirstOrDefaultAsync<TDb>(Query);
 
-            conn.Close();
+            await conn.CloseAsync();
 
-            if(entity == null)
+            if (entity == null)
             {
                 return -1;
             }
 
             return id;
-            
+
         }
         //Update Upsert extenzije
         public virtual TUpdate Coalesce(TUpdate update, TDb entry)
@@ -363,12 +389,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             {
                 if (a.PropertyType.Name != typeof(string).Name &&
                     a.PropertyType.Name != typeof(int).Name &&
-                    a.PropertyType.Name != typeof(int?).Name 
+                    a.PropertyType.Name != typeof(int?).Name
                     )
                 {
 
                     continue;
-                
+
                 }
 
 
@@ -407,7 +433,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             var list = Tip.GetProperties();
 
-           
+
             var ListaValues = new List<string>();
             foreach (var b in list)
             {
@@ -433,11 +459,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 {
                     ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
                 }
-                   
 
-
-
-               
 
             }
 
@@ -488,7 +510,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 if (nameOfProperty == PrimaryKey)
                 {
                     continue;
-                
+
                 }
 
                 ListaAtributa.Add(nameOfProperty2);
@@ -513,7 +535,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
             //drugi dio 
-            for (int i = 0; i<ListaAtributa.Count;i++)
+            for (int i = 0; i < ListaAtributa.Count; i++)
             {
 
                 query += $@"{ListaAtributa[i]} = {ListaValues[i]}";
@@ -522,7 +544,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 {
 
                     query += ",";
-                
+
                 }
 
 
@@ -535,6 +557,13 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         }
+
+
+      
+
+
+        
+
         public virtual string GetCoalesce2(Type Tip, object objekt,string TableName)
         {
             List<string> ListaAtributa = new List<string>();
@@ -569,7 +598,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 var value = propertyInfo.GetValue(objekt, null);
 
-                if (value == null || value.ToString()=="0")
+                if (value == null || value.ToString() == "0")
                 {
 
                     ListaValues.Add("null");
@@ -602,12 +631,16 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             return query;
 
-           
+
+
+
         }
+
+
         public virtual string GetCoalesce2conflict(Type Tip, string TableName)
         {
             List<string> ListaAtributa = new List<string>();
-           
+
 
             var list = Tip.GetProperties();
 
@@ -617,6 +650,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                     b.PropertyType.Name != typeof(int).Name &&
                     b.PropertyType.Name != typeof(int?).Name)
                 {
+
+
 
                     continue;
 
@@ -635,6 +670,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 ListaAtributa.Add(nameOfProperty2);
 
                
+
             }
 
             string query = "";
@@ -674,8 +710,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
         }
         public virtual void BeforeInsertVoid(TUpdate Update)
-        { 
-        
+        {
+
         }
         public virtual bool BeforeInsertBool(TInsert insert)
         {

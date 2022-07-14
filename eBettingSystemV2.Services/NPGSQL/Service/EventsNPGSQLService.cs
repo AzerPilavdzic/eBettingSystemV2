@@ -26,32 +26,32 @@ using eBettingSystemV2.Services.NPGSQL.Interface;
 
 namespace eBettingSystemV2.Services.NPGSQL.Service
 {
-    public class SportsNPGSQLService :     
+    public class EventsNPGSQLService :     
         BCrudNPGSQLService
         <
-        SportModel,
-        sport,
-        SportSearchObject,
-        SportInsertRequest,
-        SportUpsertRequest,
-        SportModelLess
+        EventModel,
+        Event,
+        EventSearchObject,
+        EventInsertRequest,
+        EventUpsertRequest,
+        EventModelLess
 
         >      
-        ,ISportsNPGSQL
+        ,IEventsNPGSQL
     {
-        public SportsNPGSQLService(IConfiguration Service1, IMapper Service3)
+        public EventsNPGSQLService(IConfiguration Service1, IMapper Service3)
         : base(Service1,Service3) {
 
 
-            PrimaryKey = $@"""SportsId""";
+            PrimaryKey = $@"""event_id""";
             Conflictinsert = PrimaryKey;
             ConflictUpsert = PrimaryKey;
             
-            var list = typeof(SportModel).GetProperties();
+            var list = typeof(EventModel).GetProperties();
 
             foreach (var a in list)
             {
-                if (a.Name != "SportsId")
+                if (a.Name != "EventsId")
                 {
                     var text = a.Name.Any(char.IsUpper) ? $@"""{a.Name}""" : a.Name;
                     ListaAtributa.Add(text);                               
@@ -61,23 +61,23 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         //Get Funkcije
-        public async Task<SportModelLess> GetIdByNameAsync(string name)
+        public async Task<EventModelLess> GetIdByNameAsync(string name)
         {
 
             string Query = null;
-            string typeParameterType = typeof(sport).Name;
+            string typeParameterType = typeof(Event).Name;
             Query += $@"select *  from ""BettingSystem"".""{typeParameterType}"" ";
             Query += $@"where {GetAtribute1()} = '{name}'; ";
 
             await using var conn = new NpgsqlConnection(connString);
             await conn.OpenAsync();
 
-            var quary = await conn.QueryAsync<SportModelLess>(Query);
+            var quary = await conn.QueryAsync<EventModelLess>(Query);
             var entity = quary.FirstOrDefault();
 
             if(entity==null)
             {
-                return new SportModelLess { SportsId = 0 };
+                return new EventModelLess { EventId = 0 };
 
             }
 
@@ -90,77 +90,64 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         // Get Ekstenzije
-        public override string AddFilter(string query, SportSearchObject search = null)
+        public override string AddFilter(string query, EventSearchObject search = null)
         {
-                  
-            if (!string.IsNullOrWhiteSpace(search?.SportName))
-            {
-                query += $@"where (lower(""name"") LIKE lower('%{search.SportName}%')) ";
-                          
-            }
-            if (search.SportId != null && string.IsNullOrWhiteSpace(search?.SportName))
-            {
-                query += $@"where {PrimaryKey} = {search.SportId} ";
-
-            }
-
-            if (search.SportId != null && !string.IsNullOrWhiteSpace(search?.SportName))
-            {
-                query += $@"or {PrimaryKey} = {search.SportId} ";
-
-            }
-                   
-
-            return query;
-
-
+            return base.AddFilter(query, search);
         }
+
 
         //Insert extensions
 
         //query ekstenzije
-       
+        public override string GetCoalesce(EventUpsertRequest Update)
+        {
+            return base.GetCoalesce(Update);
+        }
+
         public override string GetAtribute1()
         {
-            return $@"""name""";
+            return $@"""event_name""";
         }
-       
-       
-       
-        public override string GetValuesAllBesidesPrimary(SportInsertRequest Insert)
+        public override string GetValue1(EventInsertRequest insert)
         {
-            return $@"'{Insert.name}'";
+            return $@"'{insert.EventName}'";
+        }
+        public override string GetValuesAll(EventInsertRequest insert, int id)
+        {
+            return $@"{id},'{insert.EventName}'";
+        }
+        public override string GetValuesAll(EventUpsertRequest insert)
+        {
+            return $@"{insert.EventId},'{insert.EventName}'";
+        }
+        public override string GetValuesAllBesidesPrimary(EventInsertRequest Insert)
+        {
+            return $@"'{Insert.EventName}'";
         }
 
 
         //insert esktenzije
-        public override bool BeforeInsertBool(SportInsertRequest insert)
+        public override bool BeforeInsertBool(EventInsertRequest insert)
         {
             using var conn = new NpgsqlConnection(connString);
             conn.Open();
 
-            var List = conn.Query($@"Select * from ""BettingSystem"".""sport"" 
-             where (lower(""name"") = lower('{insert.name}'))");
+            var List = conn.Query($@"Select * from ""BettingSystem"".""event"" 
+             where (lower(""event_name"") = lower('{insert.EventName}'))");
             var entity = List.FirstOrDefault();
 
             if (entity != null)
-            {
                 return true;
-            }
             else
-            {
-
                 return false;
-            
-            }
         }
 
 
 
         //Upsert Extenzije
-        public override bool checkIfNameSame(SportInsertRequest insert, sport entry)
+        public override bool checkIfNameSame(EventInsertRequest insert, Event entry)
         {
-            if (insert.name== entry?.name)
+            if (insert.EventName== entry?.EventName)
             {
 
                 return true;
@@ -170,20 +157,20 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return false;
         }
 
-        public override List<SportUpsertRequest> BeforeInsertFilterList(IEnumerable<SportUpsertRequest> List)
+        public override List<EventUpsertRequest> BeforeInsertFilterList(IEnumerable<EventUpsertRequest> List)
         {
             using var conn = new NpgsqlConnection(connString);
             conn.OpenAsync();
             var Query = "";
-            List<SportUpsertRequest> OutputList = new List<SportUpsertRequest>();
+            List<EventUpsertRequest> OutputList = new List<EventUpsertRequest>();
 
             foreach (var item in List)
             {
                 //ako korisnik nije unjeo id               
-                Query = $@"Select * From ""BettingSystem"".""sport"" 
-                        Where {GetAtribute1()} ='{item.name}'";
+                Query = $@"Select * From ""BettingSystem"".""Event"" 
+                        Where {GetAtribute1()} ='{item.EventName}'";
 
-                var entity = conn.Query<SportUpsertRequest>(Query).FirstOrDefault();
+                var entity = conn.Query<EventUpsertRequest>(Query).FirstOrDefault();
                 
                 if (entity != null)
                 {
@@ -204,34 +191,34 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         }
-        public override void BeforeInsertVoid(SportInsertRequest insert)
+        public override void BeforeInsertVoid(EventInsertRequest insert)
         {
             using var conn = new NpgsqlConnection(connString);
             conn.Open();
 
-            var List = conn.Query($@"Select * from ""BettingSystem"".""sport"" 
-             where (lower(""name"") = lower('{insert.name}'))");
+            var List = conn.Query($@"Select * from ""BettingSystem"".""Event"" 
+             where (lower(""name"") = lower('{insert.EventName}'))");
             var entity = List.FirstOrDefault();
 
             if (entity != null)
             {
-                throw new Exception("EXCEPTION: SPORT SA TIM IMENOM VEC POSTOJI.");
+                throw new Exception("EXCEPTION: Event SA TIM IMENOM VEC POSTOJI.");
             }
             conn.Close();
            
         }
-        public override void BeforeInsertVoid(SportUpsertRequest Update)
+        public override void BeforeInsertVoid(EventUpsertRequest Update)
         {
             using var conn = new NpgsqlConnection(connString);
             conn.Open();
 
-            var List = conn.Query($@"Select * from ""BettingSystem"".""sport"" 
-             where (lower(""name"") = lower('{Update.name}'))");
+            var List = conn.Query($@"Select * from ""BettingSystem"".""Event"" 
+             where (lower(""name"") = lower('{Update.EventName}'))");
             var entity = List.FirstOrDefault();
 
             if (entity != null)
             {
-                throw new Exception("EXCEPTION: SPORT SA TIM IMENOM VEC POSTOJI.");
+                throw new Exception("EXCEPTION: Event SA TIM IMENOM VEC POSTOJI.");
             }
             conn.Close();
         }
@@ -242,7 +229,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             string Query2 = null;
             string TableName  = "teams";
             string TableName2 = "competition";
-            string foreignkey = "SportId";
+            string foreignkey = "EventId";
 
             Query  += $@"Select * from ""BettingSystem"".{TableName}";
             Query2 += $@"Select * from ""BettingSystem"".{TableName2}";
@@ -260,7 +247,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             if (entry != null)
             {
 
-                throw new Exception("EXCEPTION SportsNPGSQLService line 281");
+                throw new Exception("EXCEPTION EventsNPGSQLService line 281");
 
 
             }
@@ -268,11 +255,15 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             if (dalipostojicompetition != null)
             {
 
-                throw new Exception("EXCEPTION SportsNPGSQLService line 289");
+                throw new Exception("EXCEPTION EventsNPGSQLService line 289");
 
             }
         }
-     
+
+        public EventUpsertRequest GetByEventKey(string eventKey)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 
