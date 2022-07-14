@@ -228,7 +228,6 @@ namespace eBettingSystemV2.Services.Servisi
                     i++;
                     continue;
                 }
-
                 EventsFetched.Add(eventsListFetched[i].InnerText);
             }
 
@@ -693,7 +692,36 @@ namespace eBettingSystemV2.Services.Servisi
                         continue;
                     }
                     //string[] homeAway = eventsListFetched[i].InnerText.Split(" - ");
+
+                    if (i<eventsListFetched.Count()-1 &&  eventsListFetched[i].InnerText.Contains("-") && eventsListFetched[i+1].InnerText.Contains("-"))
+                    {
+                        EventHomeAwayName(eventsListFetched[i].InnerText+ eventsListFetched[i+1].InnerText);
+                        FetchModel[y]._eventi.Add(new EventUpsertRequest
+                        {
+                            CompetitionId = FetchModel[y].CompetitionId,
+
+                            EventName = eventsListFetched[i].InnerText + eventsListFetched[i+1].InnerText,
+                            EventKey = eventsKeyList[pocetakIncrementa],
+
+                            EventPeriod = _Period,
+                            EventStatus = _Status,
+                            Result = _Result,
+                            EventStartTime = _StartTime,
+
+                            YellowCardsHomeTeam = YellowCardsHome,
+                            YellowCardsAwayTeam = YellowCardsAway,
+                            RedCardsHomeTeam = RedCardsHome,
+                            RedCardsAwayTeam = RedCardsAway,
+
+                            HomeTeam = _home,
+                            AwayTeam = _away
+                        });
+                        i++;
+                    }
+                    else
+                    {
                     EventHomeAwayName(eventsListFetched[i].InnerText);
+                    
                     FetchModel[y]._eventi.Add(new EventUpsertRequest
                     {
                         CompetitionId = FetchModel[y].CompetitionId,
@@ -715,6 +743,7 @@ namespace eBettingSystemV2.Services.Servisi
                         AwayTeam = _away
 
                     });
+                    }
                     pocetakIncrementa++;
 
                     double ukupno = eventsListFetched.Count();

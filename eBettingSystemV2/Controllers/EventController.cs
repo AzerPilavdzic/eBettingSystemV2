@@ -34,18 +34,50 @@ namespace eBettingSystemV2.Controllers
 
         [HttpGet]
         [Route("GetAllEvents")]
-        public override Task<ActionResult<IEnumerable<EventModel>>> Get([FromQuery] EventSearchObject search = null)
+        public override async Task<ActionResult<IEnumerable<EventModel>>> Get([FromQuery] EventSearchObject search = null)
         {
-            return base.Get(search);
+            try
+            {
+                var List = await IEventService.GetNPGSQLGeneric(search);
+                //var List = await ICountryService.Get(search);
+
+                if (List.Count() == 0)
+                    //search.
+                    return NotFound("Podaci ne postoje u bazi");
+                else
+                    return Ok(List);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
 
         [HttpGet]
         [Route("GetEventById/{id}")]
-        public override Task<ActionResult<EventModel>> GetById(int id)
+        public override async Task<ActionResult<EventModel>> GetById(int id)
         {
-            return base.GetById(id);
+            try { 
+            var Model = await IEventService.GetByIdAsync(id);
+            if (Model == null)
+            {
+                return NotFound("Podatak ne postoji u bazi");
+            }
+            else
+            {
+                return Ok(Model);
+            }
         }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+
+
+    }
+}
 
         [HttpGet]
         [Route("GetEventIdByName/{EventName}")]
@@ -68,16 +100,39 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("InsertEvent")]
-        public override Task<ActionResult<EventModel>> Insert(EventInsertRequest insert)
+        public override async Task<ActionResult<EventModel>> Insert(EventInsertRequest insert)
         {
-            return base.Insert(insert);
+            try
+            {
+                var result = await IEventService.InsertAsync(insert);
+                if (result == null)
+                    return BadRequest("Ime vec postoji");
+                else
+                    return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+                throw;
+            }
         }
 
         [HttpPost]
         [Route("UpsertEvents")]
-        public override Task<ActionResult<EventModelLess>> InsertById(int Id, EventInsertRequest Insert)
+        public override async Task<ActionResult<EventModelLess>> InsertById(int Id, EventInsertRequest Insert)
         {
-            return base.InsertById(Id, Insert);
+            try
+            {
+                var result = await IEventService.UpsertbyIdAsync(Insert, Id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -105,9 +160,19 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPut]
         [Route("UpdateEvent/{id}")]
-        public override Task<ActionResult<EventModel>> Update(int id, [FromBody] EventInsertRequest update)
+        public override async Task<ActionResult<EventModel>> Update(int id, [FromBody] EventInsertRequest update)
         {
-            return base.Update(id, update);
+            try
+            {
+                var result = await IEventService.UpdateAsync(id, update);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete]

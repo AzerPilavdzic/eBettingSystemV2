@@ -19,7 +19,7 @@ namespace eBettingSystemV2.Services.Servisi
     public class EventService : BaseCRUDService
        <
        EventModel,
-       Event,
+       events,
        EventSearchObject,
        EventInsertRequest,
        EventUpsertRequest,
@@ -46,7 +46,7 @@ namespace eBettingSystemV2.Services.Servisi
         public async Task<EventModelLess> BeforeInsertBoolAsync(EventInsertRequest insert)
         {
             //ne koristi se.
-            var entity = await Context.Events.Where(x => x.EventName.ToLower() == insert.EventName.ToLower()).FirstOrDefaultAsync();
+            var entity = await Context.Events.Where(x => x.event_name.ToLower() == insert.event_name.ToLower()).FirstOrDefaultAsync();
             if (entity == null)
             {
                 return null;
@@ -72,14 +72,14 @@ namespace eBettingSystemV2.Services.Servisi
         public async Task<EventModelLess> GetIdByNameAsync(string name)
         {
             var entry = await Context.Events
-                .Where(X => X.EventName.ToLower() == name.ToLower())
+                .Where(X => X.event_name.ToLower() == name.ToLower())
                 .FirstOrDefaultAsync();
 
             if (entry == null)
             {
 
                 //throw new Exception($"Podatak sa imenom {name} ne postoji u bazi");
-                return new EventModelLess { EventId = 0 };
+                return new EventModelLess { event_id = 0 };
 
             }
 
@@ -88,19 +88,19 @@ namespace eBettingSystemV2.Services.Servisi
         }
 
 
-        public override IEnumerable<Event> AddRange(IEnumerable<EventUpsertRequest> insertlist, DbSet<Event> set)
+        public override IEnumerable<events> AddRange(IEnumerable<EventUpsertRequest> insertlist, DbSet<events> set)
         {
-            List<Event> Result = new List<Event>();
-            Event CheckEvent = new();
+            List<events> Result = new List<events>();
+            events CheckEvent = new();
 
             foreach (var a in insertlist)
             {
-                Event EventUpdate = Context.Events.Where(X => X.EventName == a.EventName || X.EventId == a.EventId).FirstOrDefault();
+                events EventUpdate = Context.Events.Where(X => X.event_name == a.EventName || X.event_id == a.EventId).FirstOrDefault();
 
                 if (EventUpdate == null)
                 {
                     //CheckEvent = EventUpdate;
-                    EventUpdate = Mapper.Map<Event>(a);
+                    EventUpdate = Mapper.Map<events>(a);
 
                     ////dodaj u bazu
                     set.Add(EventUpdate);
@@ -116,33 +116,33 @@ namespace eBettingSystemV2.Services.Servisi
                 {
                     //update
                     CheckEvent = EventUpdate;
-                    CheckEvent.CompetitionId = a.CompetitionId;
-                    CheckEvent.EventId = EventUpdate.EventId;
-                    CheckEvent.EventName = a.EventName;
-                    CheckEvent.EventStartTime = a.EventStartTime;
+                    CheckEvent.competition_id = a.CompetitionId;
+                    CheckEvent.event_id = EventUpdate.event_id;
+                    CheckEvent.event_name = a.EventName;
+                    CheckEvent.event_start_time = a.EventStartTime;
 
-                    CheckEvent.EventStatus = a.EventStatus;
+                    CheckEvent.event_status = a.EventStatus;
 
-                    CheckEvent.EventPeriod = a.EventPeriod;
-                    CheckEvent.Result = a.Result;
-                    CheckEvent.HomeTeam = a.HomeTeam;
-                    CheckEvent.AwayTeam = a.AwayTeam;
+                    CheckEvent.event_period = a.EventPeriod;
+                    CheckEvent.result = a.Result;
+                    CheckEvent.home_team = a.HomeTeam;
+                    CheckEvent.away_team = a.AwayTeam;
 
-                    CheckEvent.RedCardsAwayTeam=a.RedCardsAwayTeam; 
-                    CheckEvent.RedCardsHomeTeam=a.RedCardsHomeTeam;
+                    CheckEvent.red_cards_away_team=a.RedCardsAwayTeam; 
+                    CheckEvent.red_cards_home_team=a.RedCardsHomeTeam;
 
-                    CheckEvent.YellowCardsAwayTeam=a.YellowCardsAwayTeam;
-                    CheckEvent.YellowCardsHomeTeam=a.YellowCardsHomeTeam;
+                    CheckEvent.yellow_cards_away_team=a.YellowCardsAwayTeam;
+                    CheckEvent.yellow_cards_home_team=a.YellowCardsHomeTeam;
 
-                    CheckEvent = Mapper.Map<Event>(a);
+                    CheckEvent = Mapper.Map<events>(a);
 
-                    Result.Add(Mapper.Map<Event>(CheckEvent));
+                    Result.Add(Mapper.Map<events>(CheckEvent));
 
                 }
             }
 
 
-            IEnumerable<Event> entity = Mapper.Map<IEnumerable<Event>>(Result);
+            IEnumerable<events> entity = Mapper.Map<IEnumerable<events>>(Result);
             Context.SaveChanges();
 
             return entity;
@@ -154,7 +154,7 @@ namespace eBettingSystemV2.Services.Servisi
         public EventUpsertRequest GetByEventKey(string _eventKey)
         {
             var entry = Context.Events
-                .Where(x => x.EventKey == _eventKey)
+                .Where(x => x.eventkey == _eventKey)
                 .FirstOrDefaultAsync();
 
             //return Mapper.Map<EventUpsertRequest>(entry);

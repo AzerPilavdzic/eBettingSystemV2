@@ -72,13 +72,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             await using var conn = new NpgsqlConnection(connString);
             await conn.OpenAsync();
 
-            var entity = await conn.QuerySingleAsync<TDb>(
+            var entity = await conn.QuerySingleAsync<Tless>(
             Query);
 
+                return entity;
+            
 
-            BeforeInsert(insert, entity);
-
-            return Mapper.Map<Tless>(entity);
             }
 
             catch (Exception ex)
@@ -236,9 +235,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             Insert = foreignkeyfix(Id, Insert);
 
 
-
-
-                BeforeInsertVoid(Insert);
 
                 string Query = null;
 
@@ -474,7 +470,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 }
                 else
                 {
-                    ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
+                    ListaValues.Add(value.GetType() == typeof(string) || value.GetType()==typeof(DateTime) ? $@"'{value}'" : value.ToString());
                 }
 
 

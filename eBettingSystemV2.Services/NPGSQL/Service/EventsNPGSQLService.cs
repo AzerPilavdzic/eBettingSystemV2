@@ -30,7 +30,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         BCrudNPGSQLService
         <
         EventModel,
-        Event,
+        events,
         EventSearchObject,
         EventInsertRequest,
         EventUpsertRequest,
@@ -65,7 +65,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
 
             string Query = null;
-            string typeParameterType = typeof(Event).Name;
+            string typeParameterType = typeof(events).Name;
             Query += $@"select *  from ""BettingSystem"".""{typeParameterType}"" ";
             Query += $@"where {GetAtribute1()} = '{name}'; ";
 
@@ -77,7 +77,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             if(entity==null)
             {
-                return new EventModelLess { EventId = 0 };
+                return new EventModelLess { event_id = 0 };
 
             }
 
@@ -92,17 +92,29 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         // Get Ekstenzije
         public override string AddFilter(string query, EventSearchObject search = null)
         {
-            return base.AddFilter(query, search);
+            if (!string.IsNullOrWhiteSpace(search?.EventName))
+            {
+                query += $@"where (lower(""name"") LIKE lower('%{search.EventName}%')) ";
+
+            }
+            if (search.EventId != null && string.IsNullOrWhiteSpace(search?.EventName))
+            {
+                query += $@"where {PrimaryKey} = {search.EventId} ";
+
+            }
+
+            if (search.EventId != null && !string.IsNullOrWhiteSpace(search?.EventName))
+            {
+                query += $@"or {PrimaryKey} = {search.EventId} ";
+
+            }
+
+
+            return query;
         }
 
 
         //Insert extensions
-
-        //query ekstenzije
-        public override string GetCoalesce(EventUpsertRequest Update)
-        {
-            return base.GetCoalesce(Update);
-        }
 
         public override string GetAtribute1()
         {
@@ -110,11 +122,11 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         }
         public override string GetValue1(EventInsertRequest insert)
         {
-            return $@"'{insert.EventName}'";
+            return $@"'{insert.event_name}'";
         }
         public override string GetValuesAll(EventInsertRequest insert, int id)
         {
-            return $@"{id},'{insert.EventName}'";
+            return $@"{id},'{insert.event_name}'";
         }
         public override string GetValuesAll(EventUpsertRequest insert)
         {
@@ -122,7 +134,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         }
         public override string GetValuesAllBesidesPrimary(EventInsertRequest Insert)
         {
-            return $@"'{Insert.EventName}'";
+            return $@"'{Insert.event_name}'";
         }
 
 
@@ -133,7 +145,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             conn.Open();
 
             var List = conn.Query($@"Select * from ""BettingSystem"".""event"" 
-             where (lower(""event_name"") = lower('{insert.EventName}'))");
+             where (lower(""event_name"") = lower('{insert.event_name}'))");
             var entity = List.FirstOrDefault();
 
             if (entity != null)
@@ -145,9 +157,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         //Upsert Extenzije
-        public override bool checkIfNameSame(EventInsertRequest insert, Event entry)
+        public override bool checkIfNameSame(EventInsertRequest insert, events entry)
         {
-            if (insert.EventName== entry?.EventName)
+            if (insert.event_name == entry?.event_name)
             {
 
                 return true;
@@ -190,22 +202,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
 
-        }
-        public override void BeforeInsertVoid(EventInsertRequest insert)
-        {
-            using var conn = new NpgsqlConnection(connString);
-            conn.Open();
-
-            var List = conn.Query($@"Select * from ""BettingSystem"".""Event"" 
-             where (lower(""name"") = lower('{insert.EventName}'))");
-            var entity = List.FirstOrDefault();
-
-            if (entity != null)
-            {
-                throw new Exception("EXCEPTION: Event SA TIM IMENOM VEC POSTOJI.");
-            }
-            conn.Close();
-           
         }
         public override void BeforeInsertVoid(EventUpsertRequest Update)
         {
