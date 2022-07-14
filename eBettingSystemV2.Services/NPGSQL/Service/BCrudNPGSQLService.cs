@@ -237,7 +237,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
 
-                BeforeInsertVoid(Insert);
+              
 
                 string Query = null;
 
