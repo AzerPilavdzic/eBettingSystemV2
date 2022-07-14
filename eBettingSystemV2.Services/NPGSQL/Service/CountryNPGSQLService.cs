@@ -122,14 +122,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
       
        
         
-        public override string GetValuesAllBesidesPrimary(CountryInsertRequest Insert)
-        {
-            return $@"'{Insert.CountryName}'";
-        }
-        public override string ChoseAtribute()
-        {
-            return PrimaryKey;
-        }
+       
+       
 
 
         //insert esktenzije

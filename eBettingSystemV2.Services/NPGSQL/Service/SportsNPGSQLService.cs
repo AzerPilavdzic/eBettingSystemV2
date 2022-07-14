@@ -127,11 +127,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
        
        
        
-        public override string GetValuesAllBesidesPrimary(SportInsertRequest Insert)
-        {
-            return $@"'{Insert.name}'";
-        }
-
+       
 
         //insert esktenzije
         public override bool BeforeInsertBool(SportInsertRequest insert)
