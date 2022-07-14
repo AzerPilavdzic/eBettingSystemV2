@@ -163,6 +163,26 @@ namespace eBettingSystemV2.Controllers
             
         }
 
+
+        [HttpPost]
+        [Route("InsertOneOrMoreCompetitions")]
+        public override async  Task<ActionResult<IEnumerable<CompetitionModel>>> InsertOneOrMore(IEnumerable<CompetitionInsertRequest> insertlist)
+        {
+            try
+            {
+                var result = await ICompetitionNPGSQL.InsertOneOrMoreAsync(insertlist);
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
+            //return base.InsertOneOrMore(insertlist);
+        }
+
         [HttpPost]
         [Route("UpsertOneOrMoreCompetitions")]
         public override async Task<ActionResult<IEnumerable<CompetitionModel>>> UpsertOneOrMore(IEnumerable<CompetitionUpsertRequest> insertlist)
