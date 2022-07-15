@@ -241,11 +241,13 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
 
-                
+
 
                 string Query = null;
 
+
                 string typeParameterType = typeof(TDb).Name;
+
 
 
                 string TableName = typeParameterType.Any(char.IsUpper) ? $@"""{typeParameterType}""" : typeParameterType;
@@ -358,47 +360,26 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return id;
 
         }
-        //Update Upsert extenzije
-        public virtual TUpdate Coalesce(TUpdate update, TDb entry)
-        {
-            return update;
-
-        }
+        
         //Upsert extenzije
         public virtual bool checkIfNameSame(TInsert insert, TDb entry)
         {
 
             return false;
 
-        }
+        } //not used
 
 
 
-        //quary extenzije       
-        public virtual string GetValue1(TInsert insert)
-        {
-            return "";
-        }
-        public virtual string GetValuesAll(TInsert insert, int id)
-        {
-            return $@"";
-        }
-        public virtual string GetValuesAll(TUpdate insert)
-        {
-            return $@"";
-        }
-        public virtual string GetValuesAllBesidesPrimary(TInsert Insert)
-        {
-            return "";
-        }
+        //quary extenzije            
+        
+        
+        
         public virtual string GetAtribute1()
         {
             return "";
-        }
-        public virtual string ChoseAtribute()
-        {
-            return "";
-        }
+        } //used
+       
         public string GetAllAtributesFromModel(Type Tip)
         {
             ListaAtributa.Clear();
@@ -446,7 +427,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return returnstring;
 
 
-        }
+        } //used
         public string GetAllValuesFromModel(Type Tip, object objekt)
         {
             ListaAtributa.Clear();
@@ -505,7 +486,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
 
-        }
+        } //used
         public string UpdateSet(Type Tip, object objekt)
         {
             List<string> ListaAtributa = new List<string>();
@@ -576,12 +557,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
 
-        }
-
+        } //not used 
         public virtual string GetCoalesce2(Type Tip, object objekt,string TableName)
-
-
-        
         {
             List<string> ListaAtributa = new List<string>();
             List<string> ListaValues = new List<string>();
@@ -649,7 +626,9 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return query;
 
 
-        }
+
+
+        } //used
         public virtual string GetCoalesce2conflict(Type Tip, string TableName)
         {
             List<string> ListaAtributa = new List<string>();
@@ -708,7 +687,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return query;
 
 
-        }
+        } //used
 
 
 
@@ -727,29 +706,30 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
 
             return List.ToList();
-        }
-        public virtual void BeforeInsertVoid(TInsert insert,int Id)
-        {
+
+        
 
         }
+        public virtual void BeforeInsertVoid(TInsert insert,int Id)
+
+        {
+
+        }    //used ok
         public virtual void BeforeInsertVoid(TUpdate Update)
         {
 
-        }
+        }   //not used in reference
         public virtual bool BeforeInsertBool(TInsert insert)
         {
             return true;
-        }
-        public virtual bool BeforeInsertBool(TUpdate Update)
-        {
-            return true;
-        }
+        }  //not used in reference
         public virtual void BeforeInsert(TInsert insert, TDb entity)
         {
 
-        }
+        } //ok
         public virtual void BeforeDelete(int id)
         {
+
 
 
         }
@@ -759,6 +739,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         
         
         }
+
 
 
 

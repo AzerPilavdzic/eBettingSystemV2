@@ -105,22 +105,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
             return $@"""event_name""";
         }
-        public override string GetValue1(EventInsertRequest insert)
-        {
-            return $@"'{insert.EventName}'";
-        }
-        public override string GetValuesAll(EventInsertRequest insert, int id)
-        {
-            return $@"{id},'{insert.EventName}'";
-        }
-        public override string GetValuesAll(EventUpsertRequest insert)
-        {
-            return $@"{insert.EventId},'{insert.EventName}'";
-        }
-        public override string GetValuesAllBesidesPrimary(EventInsertRequest Insert)
-        {
-            return $@"'{Insert.EventName}'";
-        }
+                  
+       
 
 
         //insert esktenzije
