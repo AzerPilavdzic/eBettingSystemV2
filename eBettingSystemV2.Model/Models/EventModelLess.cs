@@ -7,7 +7,7 @@ namespace eBettingSystemV2.Models
 {
     public partial class EventModelLess
     {
-        public int EventId { get; set; }
+        public int event_id { get; set; }
      
     }
 }

@@ -9,21 +9,21 @@ namespace eBettingSystemV2.Model.SearchObjects
 {
     public class EventInsertRequest
     {
-        public string EventName { get; set; }
-        public int? CompetitionId { get; set; }
-        public DateTime? EventStartTime { get; set; }
-        public string EventStatus { get; set; }
+        public string event_name { get; set; }
+        public int? competition_id { get; set; }
+        public DateTime? event_start_time { get; set; }
+        public string event_status { get; set; }
 
-        public string EventPeriod { get; set; }
-        public string Result { get; set; }
-        public string HomeTeam { get; set; }
-        public string AwayTeam { get; set; }
-        public int? YellowCardsHomeTeam { get; set; }
-        public int? YellowCardsAwayTeam { get; set; }
-        public int? RedCardsHomeTeam { get; set; }
-        public int? RedCardsAwayTeam { get; set; }
+        public string event_period { get; set; }
+        public string result { get; set; }
+        public string home_team { get; set; }
+        public string away_team { get; set; }
+        public int? yellow_cards_home_team { get; set; }
+        public int? yellow_cards_away_team { get; set; }
+        public int? red_cards_home_team { get; set; }
+        public int? red_cards_away_team { get; set; }
 
-        public string EventKey { get; set; }
+        public string eventkey { get; set; }
 
     }
 }

@@ -20,7 +20,7 @@ namespace eBettingSystemV2.Services.DataBase
 
         public virtual DbSet<competition> Competitions { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
-        public virtual DbSet<Event> Events { get; set; }
+        public virtual DbSet<events> Events { get; set; }
         public virtual DbSet<Logcompetition> Logcompetitions { get; set; }
         public virtual DbSet<LogcompetitionTest> LogcompetitionTests { get; set; }
         public virtual DbSet<sport> Sports { get; set; }
@@ -77,62 +77,66 @@ namespace eBettingSystemV2.Services.DataBase
                     .HasColumnType("character varying");
             });
 
-            modelBuilder.Entity<Event>(entity =>
+            modelBuilder.Entity<events>(entity =>
             {
+
                 entity.ToTable("events", "BettingSystem");
 
-                entity.Property(e => e.EventId)
+                entity.HasKey(e => e.event_id)
+                 .HasName("event_id");
+
+                entity.Property(e => e.event_id)
                     .HasColumnName("event_id")
                     .UseIdentityAlwaysColumn();
 
-                entity.Property(e => e.AwayTeam)
+                entity.Property(e => e.away_team)
                     .HasColumnType("character varying")
                     .HasColumnName("away_team");
 
-                entity.Property(e => e.EventKey)
+                entity.Property(e => e.eventkey)
                     .IsRequired()
                     .HasColumnType("character varying")
                     .HasColumnName("eventkey");
 
 
-                entity.Property(e => e.CompetitionId).HasColumnName("competition_id");
+                entity.Property(e => e.competition_id).HasColumnName("competition_id");
 
-                entity.Property(e => e.EventName)
+                entity.Property(e => e.event_name)
                     .IsRequired()
                     .HasColumnType("character varying")
                     .HasColumnName("event_name");
 
-                entity.Property(e => e.EventPeriod)
+                entity.Property(e => e.event_period)
                     .HasColumnType("character varying")
                     .HasColumnName("event_period");
 
-                entity.Property(e => e.EventStartTime)
+                entity.Property(e => e.event_start_time)
                     .HasColumnType("date")
                     .HasColumnName("event_start_time");
 
-                entity.Property(e => e.EventStatus)
+                entity.Property(e => e.event_status)
                     .HasColumnType("character varying")
                     .HasColumnName("event_status");
 
-                entity.Property(e => e.HomeTeam)
+                entity.Property(e => e.home_team)
                     .HasColumnType("character varying")
                     .HasColumnName("home_team");
 
-                entity.Property(e => e.RedCardsAwayTeam).HasColumnName("red_cards_away_team");
+                entity.Property(e => e.red_cards_away_team).HasColumnName("red_cards_away_team");
 
-                entity.Property(e => e.RedCardsHomeTeam).HasColumnName("red_cards_home_team");
+                entity.Property(e => e.red_cards_home_team).HasColumnName("red_cards_home_team");
 
-                entity.Property(e => e.Result)
+                entity.Property(e => e.result)
                     .HasColumnType("character varying")
                     .HasColumnName("result");
 
-                entity.Property(e => e.YellowCardsAwayTeam).HasColumnName("yellow_cards_away_team");
+                entity.Property(e => e.yellow_cards_away_team).HasColumnName("yellow_cards_away_team");
 
-                entity.Property(e => e.YellowCardsHomeTeam).HasColumnName("yellow_cards_home_team");
+                entity.Property(e => e.yellow_cards_home_team).HasColumnName("yellow_cards_home_team");
 
                 entity.HasOne(d => d.Competition)
                     .WithMany(p => p.Events)
-                    .HasForeignKey(d => d.CompetitionId)
+                    .HasForeignKey(d => d.competition_id)
                     .HasConstraintName("events_fk");
             });
 

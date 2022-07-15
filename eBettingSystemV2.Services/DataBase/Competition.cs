@@ -11,7 +11,7 @@ namespace eBettingSystemV2.Services.DataBase
     {
         public competition()
         {
-            Events = new HashSet<Event>();
+            Events = new HashSet<events>();
         }
 
         public int id { get; set; }
@@ -21,6 +21,6 @@ namespace eBettingSystemV2.Services.DataBase
 
         public virtual Country Country { get; set; }
         public virtual sport Sport { get; set; }
-        public virtual ICollection<Event> Events { get; set; }
+        public virtual ICollection<events> Events { get; set; }
     }
 }
