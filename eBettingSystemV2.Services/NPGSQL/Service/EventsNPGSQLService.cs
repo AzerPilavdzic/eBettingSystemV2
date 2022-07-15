@@ -103,6 +103,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
             }
 
+
             if (search.EventId != null && !string.IsNullOrWhiteSpace(search?.EventName))
             {
                 query += $@"or {PrimaryKey} = {search.EventId} ";
@@ -113,6 +114,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             return query;
         }
 
+      
+       
+
+
 
         //Insert extensions
 
@@ -120,22 +125,12 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
             return $@"""event_name""";
         }
-        public override string GetValue1(EventInsertRequest insert)
-        {
-            return $@"'{insert.event_name}'";
-        }
-        public override string GetValuesAll(EventInsertRequest insert, int id)
-        {
-            return $@"{id},'{insert.event_name}'";
-        }
-        public override string GetValuesAll(EventUpsertRequest insert)
-        {
-            return $@"{insert.EventId},'{insert.EventName}'";
-        }
-        public override string GetValuesAllBesidesPrimary(EventInsertRequest Insert)
-        {
-            return $@"'{Insert.event_name}'";
-        }
+
+       
+
+                  
+       
+
 
 
         //insert esktenzije
@@ -203,6 +198,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         }
+
         public override void BeforeInsertVoid(EventUpsertRequest Update)
         {
             using var conn = new NpgsqlConnection(connString);

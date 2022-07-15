@@ -49,6 +49,10 @@ namespace eBettingSystemV2.Services
             CreateMap<CompetitionModel, CompetitionModelLess>();
             CreateMap<CompetitionModelLess, CompetitionModel>();
 
+            CreateMap<CompetitionInsertRequest, CompetitionUpsertRequest>();
+            CreateMap<CompetitionUpsertRequest, CompetitionInsertRequest>();
+
+
 
             CreateMap<events, EventModel>();
             CreateMap<EventModel, events>();
