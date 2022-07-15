@@ -707,7 +707,6 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
         }
         public virtual void BeforeInsertVoid(TInsert insert,int Id)
-
         {
 
         }    //used ok
