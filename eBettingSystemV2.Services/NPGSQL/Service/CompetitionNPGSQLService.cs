@@ -1,6 +1,7 @@
 
 ﻿using AutoMapper;
 using Dapper;
+using eBettingSystemV2.Model.Models;
 using eBettingSystemV2.Model.SearchObjects;
 using eBettingSystemV2.Models;
 using eBettingSystemV2.Services.DataBase;
@@ -24,6 +25,11 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         BCrudNPGSQLService<CompetitionModel, competition, CompetitionSearchObject, CompetitionInsertRequest, CompetitionUpsertRequest, CompetitionModelLess>
         , ICompetitionNPGSQL
     {
+        private ICountryNPGSQL ICountryService { get; set; }
+        private ISportsNPGSQL ISportService { get; set; }
+
+
+
 
         public CompetitionNPGSQLService(IConfiguration Service1, IMapper Service3) : base(Service1, Service3)
         {
@@ -274,6 +280,147 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
         }
 
+        public override void checkforexceptions(IEnumerable<CompetitionInsertRequest> lista)
+        {
+            foreach (var a in lista)
+            {
+
+                if (a.countryid == 0)
+                {
+
+                    throw new Exception("Country id od competition ne moze biti null ( "+a.naziv +")" );
+                
+                }
+            
+
+
+            
+            
+            }
+        }
+
+        public async Task<List<CompetitionModel>> AddDataAsync(List<PodaciSaStranice> Podaci)
+        {
+            try
+            {
+
+
+
+                //lista koja ce biti poslana u InsertOneOrMoreAsync
+                List<competition> competitions = new List<competition>();
+
+                foreach (var b in Podaci)
+                {
+                    //geta id by name
+
+
+                    var Sport = await ISportService.GetIdByNameAsync(b.Sport);
+                    var Competition = GetIdbyNazivAsync(b.Competitionname);
+                    var Country = await ICountryService.GetIdByNameAsync(b.Country);
+
+                    //ako id 0 dodaj i uzmi id
+                    if (Sport.SportsId == 0)
+                    {
+                        Sport = await ISportService.InsertAsync(new SportInsertRequest
+                        {
+                            name = b.Sport
+                        });
+
+                    };
+
+                    if (Country.CountryId == 0)
+                    {
+                        Country = await ICountryService.InsertAsync(new CountryInsertRequest
+                        {
+
+                            CountryName = b.Country
+
+                        });
+                    }
+
+                    var x = new competition
+                    {
+
+                        //kad dobijemo sve id pohranjujemo u competition
+                        naziv = b.Competitionname,           //competencija1
+                        id = Competition.Id,  //45
+                        sportid = Sport.SportsId,        //kosarka 5  ako ne postoji doda i onda vrati id
+                        countryid = Country.CountryId,     //country ukraine 5
+
+
+                    };
+
+                    //dodajemo u listu
+                    competitions.Add(x);
+
+                }
+
+
+                //convertujemo listu tako da je mozemo koristiti u insertoneormore async
+                var list = Mapper.Map<IEnumerable<CompetitionUpsertRequest>>(competitions);
+
+                //pokrecemo pohranu podataka
+                var result = await UpsertOneOrMoreAsync(list);
+
+
+                //competitions = Mapper.Map<List<Competition>>(result);
+
+                //ako kompetition sadrzi 0 onda mjenjamo id sa id iz result
+                if (competitions.Where(X => X.id == 0).FirstOrDefault() != null)
+                {
+
+                    foreach (var a in competitions)
+                    {
+                        foreach (var b in result)
+                        {
+                            if (a.id == 0)
+                            {
+                                a.id = b.Id;
+
+                            }
+
+
+
+
+
+                        }
+
+
+                    }
+                }
+
+
+
+
+
+
+                return Mapper.Map<List<CompetitionModel>>(competitions);
+
+
+
+                //convert listu 
+                //InsertOneOrMoreAsync(lista);
+                //vrati rezultat
+                //var sportoviq = Mapper.Map<List<CompetitionUpsertRequest>>(competitions);
+
+            }
+
+            catch (Exception ex)
+            {
+
+
+
+                return null;
+
+
+            }
+
+
+
+
+        }
+
+
         //upsert ekstenzije 
 
         public override List<CompetitionUpsertRequest> BeforeInsertFilterList(IEnumerable<CompetitionUpsertRequest> List)
@@ -471,6 +618,15 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         }
+
+
+        //update esktenzije
+
+       
+
+
+
+        
 
 
 
