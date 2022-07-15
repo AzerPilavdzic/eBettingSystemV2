@@ -112,7 +112,7 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = ICompetitionService.GetIdbyNazivAsync(Naziv);
+                var result = ICompetitionNPGSQL.GetIdbyNazivAsync(Naziv);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -129,9 +129,18 @@ namespace eBettingSystemV2.Controllers
 
         [HttpPost]
         [Route("InsertCompetition")]
-        public override Task<ActionResult<CompetitionModel>> Insert(CompetitionInsertRequest insert)
+        public override async Task<ActionResult<CompetitionModel>> Insert(CompetitionInsertRequest insert)
         {
-            return base.Insert(insert);
+            try
+            {
+                var result = await ICompetitionNPGSQL.InsertAsync(insert);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -141,11 +150,13 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await base.InsertById(Id,Insert);
-                return result;
+                //var result = await base.InsertById(Id,Insert);
+                var result = await ICompetitionNPGSQL.UpsertbyIdAsync(Insert,Id);
+                return Ok(result);
             }
             catch (Exception ex)
             {
+                _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
 
@@ -158,11 +169,13 @@ namespace eBettingSystemV2.Controllers
         {
             try
             {
-                var result = await base.UpsertOneOrMore(insertlist);
-                return result;
+                //var result = await base.UpsertOneOrMore(insertlist);
+                var result = await ICompetitionNPGSQL.UpsertOneOrMoreAsync(insertlist);
+                return Ok(result);
             }
             catch (Exception ex)
             {
+                _logger.LogInformation(ex.Message);
                 return BadRequest(ex.Message);
             }
 

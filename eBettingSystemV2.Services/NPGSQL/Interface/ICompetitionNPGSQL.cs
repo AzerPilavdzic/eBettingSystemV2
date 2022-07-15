@@ -16,7 +16,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Interface
             CompetitionUpsertRequest,
             CompetitionModelLess>
     {
-
+        public CompetitionModelLess GetIdbyNazivAsync(string name);
 
 
 

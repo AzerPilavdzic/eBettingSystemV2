@@ -41,25 +41,25 @@ namespace eBettingSystemV2.Services.DataBase
             {
                 entity.ToTable("competition", "BettingSystem");
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.id).HasColumnName("id");
 
-                entity.Property(e => e.Countryid).HasColumnName("countryid");
+                entity.Property(e => e.countryid).HasColumnName("countryid");
 
-                entity.Property(e => e.Naziv)
+                entity.Property(e => e.naziv)
                     .HasColumnType("character varying")
                     .HasColumnName("naziv");
 
-                entity.Property(e => e.Sportid).HasColumnName("sportid");
+                entity.Property(e => e.sportid).HasColumnName("sportid");
 
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.Competitions)
-                    .HasForeignKey(d => d.Countryid)
+                    .HasForeignKey(d => d.countryid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("competition_fk");
 
                 entity.HasOne(d => d.Sport)
                     .WithMany(p => p.Competitions)
-                    .HasForeignKey(d => d.Sportid)
+                    .HasForeignKey(d => d.sportid)
                     .HasConstraintName("competition_fk_1");
             });
 

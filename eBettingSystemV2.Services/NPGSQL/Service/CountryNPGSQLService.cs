@@ -215,7 +215,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         }
-        public override void BeforeInsertVoid(CountryInsertRequest insert)
+        public override void BeforeInsertVoid(CountryInsertRequest insert,int Id=0)
         {
             using var conn = new NpgsqlConnection(connString);
             conn.Open();

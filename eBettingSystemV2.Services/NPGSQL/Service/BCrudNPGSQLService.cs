@@ -39,7 +39,10 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             {
 
 
-            BeforeInsertVoid(insert);
+           
+           
+            BeforeInsertVoid(insert,0);
+
 
             //if (!BeforeInsertBool(insert))
             //{
@@ -91,16 +94,15 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
 
-            //for tomorrow;
-            var stringtext = GetAllValuesFromModel(typeof(TUpdate), List.FirstOrDefault());
+           
 
             var list = BeforeInsertFilterList(List); //ako ime vec postoji u bazi izbaci iz liste
 
            
 
 
-            string Query = null;
-            string AddQuery = null;//dodatak za ako korisnik ne unose id
+            string Query  = null;
+            
 
             string typeParameterType = typeof(TDb).Name;
 
@@ -229,8 +231,13 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
             try
             {
 
+            BeforeInsertVoid(Insert,Id);
+            Insert = foreignkeyfix(Id, Insert);
 
-                BeforeInsertVoid(Insert);
+
+
+
+              
 
                 string Query = null;
 
@@ -285,7 +292,8 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
         {
             try
             {
-                BeforeInsertVoid(update);
+                BeforeInsertVoid(update,id);
+                //update =foreignkeyfix(id, update);
 
                 string Query = null;
 
@@ -680,12 +688,26 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         //before Extenzije
+
+
+        public virtual TInsert foreignkeyfix(int Id,TInsert insert)
+        {
+            //za foriegn key coalesce
+
+
+            return insert;
+        
+        }
         public virtual List<TUpdate> BeforeInsertFilterList(IEnumerable<TUpdate> List)
         {
 
             return List.ToList();
-        } //used ok
-        public virtual void BeforeInsertVoid(TInsert insert)
+
+        
+
+        }
+        public virtual void BeforeInsertVoid(TInsert insert,int Id)
+
         {
 
         }    //used ok

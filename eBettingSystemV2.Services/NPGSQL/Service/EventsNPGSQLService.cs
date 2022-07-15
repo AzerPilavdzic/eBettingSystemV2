@@ -174,22 +174,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
 
         }
-        public override void BeforeInsertVoid(EventInsertRequest insert)
-        {
-            using var conn = new NpgsqlConnection(connString);
-            conn.Open();
-
-            var List = conn.Query($@"Select * from ""BettingSystem"".""Event"" 
-             where (lower(""name"") = lower('{insert.EventName}'))");
-            var entity = List.FirstOrDefault();
-
-            if (entity != null)
-            {
-                throw new Exception("EXCEPTION: Event SA TIM IMENOM VEC POSTOJI.");
-            }
-            conn.Close();
-           
-        }
+        
         public override void BeforeInsertVoid(EventUpsertRequest Update)
         {
             using var conn = new NpgsqlConnection(connString);

@@ -88,15 +88,15 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                     {
 
 
-                    Naziv = b.Competitionname,           //competencija1
-                    Id = GetIdbyName(b.Competitionname),  //45
-                    Sportid = GetIdbyName(b.Sport),        //kosarka 5  ako ne postoji doda i onda vrati id
-                    Countryid = GetIdbyName(b.Country)     //country ukraine 5
+                    naziv = b.Competitionname,           //competencija1
+                    id = GetIdbyName(b.Competitionname),  //45
+                    sportid = GetIdbyName(b.Sport),        //kosarka 5  ako ne postoji doda i onda vrati id
+                    countryid = GetIdbyName(b.Country)     //country ukraine 5
 
 
                     };
 
-                   if (x.Countryid == 0)
+                   if (x.countryid == 0)
                    {
 
 
@@ -107,7 +107,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                       };
 
                       var model = await ICountryService.InsertAsync(insert);
-                      x.Countryid = model.CountryId;
+                      x.countryid = model.CountryId;
 
                    }
 
@@ -186,26 +186,26 @@ namespace eBettingSystemV2.Services.Linq.Servisi
 
             if (!string.IsNullOrWhiteSpace(search?.naziv))
             {
-                filterquery = filterquery.Where(x => x.Naziv != null)
-                    .Where(X => X.Naziv.ToLower()
+                filterquery = filterquery.Where(x => x.naziv != null)
+                    .Where(X => X.naziv.ToLower()
                     .StartsWith(search.naziv.ToLower()));
             }
 
             if (search.id != null)
             {
-                filterquery = filterquery.Where(X => X.Id == search.id);
+                filterquery = filterquery.Where(X => X.id == search.id);
 
             }
 
             if (search.countryid != null)
             {
-                filterquery = filterquery.Where(X => X.Countryid == search.countryid);
+                filterquery = filterquery.Where(X => X.countryid == search.countryid);
 
             }
 
             if (search.sportid != null)
             {
-                filterquery = filterquery.Where(X => X.Sportid == search.sportid);
+                filterquery = filterquery.Where(X => X.sportid == search.sportid);
 
             }
 
@@ -226,7 +226,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
             {
 
                 var _model = Context.Competitions
-                    .Where(x => x.Naziv.ToLower() == name.ToLower())
+                    .Where(x => x.naziv.ToLower() == name.ToLower())
                     .FirstOrDefault();
 
                 if (_model == null)
@@ -270,14 +270,14 @@ namespace eBettingSystemV2.Services.Linq.Servisi
         //insert Ekstenzije
         public override void BeforeInsertVoid(CompetitionInsertRequest insert)
         {
-            var sportpostoji = Context.Sports.Find(insert.Sportid);
-            var countrypostoji = Context.Countries.Find(insert.Countryid);
+            var sportpostoji = Context.Sports.Find(insert.sportid);
+            var countrypostoji = Context.Countries.Find(insert.countryid);
 
 
             if(sportpostoji == null)
             {
 
-                throw new Exception($"Nije moguce napraviti vezu sa tabelom sport jer Sport sa sportsID {insert.Sportid} ne postoji ");
+                throw new Exception($"Nije moguce napraviti vezu sa tabelom sport jer Sport sa sportsID {insert.sportid} ne postoji ");
 
                    
             }
@@ -285,7 +285,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
             if (countrypostoji == null)
             {
 
-                throw new Exception($"Nije moguce napraviti vezu sa tabelom Country jer Country sa CountryID {insert.Countryid} ne postoji ");
+                throw new Exception($"Nije moguce napraviti vezu sa tabelom Country jer Country sa CountryID {insert.countryid} ne postoji ");
 
 
             }
@@ -313,7 +313,7 @@ namespace eBettingSystemV2.Services.Linq.Servisi
             {
                 var sportpostoji = Context.Sports.Find(a.sportid);
                 var countrypostoji = Context.Countries.Find(a.countryid);
-                var CompetitionNameExist = Context.Competitions.Where(x=>x.Naziv==a.naziv).Select(x=>x.Naziv).FirstOrDefault();
+                var CompetitionNameExist = Context.Competitions.Where(x=>x.naziv ==a.naziv).Select(x=>x.naziv).FirstOrDefault();
 
                 if (sportpostoji == null)
                 {
@@ -357,9 +357,9 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                 if (entry != null)
                 {
 
-                    entry.Naziv = a.naziv;
-                    entry.Countryid = a.countryid;
-                    entry.Sportid = a.sportid;
+                    entry.naziv = a.naziv;
+                    entry.countryid = a.countryid;
+                    entry.sportid = a.sportid;
 
                     Result.Add(Mapper.Map<competition>(entry));
 
@@ -444,10 +444,10 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                     {
 
                         //kad dobijemo sve id pohranjujemo u competition
-                        Naziv = b.Competitionname,           //competencija1
-                        Id = Competition.Id,  //45
-                        Sportid = Sport.SportsId,        //kosarka 5  ako ne postoji doda i onda vrati id
-                        Countryid = Country.CountryId,     //country ukraine 5
+                        naziv = b.Competitionname,           //competencija1
+                        id = Competition.Id,  //45
+                        sportid = Sport.SportsId,        //kosarka 5  ako ne postoji doda i onda vrati id
+                        countryid = Country.CountryId,     //country ukraine 5
 
 
                     };
@@ -468,16 +468,16 @@ namespace eBettingSystemV2.Services.Linq.Servisi
                 //competitions = Mapper.Map<List<Competition>>(result);
 
                 //ako kompetition sadrzi 0 onda mjenjamo id sa id iz result
-                if (competitions.Where(X => X.Id == 0).FirstOrDefault() != null)
+                if (competitions.Where(X => X.id == 0).FirstOrDefault() != null)
                 {
 
                     foreach (var a in competitions)
                     {
                         foreach (var b in result)
                         {
-                            if (a.Id == 0)
+                            if (a.id == 0)
                             {
-                                a.Id = b.Id;
+                                a.id = b.Id;
 
                             }
 
