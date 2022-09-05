@@ -754,8 +754,8 @@ namespace eBettingSystemV2.Services.Servisi
                     int intnum = Convert.ToInt32(num);
 
 
-                    Console.SetCursorPosition(0, Console.CursorTop - 1);
-                    ClearCurrentConsoleLine();
+                    //Console.SetCursorPosition(0, Console.CursorTop - 1);
+                    //ClearCurrentConsoleLine();
 
                     Console.WriteLine("Dodajem listu evenata broj "+ CompetitionNaziv[y].PadRight(30) + " " + (y+1) + " od " + brojcompetition + " "+intnum+ "% " +(i+1) +"/" +ukupno);
                 }

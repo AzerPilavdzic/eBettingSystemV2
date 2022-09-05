@@ -44,8 +44,9 @@ namespace eBettingSystemV2
             var fetchs = services.GetRequiredService<IFetch>();
 
             //var list=CleanSql.GetNPGSQLGeneric(new CountrySearchObject(){ }).Result;
-            ITimer.SetTimer();
-            //fetchs.FetchAllEvents2();
+
+            //ITimer.SetTimer();   turned off
+            
 
 
             host.Run();

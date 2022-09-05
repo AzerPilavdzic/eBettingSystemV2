@@ -12,7 +12,7 @@ namespace RezultatiImporter.Services
     public class ApiService
     {
         private static string _resource = "CacheLearn/";
-        public static string _endpoint = "https://localhost:5001/";
+        public static string _endpoint = "https://localhost:44318/";
         public static string _Command = "TakeDataFromCache";
 
 

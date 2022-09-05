@@ -1,0 +1,18 @@
+version: '3'
+services:
+#mssql docker
+  
+  tourismagency-api:
+    restart: unless-stopped
+    build:
+      context: .
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=T,1433;Database=Rs2_Seminarski;User=sa;Password=Pa774499;ConnectRetryCount=0
+      - ASPNETCORE_ENVIRONMENT=Development 
+      #passing down variable to the container
+    ports:
+      - 5192:5192
+   
+    
+   
+   
