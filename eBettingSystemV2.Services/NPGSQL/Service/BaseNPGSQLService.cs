@@ -81,6 +81,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 var entity = await conn.QueryAsync<T>(Query);
 
 
+
                 var quary = entity.ToList().AsQueryable();
 
                 return quary;

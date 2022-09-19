@@ -575,6 +575,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 var nameOfProperty = b.Name;
 
+                //dodavanje navodnika
                 var nameOfProperty2 = nameOfProperty.Any(char.IsUpper) ? $@"""{nameOfProperty}""" : nameOfProperty;
 
                 if (nameOfProperty == PrimaryKey)
@@ -589,6 +590,7 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
 
                 var value = propertyInfo.GetValue(objekt, null);
 
+                //0 pretvara u null
                 if (value == null || value.ToString() == "0")
                 {
 
@@ -596,7 +598,18 @@ namespace eBettingSystemV2.Services.NPGSQL.Service
                 }
                 else
                 {
-                    ListaValues.Add(value.GetType() == typeof(string) ? $@"'{value}'" : value.ToString());
+
+                    if (value.GetType() == typeof(string) || value.GetType() == typeof(DateTime))
+                    {
+                        ListaValues.Add($@"'{value}'");
+                    }
+                    else
+                    {
+                        ListaValues.Add(value.ToString());
+
+                    }
+
+                   
                 }
 
             }

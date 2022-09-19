@@ -218,12 +218,12 @@ namespace eBettingSystemV2.Controllers
 
 
         [HttpPut]
-        [Route("UpdateCompetitionById")]
-        public override async Task<ActionResult<CompetitionModel>> Update(int id, [FromBody] CompetitionInsertRequest update)
+        [Route("UpdateCompetitionById/{CompetitionId}")]
+        public override async Task<ActionResult<CompetitionModel>> Update(int CompetitionId, [FromBody] CompetitionInsertRequest update)
         {
             try
             {
-                var result = await ICompetitionNPGSQL.UpdateAsync(id,update);
+                var result = await ICompetitionNPGSQL.UpdateAsync(CompetitionId, update);
                 return Ok(result);
             }
             catch (Exception ex)
