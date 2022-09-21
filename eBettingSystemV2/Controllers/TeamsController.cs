@@ -56,10 +56,13 @@ namespace eBettingSystemV2.Controllers
         //Implementirati za logger
         //Dodati Patch
 
-        [HttpGet]
+        [HttpPost]
         [Route("GetAllTeams")]
-        public override async Task<ActionResult<IEnumerable<TeamModel>>> Get([FromQuery] TeamSearchObject search = null)
+        public override async Task<ActionResult<IEnumerable<TeamModel>>> Get(TeamSearchObject search)
         {
+
+
+
 
             if (ITeamNPGSQL.CheckPage0(search))
                 return BadRequest("PageNumber ili PageSize ne smiju biti 0");
